@@ -71,5 +71,8 @@ int main()
         std::wstring wresult = Alime::base::Join(L",", L"你", L"就", L"是",-1, L"个", L"白痴");
         std::wcout << wresult << std::endl;
     }
+    {
+
+    }
     std::cout << "Hello World!\n";
 }
