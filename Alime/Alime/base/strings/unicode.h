@@ -1,0 +1,27 @@
+﻿#pragma once
+
+#include "stdint.h"
+
+#include <string>
+
+#include "Alime/base/build_config.h"
+
+typedef int32_t UTF32Char;
+
+typedef char UTF8Char;
+
+#if defined(WCHAR_T_IS_UTF16)
+typedef wchar_t UTF16Char;
+typedef int32_t UTF32Char;
+#else
+typedef char16_t UTF16Char;
+typedef wchar_t UTF32Char;
+#endif
+
+typedef std::basic_string<UTF8Char> UTF8String;
+typedef UTF8String U8String;
+typedef std::basic_string<UTF16Char> UTF16String;
+typedef UTF16String U16String;
+typedef std::basic_string<UTF32Char> UTF32String;
+typedef UTF32String U32String;
+
