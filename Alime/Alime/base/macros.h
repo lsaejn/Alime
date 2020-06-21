@@ -4,10 +4,6 @@
 #include "Alime/base/build_config.h"
 
 
-#define AlimeBegin namespace Alime{
-#define BaseBegin namespace base{
-#define AlimeEnd }
-#define BaseEnd }
 #define implements :public
 #define extends :public
 #define USE_API(NAME, API) static auto proc_##API = (decltype(&API))(GetProcAddress(GetModuleHandle(L#NAME), #API))
@@ -46,11 +42,13 @@
 //     ignore_result(my_var.release());
 //
 template<typename T>
-inline void ignore_result(const T&) {
+inline void ignore_result(const T&)
+{
 }
 
 template<typename... Ts>
-inline void ignore_varaible(const Ts&&... Args) {
+inline void ignore_varaible(const Ts&&... Args)
+{
 }
 
 

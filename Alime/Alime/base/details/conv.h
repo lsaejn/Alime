@@ -96,6 +96,7 @@ template <class T>
 struct IsSomeString : std::false_type {};
 
 //嗯...暂时不支持wchar_t，因为数值型的部分全部需要计算长度
+//wchar_t的append,我们全部交给wostringstream
 template <typename Alloc>
 struct IsSomeString<std::basic_string<char, std::char_traits<char>, Alloc>>
     : std::true_type {};
@@ -114,13 +115,14 @@ void toAppendFit(const Ts&)
 
 //声明
 template <class Tgt>
-typename std::enable_if<IsSomeString<Tgt>::value>::type toAppend(Tgt*)
+typename std::enable_if<IsSomeString<Tgt>::value>::type
+toAppend(Tgt*)
 {
 }
 
 //好，开始体力活
 #include <sstream>
-///warning dangerous oper
+///warning dangerous implement
 template <class T>
 void toAppend(T value, std::wstring* result)
 {
@@ -138,7 +140,7 @@ void toAppend(char value, Tgt* result)
     *result += value;
 }
 
-//char*
+//const char*
 template <class Tgt>
 void toAppend(const char* value, Tgt* result)
 {

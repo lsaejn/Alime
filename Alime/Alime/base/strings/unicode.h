@@ -6,13 +6,11 @@
 
 #include "Alime/base/build_config.h"
 
-typedef int32_t UTF32Char;
-
 typedef char UTF8Char;
 
 #if defined(WCHAR_T_IS_UTF16)
 typedef wchar_t UTF16Char;
-typedef int32_t UTF32Char;
+typedef char32_t UTF32Char;
 #else
 typedef char16_t UTF16Char;
 typedef wchar_t UTF32Char;

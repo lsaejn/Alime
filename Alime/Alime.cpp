@@ -4,10 +4,51 @@
 #include <iostream>
 #include "Alime/base/strings/string_util.h"
 #include "Alime/base/details/conv.h"
+#include "Alime/base/strings/string_conversions.h"
+#include "assert.h"
 using namespace Alime::base;
 
 int main()
 {
+    {
+        //1
+        std::string_view sv = u8"hello你";
+        std::wstring re = UTF8ToUTF16(sv);
+        assert(re == L"hello你");
+        //2
+        std::wstring_view wsv = re;
+        std::string str = UTF16ToUTF8(wsv);
+        assert(str == u8"hello你");
+        //3
+        std::u32string u32str = UTF16ToUTF32(wsv);
+        assert(u32str == U"hello你");
+        //4
+        std::u32string u32str2 = UTF8ToUTF32(sv);
+        assert(u32str2 == U"hello你");
+        //5
+        std::string u8str = UTF32ToUTF8(u32str2);
+        assert(u8str == u8"hello你");
+        //6
+        std::wstring wstr = UTF32ToUTF16(u32str2);
+        assert(wstr == L"hello你");
+        //7
+        std::wstring wide_str = L"你tmd";
+        auto u8_str=SysWideToUTF8(wide_str);
+        assert(u8_str == u8"你tmd");
+        //8
+        std::wstring wide_str2 = SysUTF8ToWide(u8_str);
+        assert(wide_str2 == L"你tmd");
+        //9
+        std::string ansiStr=SysWideToNativeMB(wide_str2);
+        assert(ansiStr == "你tmd");
+        //10
+        std::wstring wide_str3=SysNativeMBToWide(ansiStr);
+        assert(wide_str3 == L"你tmd");
+
+    }
+    auto result = Alime::base::StringTrimLeft(L"    123ABC      ");
+    std::wstring str= L"    123ABC      ";
+    auto result2 = Alime::base::StringTrimLeft(str);
     //const char* ptr = nullptr;
     //std::string_view sv(ptr);
     std::wstring_view ws = L"    123ABC      ";
@@ -18,8 +59,8 @@ int main()
     bool eq = re == ws2;
     ws.remove_prefix(3);
     auto v = ws.substr();
-    //Alime::base::StringTrim<wchar_t>(L"123ABC");
-   // Alime::base::LowerString<wchar_t>(ws.c_str());
+    auto afterTrim=Alime::base::StringTrim(L"   123ABC   ");
+    afterTrim=Alime::base::LowerString(afterTrim);
     //auto res = ws + ws2;
     {
         std::string_view sv("fuckoff");
@@ -68,11 +109,11 @@ int main()
         std::cout << result << std::endl;
     }
     {
-        std::wstring wresult = Alime::base::Join(L",", L"你", L"就", L"是",-1, L"个", L"白痴");
-        std::wcout << wresult << std::endl;
+        std::wstring wresult = Alime::base::Join(L",", L"你", L"就", L"是", -2.3456789, L"个", L"白痴");
+        wresult = toDelim<std::wstring>(L",", L"你", L"就", L"是", 3.45, 1, L"个", L"白痴");
     }
     {
-
+        //std::u16string u16 = L"fuck";
     }
     std::cout << "Hello World!\n";
 }

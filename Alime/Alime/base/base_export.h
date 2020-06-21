@@ -1,9 +1,10 @@
 #ifndef BASE_BASE_EXPORT_H_
 #define BASE_BASE_EXPORT_H_
 #pragma once
+#include "Alime/base/build_config.h"
 
 #if defined(COMPONENT_BUILD)
-#if defined(WIN32)
+#if defined(_WIN32)
 
 #if defined(BASE_IMPLEMENTATION)
 #define BASE_EXPORT __declspec(dllexport)
