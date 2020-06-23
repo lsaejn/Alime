@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Alime_UnitTest/lib/pkgconfig
+/Alime_UnitTest/lib/manual-link/pkgconfig

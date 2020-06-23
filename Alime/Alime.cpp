@@ -8,7 +8,7 @@
 #include "assert.h"
 using namespace Alime::base;
 
-int main()
+int main1()
 {
     {
         //1
@@ -116,4 +116,5 @@ int main()
         //std::u16string u16 = L"fuck";
     }
     std::cout << "Hello World!\n";
+    return 1;
 }
