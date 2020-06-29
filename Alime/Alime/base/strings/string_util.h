@@ -13,10 +13,10 @@ namespace Alime
 {
 	namespace base
 	{
-		std::string StringPrintf(const char* format, ...);
-		std::wstring StringPrintf(const wchar_t* format, ...);
-		const std::string& StringPrintf(std::string& output, const char* format, ...);
-		const std::wstring& StringPrintf(std::wstring& output, const wchar_t* format, ...);
+		std::string Format(const char* format, ...);
+		std::wstring Format(const wchar_t* format, ...);
+		const std::string& Format(std::string& output, const char* format, ...);
+		const std::wstring& Format(std::wstring& output, const wchar_t* format, ...);
 
 		void StringAppendF(std::string& output, const char* format, ...);
 		void StringAppendF(std::wstring& output, const wchar_t* format, ...);
@@ -112,6 +112,20 @@ namespace Alime
 		{
 			return toDelim<std::wstring>(separator.data(), ts...);
 		}
+
+		//template<typename... Ts>
+		//std::string Append(std::string_view des, const Ts&... ts)
+		//{
+		//	return toDelim<std::string>("", ts...);
+		//}
+
+		//template<typename... Ts>
+		//std::wstring Append(std::wstring_view des, const Ts&... ts)
+		//{
+		//	return toDelim<std::wstring>("", ts...);
+		//}
+
+
 
 		bool ValidateUTF8Stream(const void* stream, unsigned length);
 		bool ValidateGB2312Stream(const void* stream, unsigned length);

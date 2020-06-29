@@ -128,5 +128,14 @@
     <ClInclude Include="Alime\base\details\string_tokenizer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Alime\base\details\string_util_details.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\copyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\notCopyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

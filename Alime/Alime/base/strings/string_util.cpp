@@ -4,6 +4,7 @@
 #include <memory.h>			/* for mem*** */
 #include <stdarg.h>			/* va_list, va_start, va_end */
 #include <ctype.h>
+
 #include "Alime/base/macros.h"
 #include "Alime/base/third_party/convert_utf/ConvertUTF.h"
 #include "Alime/base/strings/string_util.h"
@@ -446,7 +447,7 @@ namespace Alime
 			}
 		} // anonymous namespace
 
-		std::string StringPrintf(const char* format, ...)
+		std::string Format(const char* format, ...)
 		{
 			va_list	args;
 			va_start(args, format);
@@ -457,7 +458,7 @@ namespace Alime
 			return output;
 		}
 
-		std::wstring StringPrintf(const wchar_t* format, ...)
+		std::wstring Format(const wchar_t* format, ...)
 		{
 			va_list	args;
 			va_start(args, format);
@@ -468,7 +469,7 @@ namespace Alime
 			return output;
 		}
 
-		const std::string& StringPrintf(std::string& output, const char* format, ...)
+		const std::string& Format(std::string& output, const char* format, ...)
 		{
 			va_list	args;
 			va_start(args, format);
@@ -478,7 +479,7 @@ namespace Alime
 			return output;
 		}
 
-		const std::wstring& StringPrintf(std::wstring& output, const wchar_t* format, ...)
+		const std::wstring& Format(std::wstring& output, const wchar_t* format, ...)
 		{
 			va_list	args;
 			va_start(args, format);

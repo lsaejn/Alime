@@ -168,9 +168,12 @@
     <ClInclude Include="Alime\base\base_export.h" />
     <ClInclude Include="Alime\base\build_config.h" />
     <ClInclude Include="Alime\base\compiler_specific.h" />
+    <ClInclude Include="Alime\base\copyable.h" />
     <ClInclude Include="Alime\base\details\conv.h" />
     <ClInclude Include="Alime\base\details\string_tokenizer.h" />
+    <ClInclude Include="Alime\base\details\string_util_details.h" />
     <ClInclude Include="Alime\base\macros.h" />
+    <ClInclude Include="Alime\base\notCopyable.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />
     <ClInclude Include="Alime\base\strings\unicode.h" />
