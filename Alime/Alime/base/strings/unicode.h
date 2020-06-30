@@ -7,6 +7,7 @@
 #include "Alime/base/build_config.h"
 
 typedef char UTF8Char;
+static_assert(CHAR_MAX == 127, "char type need be signed");
 
 #if defined(WCHAR_T_IS_UTF16)
 typedef wchar_t UTF16Char;

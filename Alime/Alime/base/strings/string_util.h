@@ -18,9 +18,6 @@ namespace Alime
 		const std::string& Format(std::string& output, const char* format, ...);
 		const std::wstring& Format(std::wstring& output, const wchar_t* format, ...);
 
-		void StringAppendF(std::string& output, const char* format, ...);
-		void StringAppendF(std::wstring& output, const wchar_t* format, ...);
-
 		std::string		LowerString(std::string_view str);
 		std::wstring	LowerString(std::wstring_view str);
 
@@ -41,6 +38,8 @@ namespace Alime
 
 		std::string		TrimStart(std::string_view input, std::string_view trimChars="");
 		std::wstring	TrimStart(std::wstring_view input, std::wstring_view trimChars=L"");
+		std::string		TrimStart(std::string_view input, size_t n);
+		std::wstring	TrimStart(std::wstring_view input, size_t n);
 
 		std::string		Concat(std::string_view str0, std::string_view str1);
 		std::wstring	Concat(std::wstring_view str0, std::wstring_view str1);
@@ -81,6 +80,9 @@ namespace Alime
 		std::string		Insert(std::string_view src, size_t startIndex, std::string_view value);
 		std::wstring	Insert(std::wstring_view src, size_t startIndex, std::wstring_view value);
 
+		/// <summary>
+		/// ReplaceAll
+		/// </summary>
 		std::string		Replace(std::string_view src, std::string_view oldValue, std::string_view newValue);
 		std::wstring	Replace(std::wstring_view src, std::wstring_view oldValue, std::wstring_view newValue);
 		std::string		Replace(std::string_view src, char oldChar, char newChar);
@@ -112,20 +114,6 @@ namespace Alime
 		{
 			return toDelim<std::wstring>(separator.data(), ts...);
 		}
-
-		//template<typename... Ts>
-		//std::string Append(std::string_view des, const Ts&... ts)
-		//{
-		//	return toDelim<std::string>("", ts...);
-		//}
-
-		//template<typename... Ts>
-		//std::wstring Append(std::wstring_view des, const Ts&... ts)
-		//{
-		//	return toDelim<std::wstring>("", ts...);
-		//}
-
-
 
 		bool ValidateUTF8Stream(const void* stream, unsigned length);
 		bool ValidateGB2312Stream(const void* stream, unsigned length);
