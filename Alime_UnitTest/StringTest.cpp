@@ -6,6 +6,91 @@
 
 using namespace Alime::base;
 
+/*
+Each test can be divided into three parts: astring, wstring, string_view 
+*/
+
+
+TEST_UNIT(test_Format)
+{
+	{
+		auto re = Format("你就是%d个%s东西", 1, "狗");
+		H_TEST_EQUAL(re, "你就是1个狗东西");
+		auto re2 = Format("你就是%d个%s东西", 30000222, "SB");
+		H_TEST_EQUAL(re2, "你就是30000222个SB东西");
+		//so, how to deal longlong now? %ld or %lld. fix me
+		auto re3 = Format("你会不会算%d + %f= %d", 1, 2.2, 3);
+		H_TEST_EQUAL(re3, "你会不会算1 + 2.200000= 3");
+	}
+	{
+		auto re = Format(L"你就是%d个%s东西", 1, L"狗");
+		H_TEST_EQUAL(re, L"你就是1个狗东西");
+		auto re2 = Format(L"你就是%d个%s东西", 30000222, L"SB");
+		H_TEST_EQUAL(re2, L"你就是30000222个SB东西");
+		//so, how to deal longlong now? %ld or %lld. fix me
+		auto re3 = Format(L"你会不会算%d + %f= %d", 1, 2.2, 3);
+		H_TEST_EQUAL(re3, L"你会不会算1 + 2.200000= 3");
+	}
+}
+
+TEST_UNIT(test_lowerString)
+{
+	{
+		std::wstring_view sv = L"fuckPFF你";
+		H_TEST_EQUAL(LowerString(sv), L"fuckpff你");
+		H_TEST_EQUAL(LowerString(L""), L"");
+		H_TEST_ASSERT(LowerString(L"") != L"fuck");
+		H_TEST_EQUAL(LowerString(L"aabb"), L"aabb");
+		H_TEST_EQUAL(LowerString(L"你好吗"), L"你好吗");
+	}
+	{
+		std::string_view sv = "fuckPFF你";
+		H_TEST_EQUAL(LowerString(sv), "fuckpff你");
+		H_TEST_EQUAL(LowerString(""), "");
+		H_TEST_ASSERT(LowerString("") != "fuck");
+		H_TEST_EQUAL(LowerString("aabb"), "aabb");
+		H_TEST_EQUAL(LowerString("你好吗"), "你好吗");
+	}
+	{
+		std::string_view sv = "fuckPFF你";
+		H_TEST_EQUAL(LowerString(sv), "fuckpff你");
+		auto sv2 = sv.substr(0, 5);
+		H_TEST_ASSERT(LowerString(sv2) != "fuckpff你");
+		H_TEST_EQUAL(LowerString(sv2), "fuckp");
+		auto sv3 = sv.substr(1, 5);
+		H_TEST_EQUAL(LowerString(sv3), "uckpf");
+	}
+}
+
+TEST_UNIT(test_UpperString)
+{
+	{
+		std::wstring_view sv = L"fuckPFF你";
+		H_TEST_EQUAL(UpperString(sv), L"FUCKPFF你");
+		H_TEST_EQUAL(UpperString(L""), L"");
+		H_TEST_ASSERT(UpperString(L"") != L"FUCK");
+		H_TEST_EQUAL(UpperString(L"aabb"), L"AABB");
+		H_TEST_EQUAL(UpperString(L"你好吗"), L"你好吗");
+	}
+	{
+		std::string_view sv = "fuckPFF你";
+		H_TEST_EQUAL(UpperString(sv), "FUCKPFF你");
+		H_TEST_EQUAL(UpperString(""), "");
+		H_TEST_ASSERT(UpperString("") != "FUCK");
+		H_TEST_EQUAL(UpperString("aabb"), "AABB");
+		H_TEST_EQUAL(UpperString("你好吗"), "你好吗");
+	}
+	{
+		std::string_view sv = "fuckPFF你";
+		H_TEST_EQUAL(UpperString(sv), "FUCKPFF你");
+		auto sv2 = sv.substr(0, 5);
+		H_TEST_ASSERT(UpperString(sv2) != "FUCKPFF你");
+		H_TEST_EQUAL(UpperString(sv2), "FUCKP");
+		auto sv3 = sv.substr(1, 5);
+		H_TEST_EQUAL(UpperString(sv3), "UCKPF");
+	}
+}
+
 TEST_UNIT(test_CharCompareNoCase)
 {
 	H_TEST_ASSERT(Alime::base::details::CharCompareNoCase('a', 'b')<0);
@@ -47,12 +132,394 @@ TEST_UNIT(test_StringCompareNoCase)
 
 }
 
-TEST_UNIT(testAny1)
+TEST_UNIT(test_StringTrimLeft)
 {
-	auto re=LowerString("fuckPFF你");
-	H_TEST_EQUAL(re, "fuckpff你");
+	{
+		H_TEST_EQUAL(StringTrimLeft("   你好"), "你好");
+		H_TEST_EQUAL(StringTrimLeft("   你好	吗"), "你好	吗");
+		H_TEST_EQUAL(StringTrimLeft("   你 好"), "你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\naabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\n   aabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\n   \taabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r   \taabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\n   \taabbzd你 好"), "aabbzd你 好");
+	}
+	{
+		H_TEST_EQUAL(StringTrimLeft("   你好"), "你好");
+		H_TEST_EQUAL(StringTrimLeft("   你好	吗"), "你好	吗");
+		H_TEST_EQUAL(StringTrimLeft("   你 好"), "你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\naabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\n   aabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r\n   \taabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\r   \taabbzd你 好"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimLeft("\n   \taabbzd你 好"), "aabbzd你 好");
+	}
+	{
+		std::string_view sv1("Fuck   你好");
+		std::string_view sv2 = sv1.substr(4);
+		H_TEST_EQUAL(StringTrimLeft(sv2), "你好");	
+	}
+	{
+		std::wstring_view sv1(L"Fuck   你好");
+		std::wstring_view sv2 = sv1.substr(4);
+		H_TEST_EQUAL(StringTrimLeft(sv2), L"你好");
+	}
 }
 
+TEST_UNIT(test_StringTrimRight)
+{
+	{
+		H_TEST_EQUAL(StringTrimRight("你好   "), "你好");
+		H_TEST_EQUAL(StringTrimRight("你好	吗   "), "你好	吗");
+		H_TEST_EQUAL(StringTrimRight("你 好   "), "你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n   "), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n   \t"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r   \t"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\n   \t"), "aabbzd你 好");
+	}							 
+	{							 
+		H_TEST_EQUAL(StringTrimRight("你好   "), "你好");
+		H_TEST_EQUAL(StringTrimRight("你好	吗   "), "你好	吗");
+		H_TEST_EQUAL(StringTrimRight("你 好   "), "你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n   "), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r\n   \t"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\r   \t"), "aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight("aabbzd你 好\n   \t"), "aabbzd你 好");
+	}
+	{
+		H_TEST_EQUAL(StringTrimRight(L"你好   "), L"你好");
+		H_TEST_EQUAL(StringTrimRight(L"你好	吗   "), L"你好	吗");
+		H_TEST_EQUAL(StringTrimRight(L"你 好   "), L"你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n   "), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n   \t"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r   \t"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\n   \t"), L"aabbzd你 好");
+	}
+	{
+		H_TEST_EQUAL(StringTrimRight(L"你好   "), L"你好");
+		H_TEST_EQUAL(StringTrimRight(L"你好	吗   "), L"你好	吗");
+		H_TEST_EQUAL(StringTrimRight(L"你 好   "), L"你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n   "), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r\n   \t"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\r   \t"), L"aabbzd你 好");
+		H_TEST_EQUAL(StringTrimRight(L"aabbzd你 好\n   \t"), L"aabbzd你 好");
+	}
+	{
+		std::string_view sv1("F 你好    ");
+		std::string_view sv2 = sv1.substr(1);
+		H_TEST_EQUAL(StringTrimRight(sv2), " 你好");
+	}
+	{
+		std::wstring_view sv1(L"F 你好    ");
+		std::wstring_view sv2 = sv1.substr(1);
+		H_TEST_EQUAL(StringTrimRight(sv2), L" 你好");
+	}
+}
+
+TEST_UNIT(test_TrimEnd)
+{
+	{
+		std::string_view sv1("F 你好    ");	
+		H_TEST_EQUAL(TrimEnd(sv1, " ") , "F 你好");
+		std::string_view sv2("F 你好好好好");
+		H_TEST_EQUAL(TrimEnd(sv2, "好"), "F 你");
+		std::string_view sv3("F 你好    llllkkk");
+		H_TEST_EQUAL(TrimEnd(sv3, "k"), "F 你好    llll");
+		std::string_view sv4("F 你好    llllkkk");
+		H_TEST_EQUAL(TrimEnd(sv1, " kl"), "F 你好");
+	}
+	{
+		std::wstring_view sv1(L"F 你好    ");
+		H_TEST_EQUAL(TrimEnd(sv1, L" "), L"F 你好");
+		std::wstring_view sv2(L"F 你好好好好");
+		H_TEST_EQUAL(TrimEnd(sv2, L"好"), L"F 你");
+		std::wstring_view sv3(L"F 你好    llllkkk");
+		H_TEST_EQUAL(TrimEnd(sv3, L"k"), L"F 你好    llll");
+		H_TEST_EQUAL(TrimEnd(sv3, L"kl"), L"F 你好    ");
+		H_TEST_EQUAL(TrimEnd(sv3, L" kl"), L"F 你好");
+		H_TEST_EQUAL(TrimEnd(sv3, L" kl你好"), L"F");
+	}
+	{
+		std::wstring_view sv1(L"FFFF 你好    llllkkk");
+		H_TEST_EQUAL(TrimEnd(sv1, L" "), sv1);
+		std::wstring_view sv2 = sv1.substr(0,sv1.length()-7);
+		H_TEST_EQUAL(TrimEnd(sv2, L" "), L"FFFF 你好");
+		std::wstring_view sv3 = sv1.substr(3);		
+		H_TEST_EQUAL(TrimEnd(sv3, L"k"), L"F 你好    llll");
+		H_TEST_EQUAL(TrimEnd(sv3, L"kl"), L"F 你好    ");
+		H_TEST_EQUAL(TrimEnd(sv3, L" kl"), L"F 你好");
+		H_TEST_EQUAL(TrimEnd(sv3, L" kl你好"), L"F");
+	}
+}
+
+TEST_UNIT(test_TrimStart)
+{
+	{
+		std::string_view sv1("    F 你好");
+		H_TEST_EQUAL(TrimStart(sv1, " "), "F 你好");
+		std::string_view sv2("好好好好F 你");
+		H_TEST_EQUAL(TrimStart(sv2, "好"), "F 你");
+		std::string_view sv3("gfyusF 你好    llllkkk");
+		H_TEST_EQUAL(TrimStart(sv3, "gfyusgyf"), "F 你好    llllkkk");//a trap
+		std::string_view sv4("kllk    llllkkkF 你好");
+		H_TEST_EQUAL(TrimStart(sv4, " kl"), "F 你好");
+	}
+	{
+		std::wstring_view sv1(L"    F 你好");
+		H_TEST_EQUAL(TrimStart(sv1, L" "), L"F 你好");
+		std::wstring_view sv2(L"好好好好F 你");
+		H_TEST_EQUAL(TrimStart(sv2, L"好"), L"F 你");
+		std::wstring_view sv3(L"gf    llllkkkyusF 你好B");
+		H_TEST_EQUAL(TrimStart(sv3, L"g"), L"f    llllkkkyusF 你好B");
+		H_TEST_EQUAL(TrimStart(sv3, L"gf "), L"llllkkkyusF 你好B");
+		H_TEST_EQUAL(TrimStart(sv3, L" klfg"), L"yusF 你好B");
+		H_TEST_EQUAL(TrimStart(sv3, L" gflkyusF你好"), L"B");
+	}
+	{
+		std::wstring_view sv1(L"llllkk  kFFFF 你好");
+		H_TEST_EQUAL(TrimStart(sv1, L" "), sv1);
+		std::wstring_view sv2 = sv1.substr(7);
+		H_TEST_EQUAL(TrimStart(sv2, L" lk"), L"FFFF 你好");
+		std::wstring_view sv3 = sv1.substr(3);
+		H_TEST_EQUAL(TrimStart(sv3, L"lk"), L"  kFFFF 你好");
+		H_TEST_EQUAL(TrimStart(sv3, L"kFl "), L"你好");
+	}
+}
+
+TEST_UNIT(test_TrimStart_SizeN)
+{
+	{
+		std::string_view sv1("FFFF你好");
+		H_TEST_EQUAL(TrimStart(sv1, 4), "你好");
+		std::string_view sv2("好好好好F 你");
+		H_TEST_EQUAL(TrimStart(sv2, 2), "好好好F 你");
+		std::string_view sv3("gfyusF 你好    llllkkk");
+		H_TEST_EQUAL(TrimStart(sv3, 100), "");//a trap
+		std::string_view sv4("");
+		H_TEST_EQUAL(TrimStart(sv4, 30), "");
+	}
+	{
+		std::wstring_view sv1(L"FFFF你好");
+		H_TEST_EQUAL(TrimStart(sv1, 4), L"你好");
+		H_TEST_EQUAL(TrimStart(sv1, 5), L"好");
+		H_TEST_EQUAL(TrimStart(sv1, 6), L"");
+		H_TEST_EQUAL(TrimStart(sv1, 7), L"");
+		H_TEST_EQUAL(TrimStart(sv1, 8887), L"");
+		H_TEST_EQUAL(TrimStart(sv1, -1), L"");
+		H_TEST_EQUAL(TrimStart(sv1, 0), sv1);
+	}
+	{
+		std::wstring_view sv1(L"FFFF你好");
+		H_TEST_EQUAL(TrimStart(sv1, 0), sv1);
+		std::wstring_view sv2 = sv1.substr(2);
+		H_TEST_EQUAL(TrimStart(sv2, 2), L"你好");
+		std::wstring_view sv3 = sv1.substr(5);
+		H_TEST_EQUAL(TrimStart(sv3, 1), L"");
+	}
+}
+
+TEST_UNIT(test_Concat)
+{
+	{
+		std::string_view sv1("F 你好");
+		H_TEST_EQUAL(Concat(sv1, "GGGGGgg"), "F 你好GGGGGgg");
+		H_TEST_EQUAL(Concat(sv1, ""), sv1);
+		H_TEST_EQUAL(Concat("", sv1), sv1);
+		H_TEST_EQUAL(Concat(sv1, sv1), std::string(sv1)+ std::string(sv1));
+	}
+	{
+		std::wstring_view sv1(L"FFFF你好");
+		H_TEST_EQUAL(Concat(sv1, L"GGGGGgg"), L"FFFF你好GGGGGgg");
+		H_TEST_EQUAL(Concat(sv1, L""), sv1);
+		H_TEST_EQUAL(Concat(L"", sv1), sv1);
+		H_TEST_EQUAL(Concat(sv1, sv1), std::wstring(sv1) + std::wstring(sv1));
+	}
+	{
+		std::wstring_view sv(L"FFFF你好");
+		std::wstring_view sv1 = sv.substr(2);
+		H_TEST_EQUAL(Concat(sv1, L"GGGGGgg"), L"FF你好GGGGGgg");
+		H_TEST_EQUAL(Concat(sv1, L""), sv1);
+		H_TEST_EQUAL(Concat(L"", sv1), sv1);
+		H_TEST_EQUAL(Concat(sv1, sv1), std::wstring(sv1) + std::wstring(sv1));
+		std::wstring_view sv2 = sv.substr(2,3);
+		H_TEST_EQUAL(Concat(sv2, L"GGGGGgg"), L"FF你GGGGGgg");
+		H_TEST_EQUAL(Concat(sv2, L""), sv2);
+		H_TEST_EQUAL(Concat(L"", sv2), sv2);
+		H_TEST_EQUAL(Concat(sv2, sv2), std::wstring(sv2) + std::wstring(sv2));
+		H_TEST_NOTEQUAL(Concat(sv2, sv2), std::wstring(sv2.data()) + std::wstring(sv2));
+	}
+}
+
+TEST_UNIT(test_StartsWith)
+{
+	{
+		std::string_view sv1("F 你好");
+		H_EXPECT_TRUE(StartsWith(sv1, ""));
+		H_EXPECT_TRUE(StartsWith(sv1, "F"));
+		H_EXPECT_TRUE(StartsWith(sv1, "F "));
+		H_EXPECT_TRUE(StartsWith(sv1, "F 你"));
+		H_EXPECT_TRUE(StartsWith(sv1, "F 你好"));
+		H_EXPECT_TRUE(StartsWith(sv1, "", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "F", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "F ", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "F 你", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "F 你好", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "f", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "f ", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "f 你", true));
+		H_EXPECT_TRUE(StartsWith(sv1, "f 你好", true));
+
+		H_EXPECT_TRUE(StartsWith("", ""));
+		H_EXPECT_FALSE(StartsWith("", "aa"));
+		H_EXPECT_FALSE(StartsWith("", "aabb"));
+	}
+	{
+		std::wstring_view sv1(L"F 你好");
+		H_EXPECT_TRUE(StartsWith(sv1, L""));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F"));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F "));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F 你"));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F 你好"));
+		H_EXPECT_TRUE(StartsWith(sv1, L"", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F ", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F 你", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"F 你好", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"f", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"f ", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"f 你", true));
+		H_EXPECT_TRUE(StartsWith(sv1, L"f 你好", true));
+
+		H_EXPECT_TRUE(StartsWith("", ""));
+		H_EXPECT_FALSE(StartsWith("", "aa"));
+		H_EXPECT_FALSE(StartsWith("", "aabb"));
+	}
+	{
+		std::string_view sv("FFFUUUCCCKKK");
+		std::string_view sv1=sv.substr(3,6);
+		H_EXPECT_TRUE(StartsWith(sv1, "U"));
+		H_EXPECT_TRUE(StartsWith(sv1, "UU"));
+		H_EXPECT_TRUE(StartsWith(sv1, "UUU"));
+		H_EXPECT_TRUE(StartsWith(sv1, "UUUC"));
+		H_EXPECT_TRUE(StartsWith(sv1, "UUUCC"));
+		H_EXPECT_TRUE(StartsWith(sv1, "UUUCCC"));
+		H_EXPECT_FALSE(StartsWith(sv1, "UUUCCCK"));
+		H_EXPECT_FALSE(StartsWith(sv1, "UUUCCCKK"));
+		H_EXPECT_FALSE(StartsWith(sv1, "UUUCCCKKK"));
+		H_EXPECT_FALSE(StartsWith(sv1, "UUUCCCKKKK"));
+	}
+}
+
+TEST_UNIT(test_EndsWith)
+{
+	{
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", "O"));
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", "OO"));
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", "OOO"));
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", "LLOOO"));
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", ""));
+		H_EXPECT_TRUE(EndsWith("HHHEEELLLLLLOOO", "HHHEEELLLLLLOOO"));
+		H_EXPECT_FALSE(EndsWith("HHHEEELLLLLLOOO", "HHHHEEELLLLLLOOOO"));
+	}
+	{
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L"O"));
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L"OO"));
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L"OOO"));
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L"LLOOO"));
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L""));
+		H_EXPECT_TRUE(EndsWith(L"HHHEEELLLLLLOOO", L"HHHEEELLLLLLOOO"));
+		H_EXPECT_FALSE(EndsWith(L"HHHEEELLLLLLOOO", L"HHHHEEELLLLLLOOOO"));
+	}
+	{
+		std::wstring_view sv = L"HHHEEELLLLLLOOO";
+		H_EXPECT_TRUE(EndsWith(sv , L"O"));
+		H_EXPECT_TRUE(EndsWith(sv, L"OO"));
+		H_EXPECT_TRUE(EndsWith(sv, L"OOO"));
+		H_EXPECT_TRUE(EndsWith(sv, L"LLOOO"));
+		H_EXPECT_TRUE(EndsWith(sv, L""));
+		H_EXPECT_TRUE(EndsWith(sv, L"HHHEEELLLLLLOOO"));
+		H_EXPECT_FALSE(EndsWith(sv, L"HHHHEEELLLLLLOOOO"));
+	}
+	{
+		std::wstring_view sv = L"HHHEEELLLLLLOOO";
+		sv=sv.substr(3, 9);
+		H_EXPECT_TRUE(EndsWith(sv, L"L"));
+		H_EXPECT_TRUE(EndsWith(sv, L"LLL"));
+		H_EXPECT_TRUE(EndsWith(sv, L"ELLLLLL"));
+		H_EXPECT_TRUE(EndsWith(sv, L""));
+		H_EXPECT_TRUE(EndsWith(sv, L"") && StartsWith(sv,L"EE") );
+	}
+}
+
+TEST_UNIT(test_IsWhiteSpace)
+{
+	{
+
+
+		std::string s = R"( )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 
+)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 
+						)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 
+						  )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 
+
+						  )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = R"(	 
+
+										)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+	}
+	{
+		std::wstring s = LR"( )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 
+)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 
+						)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 
+						  )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 
+
+						  )";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+		s = LR"(	 
+
+										)";
+		H_EXPECT_TRUE(IsWhiteSpace(s));
+	}
+	{
+		std::string_view sv = "你好吗		\n\r\n   测试";
+		H_EXPECT_TRUE(!IsWhiteSpace(sv));
+		sv=sv.substr(7, sv.length() - 4-7);
+		H_EXPECT_TRUE(IsWhiteSpace(sv));
+	}
+	{
+		std::wstring_view sv = L"你好吗		\n\r\n   测试";
+		H_EXPECT_TRUE(!IsWhiteSpace(sv));
+		sv = sv.substr(4, sv.length() - 4 - 2);
+		H_EXPECT_TRUE(IsWhiteSpace(sv));
+	}
+}
 
 TEST_UNIT(test_Join)
 {

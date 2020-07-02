@@ -34,6 +34,7 @@
 
 #define H_TEST_ASSERT ASSERT_TRUE
 #define H_TEST_EQUAL(x, y) H_TEST_ASSERT((x)==(y))
+#define H_TEST_NOTEQUAL(x, y) H_TEST_ASSERT((x)!=(y))
 #define H_EXPECT_EQUAL(x, y) H_TEST_ASSERT((x)==(y))
 #define H_EXPECT_TRUE(x) H_TEST_ASSERT(x)
 #define H_EXPECT_FALSE(x) H_TEST_ASSERT(!(x))

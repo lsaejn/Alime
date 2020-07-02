@@ -356,7 +356,7 @@ namespace Alime::base
 			else
 			{
 				size_t index = input.find_first_not_of(trimChars);
-				return std::basic_string<CharType>(input.substr(0, index + 1));
+				return std::basic_string<CharType>(input.substr(index));
 			}
 		}
 
@@ -372,6 +372,7 @@ namespace Alime::base
 				if (src.size() < input.size())
 					return false;
 				auto const piece = src.substr(0, input.size());
+				//seem like the compiler will raise an warning when chartype inner cast to int
 				return std::equal(piece.begin(), piece.end(), input.begin(),
 					[](CharType l, CharType r) {
 						if (l >= 'A' && l <= 'Z')
