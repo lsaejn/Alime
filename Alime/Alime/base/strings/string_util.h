@@ -11,6 +11,12 @@
 
 namespace Alime::base
 {
+	enum class StringSplitOptions
+	{
+		None = 0,
+		RemoveEmptyEntries = 1
+	};
+
 	std::string		Format(const char* format, ...);
 	std::wstring	Format(const wchar_t* format, ...);
 	const std::string&		Format(std::string& output, const char* format, ...);
@@ -69,11 +75,13 @@ namespace Alime::base
 	size_t LastIndexOfAny(std::string_view src, std::string_view anyOf);
 	size_t LastIndexOfAny(std::wstring_view src, std::wstring_view anyOf);
 
-	std::vector<std::string>		Split(std::string_view src, std::string_view separator);
-	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator);
+	//折衷的方案
+	std::vector<std::string>		Split(std::string_view src, std::string_view separator, std::string_view quote="");
+	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator, std::wstring_view quote=L"");
 
-	std::vector<std::string>		Split(std::string_view src, std::string_view separator, std::string_view quote);
-	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator, std::wstring_view quote);
+	//选择了C#的方式。增加' '，即可达到trim子串的效果
+	std::vector<std::string>		Split(std::string_view src, std::string_view separator, StringSplitOptions op);
+	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator, StringSplitOptions op);
 
 	std::string		Insert(std::string_view src, size_t startIndex, std::string_view value);
 	std::wstring	Insert(std::wstring_view src, size_t startIndex, std::wstring_view value);

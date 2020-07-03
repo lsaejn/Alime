@@ -869,57 +869,13 @@ namespace Alime::base
 		return JoinT(src, value, separator, startIndex, count);
 	}
 
-	std::vector<std::string> Split(std::string_view _input, std::string_view _separator)
-	{
-		std::vector<std::string> output;
-		std::string input(_input);
-		std::string separator(_separator);
-		if (input.empty())
-			return output;
-
-		char* token = strtok(&input[0], separator.data());
-		while (token != NULL)
-		{
-			output.push_back(token);
-			token = strtok(NULL, separator.data());
-		}
-
-		return output;
-	}
-
-	std::vector<std::wstring> Split(std::wstring_view _input, std::wstring_view _separator)
-	{
-		std::vector<std::wstring> output;
-		std::wstring input(_input);
-		std::wstring separator(_separator);
-		if (input.empty())
-			return output;
-
-#if defined(OS_WIN)	
-		wchar_t* token = wcstok(&input[0], separator.data());
-		while (token != NULL)
-		{
-			output.push_back(token);
-			token = wcstok(NULL, separator.data());
-		}
-#else
-		wchar_t* ptr;
-		wchar_t* token = wcstok(const_cast<wchar_t*>(&input2[0]), separator.data(), &ptr);
-		while (token != NULL)
-		{
-			output.push_back(token);
-			token = wcstok(NULL, separator.data(), &ptr);
-		}
-#endif
-
-		return output;
-	}
-
+	//wcstok系列是线程安全的，Split和wcstok函数混用时，容易出现难以察觉的错误。
 	std::vector<std::string> Split(std::string_view src, std::string_view separator, std::string_view quote)
 	{
 		std::string input(src);
 		StringTokenizer tokenizer(input, std::string(separator));
-		tokenizer.set_quote_chars(std::string(quote));
+		if(!quote.empty())
+			tokenizer.set_quote_chars(std::string(quote));
 		std::vector<std::string> result;
 		while (tokenizer.GetNext())
 		{
@@ -928,11 +884,41 @@ namespace Alime::base
 		return result;
 	}
 
+	//code modified from chromium
 	std::vector<std::wstring> Split(std::wstring_view src, std::wstring_view separator, std::wstring_view quote)
 	{
 		std::wstring input(src);
 		WstringTokenizer tokenizer(input, std::wstring(separator));
-		tokenizer.set_quote_chars(std::wstring(quote));
+		if (!quote.empty())
+			tokenizer.set_quote_chars(std::wstring(quote));
+		std::vector<std::wstring> result;
+		while (tokenizer.GetNext())
+		{
+			result.push_back(tokenizer.token().c_str());
+		}
+		return result;
+	}
+
+	std::vector<std::string> Split(std::string_view src, std::string_view separator, StringSplitOptions op)
+	{
+		std::string input(src);
+		StringTokenizer tokenizer(input, std::string(separator));
+		if (op != StringSplitOptions::RemoveEmptyEntries)
+			tokenizer.set_options(StringTokenizer::RETURN_EMPTY_TOKENS);
+		std::vector<std::string> result;
+		while (tokenizer.GetNext())
+		{
+			result.push_back(tokenizer.token().c_str());
+		}
+		return result;
+	}
+
+	std::vector<std::wstring> Split(std::wstring_view src, std::wstring_view separator, StringSplitOptions op)
+	{
+		std::wstring input(src);
+		WstringTokenizer tokenizer(input, std::wstring(separator));
+		if (op == StringSplitOptions::None)
+			tokenizer.set_options(WstringTokenizer::RETURN_EMPTY_TOKENS);
 		std::vector<std::wstring> result;
 		while (tokenizer.GetNext())
 		{

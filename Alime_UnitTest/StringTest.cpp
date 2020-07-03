@@ -460,8 +460,6 @@ TEST_UNIT(test_EndsWith)
 TEST_UNIT(test_IsWhiteSpace)
 {
 	{
-
-
 		std::string s = R"( )";
 		H_EXPECT_TRUE(IsWhiteSpace(s));
 		s = R"(	 )";
@@ -518,6 +516,198 @@ TEST_UNIT(test_IsWhiteSpace)
 		H_EXPECT_TRUE(!IsWhiteSpace(sv));
 		sv = sv.substr(4, sv.length() - 4 - 2);
 		H_EXPECT_TRUE(IsWhiteSpace(sv));
+	}
+}
+
+// the first test running when which  i found the results of the two cases were inconsistent
+// because of two function are written at different time. so, be careful here
+TEST_UNIT(test_Compare)
+{
+	{
+		std::string_view sv("hello world");
+		H_EXPECT_TRUE(Compare(sv, "hello world")==0);
+		H_EXPECT_TRUE(Compare(sv, "aello world") > 0);
+		H_EXPECT_TRUE(Compare(sv, "aello world") ==1);
+		H_EXPECT_TRUE(Compare(sv, "iello world") ==-1);
+
+		H_EXPECT_TRUE(Compare(sv, "Hello world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "HEllo world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "HEllO world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "AELLO WorLD", true) == 1);
+		H_EXPECT_TRUE(Compare(sv, "AellO WORLD", true) ==1);
+		H_EXPECT_TRUE(Compare(sv, "aello WORld", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, "iello wORld", true) < 0);
+
+		H_EXPECT_TRUE(Compare(sv, "") > 0);
+		H_EXPECT_TRUE(Compare("", sv) < 0);
+		H_EXPECT_TRUE(Compare("", "") == 0);
+	}
+	{
+		std::wstring_view sv(L"hello world");
+		H_EXPECT_TRUE(Compare(sv, L"hello world")==0);
+		H_EXPECT_TRUE(Compare(sv, L"aello world") > 0);
+		H_EXPECT_TRUE(Compare(sv, L"iello world") < 0);
+
+		H_EXPECT_TRUE(Compare(sv, L"Hello world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, L"HEllo world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, L"HEllO world", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, L"AELLO WorLD", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, L"AellO WORLD", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, L"aello WORld", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, L"iello wORld", true) < 0);
+
+		H_EXPECT_TRUE(Compare(sv, L"") > 0);
+		H_EXPECT_TRUE(Compare(L"", sv) < 0);
+		H_EXPECT_TRUE(Compare(L"", L"") == 0);
+
+		sv = L"abc测试中文";
+		H_EXPECT_TRUE(Compare(sv, L"abc测试中文")==0);
+		H_EXPECT_TRUE(Compare(sv, L"ABC测试中文", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, L"Abc测试中文") > 0);
+		H_EXPECT_TRUE(Compare(sv, L"Abc测试中文", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, L"C测试中文") > 0);
+		H_EXPECT_TRUE(Compare(sv, L"C测试中文",true) < 0);
+
+		sv = L"测试中文";
+		H_EXPECT_TRUE(Compare(sv, L"测试中文")==0);
+	}
+	{
+		std::string_view sv_("hello world");
+		auto sv = sv_.substr(6);//"world"
+		H_EXPECT_TRUE(Compare(sv, "world")==0);
+		H_EXPECT_TRUE(Compare(sv, "World") >0);
+		H_EXPECT_TRUE(Compare(sv, "World") == 1);
+		H_EXPECT_TRUE(Compare(sv, "Aorld") > 0);
+		H_EXPECT_TRUE(Compare(sv, "") > 0);
+		H_EXPECT_TRUE(Compare("", sv) < 0);
+		H_EXPECT_TRUE(Compare("", "") == 0);
+
+		H_EXPECT_TRUE(Compare(sv, "WOrld", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "World", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "WorlD", true) == 0);
+		H_EXPECT_TRUE(Compare(sv, "Aorld") > 0);
+		H_EXPECT_TRUE(Compare(sv, "aorld") > 0);
+		H_EXPECT_TRUE(Compare(sv, "Aorld", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, "aorld", true) > 0);
+		H_EXPECT_TRUE(Compare(sv, "zorld") < 0);
+		H_EXPECT_TRUE(Compare(sv, "Zorld") > 0);
+		H_EXPECT_TRUE(Compare(sv, "zorld", true) < 0);
+		H_EXPECT_TRUE(Compare(sv, "Zorld", true) < 0);
+		H_EXPECT_TRUE(Compare(sv, "") > 0);
+		H_EXPECT_TRUE(Compare("", sv) < 0);
+		H_EXPECT_TRUE(Compare("", "") == 0);
+	}
+}
+
+TEST_UNIT(test_Contains)
+{
+	{
+		std::string_view sv("hello world");
+		H_EXPECT_TRUE(Contains(sv, "ello"));
+		H_EXPECT_TRUE(Contains(sv, "orld"));
+		H_EXPECT_TRUE(Contains(sv, "world"));
+		H_EXPECT_TRUE(Contains(sv, "o world"));
+		std::string_view sv1("少玩嫩模");
+		H_EXPECT_TRUE(Contains(sv1, "少"));
+		H_EXPECT_TRUE(Contains(sv1, "少玩"));
+		H_EXPECT_TRUE(Contains(sv1, "少玩嫩"));
+		H_EXPECT_TRUE(Contains(sv1, "少玩嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, "玩"));
+		H_EXPECT_TRUE(Contains(sv1, "玩嫩"));
+		H_EXPECT_TRUE(Contains(sv1, "玩嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, "嫩"));
+		H_EXPECT_TRUE(Contains(sv1, "嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, "模"));
+	}
+	{
+		std::wstring_view sv(L"hello world");
+		H_EXPECT_TRUE(Contains(sv, L"ello"));
+		H_EXPECT_TRUE(Contains(sv, L"orld"));
+		H_EXPECT_TRUE(Contains(sv, L"world"));
+		H_EXPECT_TRUE(Contains(sv, L"o world"));
+		std::wstring_view sv1(L"少玩嫩模");
+		H_EXPECT_TRUE(Contains(sv1, L"少"));
+		H_EXPECT_TRUE(Contains(sv1, L"少玩"));
+		H_EXPECT_TRUE(Contains(sv1, L"少玩嫩"));
+		H_EXPECT_TRUE(Contains(sv1, L"少玩嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, L"玩"));
+		H_EXPECT_TRUE(Contains(sv1, L"玩嫩"));
+		H_EXPECT_TRUE(Contains(sv1, L"玩嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, L"嫩"));
+		H_EXPECT_TRUE(Contains(sv1, L"嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, L"模"));
+	}
+	{
+		std::wstring_view sv_(L"hello world");
+		auto sv = sv_.substr(6);// "world"
+		H_EXPECT_TRUE(!Contains(sv, L"ello"));
+		H_EXPECT_TRUE(Contains(sv, L"orld"));
+		H_EXPECT_TRUE(Contains(sv, L"world"));
+		H_EXPECT_TRUE(!Contains(sv, L"o world"));
+		H_EXPECT_TRUE(Contains(sv, L"orld"));
+
+		std::wstring_view sv1_(L"少玩嫩模");
+		auto sv1 = sv1_.substr(1);// "world"
+		H_EXPECT_TRUE(Contains(sv1, L"玩"));
+		H_EXPECT_TRUE(Contains(sv1, L"玩嫩"));
+		H_EXPECT_TRUE(Contains(sv1, L"玩嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, L"嫩"));
+		H_EXPECT_TRUE(Contains(sv1, L"嫩模"));
+		H_EXPECT_TRUE(Contains(sv1, L"模"));
+	}
+}
+
+TEST_UNIT(test_Split)
+{
+	{
+		std::string_view sv("hello,world,is,the,first,program,that,everyone,write,in,this,world");
+		H_EXPECT_TRUE(Split(sv, ",").size() == 12);
+		H_EXPECT_TRUE(Split(sv, ",,").size() == 12);
+		H_EXPECT_TRUE(Split(sv, ".,").size() == 12);
+		H_EXPECT_TRUE(Split(sv, ".").size() == 1);
+		H_EXPECT_TRUE(Split(sv, "...").size() == 1);
+	}
+	{
+		std::wstring_view wsv(L"年  轻,人.少,玩'嫩''模");
+		H_EXPECT_TRUE(Split(wsv, L" ,.'").size() == 7);
+		H_EXPECT_TRUE(Split(wsv, L" ").size() == 2);
+		H_EXPECT_TRUE(Split(wsv, L",").size() == 3);
+		H_EXPECT_TRUE(Split(wsv, L".").size() == 2);
+		H_EXPECT_TRUE(Split(wsv, L"'").size() == 3);
+	}
+	{
+		std::wstring_view wsv(L" 年  ,轻 ,  人,少  ,玩,嫩,模  ");
+		auto vec=Split(wsv, L",");
+		H_EXPECT_TRUE(vec.size() == 7);
+	}
+	{
+		std::wstring_view wsv(L"年 轻,人.少,玩'嫩''模");
+		H_EXPECT_TRUE(Split(wsv, L" ,.'").size() == 7);
+		H_EXPECT_TRUE(Split(wsv, L" ").size() == 2);
+		H_EXPECT_TRUE(Split(wsv, L",").size() == 3);
+		H_EXPECT_TRUE(Split(wsv, L".").size() == 2);
+		H_EXPECT_TRUE(Split(wsv, L"'").size() == 3);
+	}
+	// with quoter
+	{
+		std::string_view path = R"("C:\\Program Files\\Baidu is a rogue", "C:\\Program Files\\Tencent is a rogue too")";
+		H_EXPECT_TRUE(Split(path, ",", "\"").size() == 2);
+		H_EXPECT_TRUE(Split(path, " ", "\"").size() == 2);
+		H_EXPECT_TRUE(Split(path, ", ", "\"").size() == 2);
+	}
+	//StringSplitOptions
+	{
+		std::string_view path = " hello,world,,by, lee  ";
+		auto vec=Split(path, ",", StringSplitOptions::None);
+		H_EXPECT_TRUE(Split(path, ", ", "\"").size() == 4);
+
+		std::string_view path1 = " hello,world,,by, lee  ";
+		auto vec1 = Split(path1, ",", StringSplitOptions::RemoveEmptyEntries);
+		H_EXPECT_TRUE(Split(path1, ", ", "\"").size() == 4);
+
+		std::string_view path2 = " fuck , , ,off ";
+		auto vec2 = Split(path2, ", ", StringSplitOptions::None);
+		H_EXPECT_TRUE(Split(path2, ", ", "\"").size() == 4);
 	}
 }
 
