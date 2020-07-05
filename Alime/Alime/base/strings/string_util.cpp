@@ -439,8 +439,9 @@ namespace Alime::base
 			if (startIndex >= src.size())
 				return std::basic_string<CharType>(src);
 			std::basic_string_view<CharType> left = src.substr(0, startIndex);
+			if (startIndex + count >= src.length())
+				return left;
 			std::basic_string_view<CharType> right = src.substr(startIndex + count);
-
 			return std::basic_string<CharType>(left) + std::basic_string<CharType>(right);
 		}
 

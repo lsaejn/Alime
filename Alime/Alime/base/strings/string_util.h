@@ -107,13 +107,15 @@ namespace Alime::base
 	std::wstring Join(std::wstring_view src, std::vector<std::wstring_view> value, std::wstring_view separator = L"", size_t startIndex = 0, size_t count = -1);
 
 	template<typename... Ts>
-	std::string Join(std::string_view separator, const Ts&... ts)
+	std::enable_if_t<sizeof...(Ts)>=2, std::string>
+	  Join(std::string_view separator, const Ts&... ts)
 	{
 		return toDelim<std::string>(separator.data(), ts...);
 	}
 
 	template<typename... Ts>
-	std::wstring Join(std::wstring_view separator, const Ts&... ts)
+	std::enable_if_t<sizeof...(Ts) >= 2, std::wstring>
+	  Join(std::wstring_view separator, const Ts&... ts)
 	{
 		return toDelim<std::wstring>(separator.data(), ts...);
 	}
