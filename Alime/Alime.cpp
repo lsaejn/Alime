@@ -8,8 +8,13 @@
 #include "assert.h"
 using namespace Alime::base;
 
+//#include "Alime/base/thread/mutex.h"
 int main1()
 {
+    {
+        //Alime::Mutex mu;
+        //mu.lock();
+    }
     {
         //1
         std::string_view sv = u8"hello你";
@@ -86,10 +91,10 @@ int main1()
     }
     {//EndsWith
         std::wstring_view sv(L"你a妈了个fuckoff哦");
-        bool re = Alime::base::EndsWith(sv, L"F哦", false);
-        std::cout << re << std::endl;
-        re = Alime::base::EndsWith(sv, L"F哦", true);
-        std::cout << re << std::endl;
+        bool re3 = Alime::base::EndsWith(sv, L"F哦", false);
+        std::cout << re3 << std::endl;
+        re3 = Alime::base::EndsWith(sv, L"F哦", true);
+        std::cout << re3 << std::endl;
     }
     {
         std::string_view sv1 = "fuckoff";

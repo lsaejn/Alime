@@ -2,10 +2,10 @@
 
 namespace Alime
 {
-    class copyable
+    class Copyable
     {
     protected:
-        copyable() = default;
-        ~copyable() = default;
+        Copyable() = default;
+        ~Copyable() = default;
     };
 }

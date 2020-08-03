@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -89,10 +89,9 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/analyze:stacksize16436 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +153,8 @@
     <ClCompile Include="Alime\base\details\string_constants.h" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
     <ClCompile Include="Alime\base\strings\string_util.cpp" />
+    <ClCompile Include="Alime\base\system\IteratorHelper.cpp" />
+    <ClCompile Include="Alime\base\system\win32_utility.cpp" />
     <ClCompile Include="Alime\base\third_party\convert_utf\ConvertUTF.c" />
     <ClCompile Include="Alime\base\third_party\double-conversion\bignum-dtoa.cc" />
     <ClCompile Include="Alime\base\third_party\double-conversion\bignum.cc" />
@@ -163,6 +164,9 @@
     <ClCompile Include="Alime\base\third_party\double-conversion\fixed-dtoa.cc" />
     <ClCompile Include="Alime\base\third_party\double-conversion\string-to-double.cc" />
     <ClCompile Include="Alime\base\third_party\double-conversion\strtod.cc" />
+    <ClCompile Include="Alime\base\thread\thread.cpp" />
+    <ClCompile Include="Alime\base\time\Duration.cpp" />
+    <ClCompile Include="Alime\base\time\TimeStamp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\base_export.h" />
@@ -177,6 +181,10 @@
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />
     <ClInclude Include="Alime\base\strings\unicode.h" />
+    <ClInclude Include="Alime\base\system\IteratorHelper.h" />
+    <ClInclude Include="Alime\base\system\processIterator.h" />
+    <ClInclude Include="Alime\base\system\win32_utility.h" />
+    <ClInclude Include="Alime\base\system\windowIterator.h" />
     <ClInclude Include="Alime\base\third_party\convert_utf\ConvertUTF.h" />
     <ClInclude Include="Alime\base\details\windows\winsdk_config.h" />
     <ClInclude Include="Alime\base\details\windows\xp_style_manifest_win.h" />
@@ -192,6 +200,12 @@
     <ClInclude Include="Alime\base\third_party\double-conversion\string-to-double.h" />
     <ClInclude Include="Alime\base\third_party\double-conversion\strtod.h" />
     <ClInclude Include="Alime\base\third_party\double-conversion\utils.h" />
+    <ClInclude Include="Alime\base\thread\countDownLatch.h" />
+    <ClInclude Include="Alime\base\thread\mutex.h" />
+    <ClInclude Include="Alime\base\thread\thread.h" />
+    <ClInclude Include="Alime\base\time\Duration.h" />
+    <ClInclude Include="Alime\base\time\GetTimeOfDay.h" />
+    <ClInclude Include="Alime\base\time\Timestamp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

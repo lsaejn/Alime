@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StringTest.cpp" />
+    <ClCompile Include="threadTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\gmockd.lib" />

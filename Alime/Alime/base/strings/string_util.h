@@ -48,14 +48,14 @@ namespace Alime::base
 	bool EndsWith(std::string_view src, std::string_view input, bool ignoreCase = false);
 	bool EndsWith(std::wstring_view src, std::wstring_view input, bool ignoreCase = false);
 
-	int Compare(std::string_view strA, std::string_view strB, bool ignoreCase=false);
-	int Compare(std::wstring_view strA, std::wstring_view strB, bool ignoreCase = false);
-
 	bool Equals(std::string_view strA, std::string_view strB, bool ignoreCase = false);
 	bool Equals(std::wstring_view strA, std::wstring_view strB, bool ignoreCase = false);
 
 	bool Contains(std::string_view value, std::string_view des);
 	bool Contains(std::wstring_view value, std::wstring_view des);
+
+	int Compare(std::string_view strA, std::string_view strB, bool ignoreCase = false);
+	int Compare(std::wstring_view strA, std::wstring_view strB, bool ignoreCase = false);
 
 	size_t IndexOf(std::string_view src, std::string_view value);
 	size_t IndexOf(std::wstring_view src, std::wstring_view value);

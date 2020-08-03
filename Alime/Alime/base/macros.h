@@ -5,7 +5,9 @@
 
 
 #define implements :public
+
 #define extends :public
+
 #define USE_API(NAME, API) static auto proc_##API = (decltype(&API))(GetProcAddress(GetModuleHandle(L#NAME), #API))
 
 #ifdef __has_include
@@ -47,7 +49,7 @@ inline void ignore_result(const T&)
 }
 
 template<typename... Ts>
-inline void ignore_varaible(const Ts&&... Args)
+inline void ignore_varaible(const Ts&&... )
 {
 }
 

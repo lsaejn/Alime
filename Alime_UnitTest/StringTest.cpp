@@ -529,7 +529,7 @@ TEST_UNIT(test_Join)
 	H_TEST_EQUAL(re, "hello,world");
 
 	auto re1 = Alime::base::Join("", "a", "new", "file");
-	H_TEST_EQUAL(re1, "helloworld");
+	H_TEST_EQUAL(re1, "anewfile");
 }
 
 /// <summary>
@@ -546,5 +546,15 @@ TEST_UNIT(test_string_view)
 	std::string str3(sv.data());
 	std::string str4(subSv.data());
 	H_TEST_EQUAL(str3, str4);
+}
+
+
+TEST_UNIT(test_toString)
+{
+	auto re = to<std::string>(3.1415);
+	std::string test="fuck";
+	//re = to<std::string>(test);
+	re = to<std::string>("hello");
+	re = to<std::string>("hello",3.1415,test);
 }
 

@@ -2,14 +2,14 @@
 
 namespace Alime
 {
-    class notCopyable
+    class NotCopyable
     {
     public:
-        notCopyable(const notCopyable&) = delete;
-        void operator=(const notCopyable&) = delete;
+        NotCopyable(const NotCopyable&) = delete;
+        void operator=(const NotCopyable&) = delete;
 
     protected:
-        notCopyable() = default;
-        ~notCopyable() = default;
+        NotCopyable() = default;
+        ~NotCopyable() = default;
     };
 }

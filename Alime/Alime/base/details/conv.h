@@ -318,7 +318,7 @@ typename std::enable_if< sizeof...(Ts) >= 2 && IsSomeString<typename std::remove
     toAppendStrImpl(vs...);
 }
 
-//大于三个参数的时候，我们才给impl,这正是impl>=2的原因
+//大于三个参数的时候，我们才给impl,这正是toAppendStrImpl里Ts>=2的原因
 template <class... Ts>
 typename std::enable_if<sizeof...(Ts) >= 3 &&
     IsSomeString<typename std::remove_pointer<
@@ -337,6 +337,9 @@ typename std::enable_if<IsSomeString<typename std::remove_pointer<
     toAppend(vs...);
 }
 
+/// <summary>
+/// 参数个数不为1，或者参数为1但不是同类型
+/// </summary>
 template <class Tgt, class... Ts>
 typename std::enable_if<IsSomeString<Tgt>::value &&
     (sizeof...(Ts) != 1 || !std::is_same<Tgt, typename LastElement<const Ts&...>::type>::value), Tgt>::type
@@ -346,6 +349,9 @@ typename std::enable_if<IsSomeString<Tgt>::value &&
     return result;
 }
 
+/// <summary>
+/// 同上，参数为1，并且是浮点型
+/// </summary>
 template <class Tgt, class Src>
 typename std::enable_if<
     IsSomeString<Tgt>::value&& std::is_floating_point<Src>::value, Tgt>::type
