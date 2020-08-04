@@ -19,17 +19,16 @@ namespace Alime
 	enum 
 	{	
 		_Thrd_success,
-		_Thrd_nomem,
-		_Thrd_timedout,
-		_Thrd_busy,
 		_Thrd_error
 	};
 
 	typedef struct
 	{	/* thread identifier for Win32 */
-		void * handle;	/* Win32 HANDLE */
+		void* handle;	/* Win32 HANDLE */
 		unsigned int tid;
-	} Thrd_ty;//or Runnable
+	} Thread_win32;
+	
+	typedef Thread_win32 Thrd_ty;//or Runnable
 
 	template<typename T>
 	void Thr_set_null(T& thr)
@@ -55,7 +54,7 @@ namespace Alime
 		{
 			NotStarted,
 			Running,
-			Stopped,//±∏”√
+			Stopped
 		};
 		typedef void* native_handle_type;
 		typedef std::function<void()> ThreadFunc;

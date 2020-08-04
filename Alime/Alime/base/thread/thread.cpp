@@ -237,7 +237,7 @@ namespace Alime
 	}
 
 	Thread::native_handle_type Thread::native_handle()
-	{	// return Win32 HANDLE as void *
+	{	// return Win32 HANDLE as void*
 		return (Thr_.handle);
 	}
 
@@ -250,7 +250,9 @@ namespace Alime
 		}
 
 		void yield() noexcept
-		{	// give up balance of time slice
+		{	
+			// give up balance of time slice
+			// or sleep(0)
 			SwitchToThread();
 		}
 
