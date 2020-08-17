@@ -9,7 +9,7 @@
 using namespace Alime::base;
 
 //#include "Alime/base/thread/mutex.h"
-int main()
+int main1()
 {
     {
         //Alime::Mutex mu;

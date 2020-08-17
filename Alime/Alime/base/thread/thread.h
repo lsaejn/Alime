@@ -45,6 +45,7 @@ namespace Alime
 
 /// <summary>
 /// <remarks>use std::thread repalce alime::thread as if your compiler support c++11</remarks>
+/// 函数小写是为了将来替换std::thread
 /// </summary>
 	class Thread : public NotCopyable
 	{
@@ -61,7 +62,7 @@ namespace Alime
 		
 	public:
 		Thread();
-		Thread(ThreadFunc ,bool startImmediately=true);
+		Thread(ThreadFunc ,bool startImmediately=true, const std::string& name="");
 		Thread(Thread&&) noexcept;
 		Thread& operator=(Thread&&) noexcept;
 		~Thread();
@@ -72,7 +73,7 @@ namespace Alime
 
 		bool joinable() const;
 		unsigned int get_id() const;
-		native_handle_type native_handle();	
+		native_handle_type native_handle();
 
 		void swap(Thread&);
 		static unsigned int hardware_concurrency();

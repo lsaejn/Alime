@@ -1,8 +1,36 @@
 #include "easyTest.h"
 #include "../Alime/Alime/base/thread/thread.h"
+#include "../Alime/Alime/base/thread/SpinLock.h"
+#include "../Alime/Alime/base/thread/countDownLatch.h"
 
 #include <string>
 #include <stdio.h>
+
+
+
+TEST_UNIT(test_SpinLock)
+{
+    int count = 3;
+    Alime::CountDownLatchXp latch(count);
+    Alime::Thread t1([&latch]() {
+        //Sleep(3000);
+        latch.countDown();
+        });
+    Alime::Thread t2([&latch]() {
+        Sleep(3000);
+        latch.countDown();
+        });
+    Alime::Thread t3([&latch]() {
+        Sleep(3000);
+        latch.countDown();
+        });
+    latch.wait();
+
+
+}
+
+
+
 
 void threadFunc()
 {
@@ -41,7 +69,6 @@ public:
 private:
     double x_;
 };
-
 
 /*
 to save time, we use muduo::thread 's testCase

@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -92,6 +92,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -204,6 +205,7 @@
     <ClInclude Include="Alime\base\third_party\double-conversion\utils.h" />
     <ClInclude Include="Alime\base\thread\countDownLatch.h" />
     <ClInclude Include="Alime\base\thread\mutex.h" />
+    <ClInclude Include="Alime\base\thread\spinLock.h" />
     <ClInclude Include="Alime\base\thread\thread.h" />
     <ClInclude Include="Alime\base\time\Duration.h" />
     <ClInclude Include="Alime\base\time\GetTimeOfDay.h" />

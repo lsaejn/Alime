@@ -207,7 +207,6 @@ namespace Alime
 	};
 
 
-
 	template<typename T>
 	class Lock_guard
 	{

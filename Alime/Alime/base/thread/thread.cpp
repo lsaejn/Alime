@@ -34,8 +34,8 @@ namespace Alime
 		typedef Alime::Thread::ThreadFunc ThreadFunc;
 		ThreadFunc func_;
 		Thrd_ty* thr_;
-		CountDownLatch* latch_;
-		launcher(ThreadFunc func ,Thrd_ty* tid, CountDownLatch* latch):
+		CountDownLatchXp* latch_;
+		launcher(ThreadFunc func ,Thrd_ty* tid, CountDownLatchXp* latch):
 			func_(std::move(func)),//move?
 			thr_(tid),
 			latch_(latch)
@@ -73,9 +73,10 @@ namespace Alime
 		numCreated_++;
 	}
 
-	Thread::Thread(ThreadFunc func, bool startImmediately)
+	Thread::Thread(ThreadFunc func, bool startImmediately, const std::string& name)
 		:func_(std::move(func))
-		, state_(ThreadState::NotStarted)
+		, state_(ThreadState::NotStarted),
+		threadName_(name)
 	{
 		Thr_set_null(Thr_);
 		numCreated_++;
@@ -114,7 +115,7 @@ namespace Alime
 	{
 		if (state_ == ThreadState::Running)
 			throw std::exception("thread already start");
-		CountDownLatch latch(1);
+		CountDownLatchXp latch(1);
 		launcher* task = new launcher(func_, &Thr_, &latch);
 		Thr_.handle = (HANDLE)_beginthreadex(0, 0, ThreadProcFunc, task, 0, &Thr_.tid);
 		//如果 _beginthreadex未返回错误，则可以保证其为有效句柄
@@ -123,8 +124,12 @@ namespace Alime
 		if (_Thrd_success == ret)
 		{
 			latch.wait();//线程还没启动，thread本身就被销毁，或者用户调用tid
-			state_ = ThreadState::Running;//msdn:线程太快结束，handle也会无效
+			state_ = ThreadState::Running;
 			assert(Thr_.tid > 0);
+			if (!threadName_.empty())
+			{
+				SetThreadName(Thr_.tid, threadName_.c_str());
+			}
 		}
 		else
 		{// error happened
@@ -206,6 +211,7 @@ namespace Alime
 		if (Thrd_join(Thr_) != _Thrd_success)
 			throw std::exception("no such process");
 		Thr_set_null(Thr_);
+		state_ = ThreadState::Stopped;
 	}
 
 	int Thread::Thrd_detach(Thrd_ty thr)
@@ -240,7 +246,6 @@ namespace Alime
 	{	// return Win32 HANDLE as void*
 		return (Thr_.handle);
 	}
-
 
 	namespace this_thread
 	{

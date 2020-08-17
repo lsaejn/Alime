@@ -182,5 +182,8 @@
     <ClInclude Include="Alime\base\thread\mutex.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Alime\base\thread\spinLock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
