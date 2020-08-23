@@ -36,3 +36,8 @@ namespace Alime::base
 		const wchar_t* description_;
 	};
 }
+
+
+#define CHECK_ERROR(condtion, description) \
+if(!(conditon)) \
+	throw Alime::base::Error(description);

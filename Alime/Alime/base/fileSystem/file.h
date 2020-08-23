@@ -30,7 +30,7 @@ namespace Alime::base
 		bool ReadAllLines(std::vector<std::string>& lines) const;
 		std::string ReadAllText() const;
 
-		bool WriteAllText(const PathStringTy& text);
+		bool WriteAllText(const std::string& text);
 		bool WriteAllLines(std::vector<std::string>& lines);
 
 		bool Exists()const;

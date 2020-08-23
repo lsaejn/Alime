@@ -277,21 +277,21 @@ namespace Alime::base
 		}
 	}
 
-	aint FileStream::Read(void* _buffer, aint _size)
+	size_t FileStream::Read(void* _buffer, size_t _size)
 	{
 		//CHECK_ERROR(file_ != 0, L"FileStream::Read(pos_t)#Stream is closed, cannot perform this operation.");
 		//CHECK_ERROR(_size >= 0, L"FileStream::Read(void*, vint)#Argument size cannot be negative.");
 		return fread(_buffer, 1, _size, file_);
 	}
 
-	aint FileStream::Write(void* _buffer, aint _size)
+	size_t FileStream::Write(void* _buffer, size_t _size)
 	{
 		//CHECK_ERROR(file_ != 0, L"FileStream::Write(pos_t)#Stream is closed, cannot perform this operation.");
 		//CHECK_ERROR(_size >= 0, L"FileStream::Write(void*, vint)#Argument size cannot be negative.");
 		return fwrite(_buffer, 1, _size, file_);
 	}
 
-	aint FileStream::Peek(void* _buffer, aint _size)
+	size_t FileStream::Peek(void* _buffer, size_t _size)
 	{
 		//CHECK_ERROR(file_ != 0, L"FileStream::Peek(pos_t)#Stream is closed, cannot perform this operation.");
 		//CHECK_ERROR(_size >= 0, L"FileStream::Peek(void*, vint)#Argument size cannot be negative.");

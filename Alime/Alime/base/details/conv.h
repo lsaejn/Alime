@@ -10,8 +10,8 @@
 #include <tuple>
 
 #include "string.h"
+#include "Alime/base/compiler_specific.h"
 #include "Alime/base/third_party/double-conversion/double-conversion.h"
-#define LIKELY 
 
 
 namespace

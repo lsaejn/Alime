@@ -342,12 +342,12 @@ namespace Alime::base
 		return false;
 	}
 
-	bool CreateDirectory(const PathString& full_path)
+	bool CreateADirectory(const PathString& full_path)
 	{
-		return CreateDirectory(full_path.c_str());
+		return CreateADirectory(full_path.c_str());
 	}
 
-	bool CreateDirectory(const PathChar* full_path)
+	bool CreateADirectory(const PathChar* full_path)
 	{
 		if (full_path == nullptr)
 			return false;
@@ -381,6 +381,18 @@ namespace Alime::base
 			}
 		}
 		return true;
+	}
+
+	int64_t GetFileSize(const PathString& filepath)
+	{
+		WIN32_FIND_DATAW file_data;
+		HANDLE file = FindFirstFileW(filepath.c_str(), &file_data);
+
+		if (file == INVALID_HANDLE_VALUE)
+			return -1;
+		LARGE_INTEGER li = { file_data.nFileSizeLow, (LONG)file_data.nFileSizeHigh };
+		FindClose(file);
+		return li.QuadPart;
 	}
 
 };  // namespace nbase

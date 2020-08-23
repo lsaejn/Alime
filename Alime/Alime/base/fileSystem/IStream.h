@@ -19,9 +19,9 @@ namespace Alime::base
 		virtual void Seek(pos_t _size) = 0;
 		virtual void SeekFromBegin(pos_t _size) = 0;
 		virtual void SeekFromEnd(pos_t _size) = 0;
-		virtual aint Read(void* _buffer, aint _size) = 0;
-		virtual aint Write(void* _buffer, aint _size) = 0;
-		virtual aint Peek(void* _buffer, aint _size) = 0;
+		virtual size_t Read(void* _buffer, size_t _size) = 0;
+		virtual size_t Write(void* _buffer, size_t _size) = 0;
+		virtual size_t Peek(void* _buffer, size_t _size) = 0;
 	};
 
 	class IEncoder
@@ -29,7 +29,7 @@ namespace Alime::base
 	public:
 		virtual void Setup(IStream* _stream) = 0;
 		virtual void Close() = 0;
-		virtual int Write(void* _buffer, int _size) = 0;
+		virtual size_t Write(void* _buffer, size_t _size) = 0;
 	};
 
 	class IDecoder
@@ -37,6 +37,6 @@ namespace Alime::base
 	public:
 		virtual void Setup(IStream* _stream) = 0;
 		virtual void Close() = 0;
-		virtual int Read(void* _buffer, int _size) = 0;
+		virtual size_t Read(void* _buffer, size_t _size) = 0;
 	};
 }

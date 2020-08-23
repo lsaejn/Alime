@@ -40,15 +40,16 @@ namespace Alime::base
 
 	void	FilePath::Initialize()
 	{
-
-		std::vector<wchar_t> buffer(fullPath_.length() + 1);
-		wcscpy_s(&buffer[0], fullPath_.length() + 1, fullPath_.c_str());
-		for (size_t i = 0; i < buffer.size(); i++)
 		{
-			if (buffer[i] == L'\\' || buffer[i] == L'/')
-				buffer[i] = Delimiter;
+			std::vector<wchar_t> buffer(fullPath_.length() + 1);
+			wcscpy_s(&buffer[0], fullPath_.length() + 1, fullPath_.c_str());
+			for (size_t i = 0; i < buffer.size(); i++)
+			{
+				if (buffer[i] == L'\\' || buffer[i] == L'/')
+					buffer[i] = Delimiter;
+			}
+			fullPath_ = &buffer[0];
 		}
-		fullPath_ = &buffer[0];
 
 		if (fullPath_ != L"")
 		{

@@ -1,6 +1,6 @@
 #include <Alime/base/fileSystem/file.h>
 #include <Alime/base/fileSystem/FileStream.h>
-
+#include <Alime/base/strings/string_util.h>
 
 
 
@@ -23,10 +23,15 @@ namespace Alime::base
 			encoding = Encoding::Utf16BE;
 			containsBom = true;
 		}
-		else
+		else// no bom, we just check 3 stream as Utf16BE is rare used
 		{
-			encoding = Encoding::Mbcs;
 			containsBom = false;
+			if(ValidateUTF8Stream(buffer, size))
+				encoding = Encoding::Utf8;
+			else if(ValidateGB2312Stream(buffer, size))
+				encoding = Encoding::Mbcs;
+			else
+				encoding = Encoding::Utf16;
 		}
 	}
 
@@ -75,6 +80,16 @@ namespace Alime::base
 			text.push_back(buffer[i]);
 		}
 		return true;
+	}
+
+	bool File::WriteAllText(const std::string& text)
+	{
+		FileStream fileStream(filePath_.GetFullPath(), FileMode::Append, FileAccess::ReadWrite, FileShare::ReadWrite);
+		if (fileStream.CanWrite())
+		{
+			return fileStream.Write((void*)text.c_str(), text.length());
+		}
+		return false;
 	}
 
 }

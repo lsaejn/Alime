@@ -18,11 +18,13 @@ TEST_UNIT(test_FilePath)
 	auto folderPath= folder.GetFullPath();
 
 
-	auto thisFile = Alime::base::File(L"D:\\公司文档\\pgcell - 副本.txt");
+	auto thisFile = Alime::base::File(folderPath+L"\\pgcell.txt");
+	thisFile.WriteAllText("我了歌曲");
+
 	std::string re;
 	Alime::base::Encoding encoding;
 	bool containsBom = false;
 	thisFile.ReadAllText(re, encoding, containsBom);
-	auto u16String=Alime::base::UTF8ToUTF16(re);
+	//auto u16String=Alime::base::
 	int x = 3;
 }

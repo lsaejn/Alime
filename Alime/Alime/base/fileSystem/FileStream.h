@@ -12,7 +12,7 @@ namespace Alime::base
 	{
 	public:
 		using StringTy = std::wstring;
-		using pos_t = long long;
+		using pos_t = int64_t;
 	public:
 		FileStream(const StringTy& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
 		FileStream(const StringTy& fileName, FileMode fileMode=FileMode::Open);
@@ -30,9 +30,9 @@ namespace Alime::base
 		void	Seek(pos_t _size);
 		void	SeekFromBegin(pos_t _size);
 		void	SeekFromEnd(pos_t _size);
-		virtual aint Read(void* _buffer, aint _size) override;
-		virtual aint	 Write(void* _buffer, aint  _size) override;
-		virtual aint	 Peek(void* _buffer, aint _size) override;
+		size_t		Read(void* _buffer, size_t _size);
+		size_t		Write(void* _buffer, size_t _size);
+		size_t		Peek(void* _buffer,  size_t _size);
 
 	protected:
 		void Init(const StringTy& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);
