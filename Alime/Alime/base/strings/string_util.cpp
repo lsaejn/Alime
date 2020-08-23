@@ -422,12 +422,16 @@ namespace Alime::base
 		{
 			std::basic_string<CharType> result;
 			if (startIndex >= src.size())
-				return result + std::basic_string<CharType>(value);//没有考虑效率
+				return std::basic_string<CharType>(src) + std::basic_string<CharType>(value);//没有考虑效率
 			else
 			{
-				result += src.substr(0, startIndex);
-				result += value;//fix me
-				result += src.substr(startIndex);
+				result.reserve(src.size() + value.length());
+				result.append(src, 0, startIndex);
+				result.append(value);
+				result.append(src, startIndex, src.length()-startIndex);
+				//result += src.substr(0, startIndex);
+				//result += value;//fix me
+				//result += src.substr(startIndex);
 				return result;
 			}
 		}
@@ -440,7 +444,7 @@ namespace Alime::base
 				return std::basic_string<CharType>(src);
 			std::basic_string_view<CharType> left = src.substr(0, startIndex);
 			if (startIndex + count >= src.length())
-				return left;
+				return std::basic_string<CharType>(left);
 			std::basic_string_view<CharType> right = src.substr(startIndex + count);
 			return std::basic_string<CharType>(left) + std::basic_string<CharType>(right);
 		}

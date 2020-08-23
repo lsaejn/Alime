@@ -154,6 +154,13 @@
   <ItemGroup>
     <ClCompile Include="Alime.cpp" />
     <ClCompile Include="Alime\base\details\string_constants.h" />
+    <ClCompile Include="Alime\base\details\windows\IteratorHelper.cpp" />
+    <ClCompile Include="Alime\base\details\windows\win32_utility.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\file.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\file_util.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\MemoryStream.cpp" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
     <ClCompile Include="Alime\base\strings\string_util.cpp" />
     <ClCompile Include="Alime\base\third_party\convert_utf\ConvertUTF.c" />
@@ -174,6 +181,19 @@
     <ClInclude Include="Alime\base\details\conv.h" />
     <ClInclude Include="Alime\base\details\string_tokenizer.h" />
     <ClInclude Include="Alime\base\details\string_util_details.h" />
+    <ClInclude Include="Alime\base\details\windows\IteratorHelper.h" />
+    <ClInclude Include="Alime\base\details\windows\processIterator.h" />
+    <ClInclude Include="Alime\base\details\windows\win32_utility.h" />
+    <ClInclude Include="Alime\base\details\windows\windowIterator.h" />
+    <ClInclude Include="Alime\base\exceptionBase.h" />
+    <ClInclude Include="Alime\base\fileSystem\file.h" />
+    <ClInclude Include="Alime\base\fileSystem\filePath.h" />
+    <ClInclude Include="Alime\base\fileSystem\FileStream.h" />
+    <ClInclude Include="Alime\base\fileSystem\file_define.h" />
+    <ClInclude Include="Alime\base\fileSystem\file_util.h" />
+    <ClInclude Include="Alime\base\fileSystem\folder.h" />
+    <ClInclude Include="Alime\base\fileSystem\IStream.h" />
+    <ClInclude Include="Alime\base\fileSystem\MemoryStream.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />

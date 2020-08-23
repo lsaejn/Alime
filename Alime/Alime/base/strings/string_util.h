@@ -79,7 +79,7 @@ namespace Alime::base
 	std::vector<std::string>		Split(std::string_view src, std::string_view separator, std::string_view quote="");
 	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator, std::wstring_view quote=L"");
 
-	//选择了C#的方式。增加' '，即可达到trim子串的效果
+	//选择了C#的方式。separator意思是char[]
 	std::vector<std::string>		Split(std::string_view src, std::string_view separator, StringSplitOptions op);
 	std::vector<std::wstring>	Split(std::wstring_view src, std::wstring_view separator, StringSplitOptions op);
 

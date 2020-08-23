@@ -707,7 +707,51 @@ TEST_UNIT(test_Split)
 
 		std::string_view path2 = " fuck , , ,off ";
 		auto vec2 = Split(path2, ", ", StringSplitOptions::None);
-		H_EXPECT_TRUE(Split(path2, ", ", "\"").size() == 4);
+		H_EXPECT_TRUE(vec2.size() == 9);
+	}
+}
+
+TEST_UNIT(test_Insert)
+{
+	//string
+	{
+		H_TEST_EQUAL(Insert("fuck .", 5, "off"), "fuck off.");
+		H_TEST_EQUAL(Insert("fuck .", 15, "off"), "fuck .off");
+		H_TEST_EQUAL(Insert("fuck .", 6, "off"), "fuck .off");
+		H_TEST_EQUAL(Insert("fuck .", 0, "off"), "offfuck .");
+		H_TEST_EQUAL(Insert("fuck .", 1, "off"), "foffuck .");
+		H_TEST_EQUAL(Insert("fuck .", 2, "off"), "fuoffck .");
+	}
+	//wstring
+	{
+		H_TEST_EQUAL(Insert(L"警察，你好吗", 5, L"梁朝伟"), L"警察，你好梁朝伟吗");
+		H_TEST_EQUAL(Insert(L"警察，你好吗", -1, L"梁朝伟"), L"警察，你好吗梁朝伟");
+		H_TEST_EQUAL(Insert(L"警察，你好吗", 0, L"梁朝伟"), L"梁朝伟警察，你好吗");
+		H_TEST_EQUAL(Insert(L"警察，你好吗", 100, L"梁朝伟"), L"警察，你好吗梁朝伟");
+		H_TEST_EQUAL(Insert(L"警察，你好吗", 0, L""), L"警察，你好吗");
+		H_TEST_EQUAL(Insert(L"警察，你好吗", 3, L"梁朝伟"), L"警察，梁朝伟你好吗");
+	}
+	//string_view
+	{
+		std::string str = " hello world,,by, lee  ";
+		std::string_view path1 = str;
+		std::string_view path2 = path1.substr(1,11);//"hello world"
+		H_TEST_EQUAL(Insert(path2, 5, "off"), "hellooff world");
+		H_TEST_EQUAL(Insert(path2, 15, "off"),"hello worldoff");
+		H_TEST_EQUAL(Insert(path2, 6, "off"), "hello offworld");
+		H_TEST_EQUAL(Insert(path2, 0, "off"), "offhello world");
+		H_TEST_EQUAL(Insert(path2, 1, "off"), "hoffello world");
+		H_TEST_EQUAL(Insert(path2, 2, "off"), "heoffllo world");
+	}
+}
+
+TEST_UNIT(test_Replace)
+{
+	{
+		H_TEST_EQUAL(Replace("李明同学，你同学是失了智吗", "同学", "小姐"), "李明小姐，你小姐是失了智吗");
+		H_TEST_EQUAL(Replace("李明同学，你同学是失了智吗", "", "lee"), "李明同学，你同学是失了智吗");
+		H_TEST_EQUAL(Replace("李明同学，你同学是失了智吗", "学", "志"), "李明同志，你同志是失了智吗");
+		H_TEST_EQUAL(Replace("李明同学，你同学是失了智吗", "，", ","), "李明同学,你同学是失了智吗");
 	}
 }
 
@@ -719,7 +763,7 @@ TEST_UNIT(test_Join)
 	H_TEST_EQUAL(re, "hello,world");
 
 	auto re1 = Alime::base::Join("", "a", "new", "file");
-	H_TEST_EQUAL(re1, "helloworld");
+	H_TEST_EQUAL(re1, "anewfile");
 }
 
 /// <summary>
@@ -736,5 +780,9 @@ TEST_UNIT(test_string_view)
 	std::string str3(sv.data());
 	std::string str4(subSv.data());
 	H_TEST_EQUAL(str3, str4);
+
+	std::string str5(sv);
+	std::string str6(subSv);
+	H_EXPECT_TRUE(str5!=str6);
 }
 

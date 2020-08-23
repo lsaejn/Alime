@@ -54,6 +54,27 @@
     <ClCompile Include="Alime\base\details\string_constants.h">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\file.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\file_util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\filePath.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\FileStream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\MemoryStream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\details\windows\IteratorHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\details\windows\win32_utility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\strings\string_util.h">
@@ -135,6 +156,45 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\notCopyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\MemoryStream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\file.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\file_define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\file_util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\filePath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\FileStream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\folder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\IStream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\windows\windowIterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\windows\IteratorHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\windows\processIterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\windows\win32_utility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\exceptionBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
