@@ -31,6 +31,21 @@
 
 #include "gtest/gtest.h"
 
+
+template <typename F, typename... A>
+auto invoke_cold(F&& f, A&&... a)-> decltype(static_cast<F&&>(f)(static_cast<A&&>(a)...))
+{
+    return std::forward(f)(std::forward()a...);
+    //return static_cast<F&&>(f)(static_cast<A&&>(a)...);
+}
+
+template<typename... T>
+void printClass(T... args)
+{
+    std::cout << args...<< std::endl;
+}
+
+
 int main(int argc, char** argv)
 {
     printf("Running main() from gtest_main.cc\n");
