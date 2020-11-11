@@ -4,6 +4,11 @@
 // Define platform macro
 #if defined(_WIN32)
 #define OS_WIN      1
+#if defined(_WIN64)
+#define Alime64
+#else
+#define Alime32
+#endif
 #elif defined(__APPLE__) && (defined(__i386__) || defined(__ARMEL__))
 #define OS_IOS      1
 #elif defined(__APPLE__)

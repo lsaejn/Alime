@@ -30,12 +30,12 @@ namespace Alime::base
 		bool ReadAllLines(std::vector<std::string>& lines) const;
 		std::string ReadAllText() const;
 
-		bool WriteAllText(const PathStringTy& text);
+		bool WriteAllText(const String& text);
 		bool WriteAllLines(std::vector<std::string>& lines);
 
 		bool Exists()const;
 		bool Delete()const;
-		bool Rename(const PathStringTy& newName)const;
+		bool Rename(const String& newName)const;
 		void TestEncoding(unsigned char* buffer, int size, Encoding& encoding, bool& containsBom);
 	private:
 		FilePath	 filePath_;

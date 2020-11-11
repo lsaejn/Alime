@@ -4,11 +4,9 @@
 #include <Alime/base/fileSystem/filePath.h>
 #include <Alime/base/strings/string_util.h>
 
-
+#ifdef OS_WIN
 #include "Shlwapi.h"
 #pragma comment(lib, "Shlwapi.lib")
-
-//windows
 
 namespace Alime::base
 {
@@ -17,7 +15,7 @@ namespace Alime::base
 		Initialize();
 	}
 
-	FilePath::FilePath(const PathStringTy& _filePath)
+	FilePath::FilePath(const String& _filePath)
 		:fullPath_(_filePath)
 	{
 		Initialize();
@@ -61,7 +59,7 @@ namespace Alime::base
 				{
 					throw std::exception("Failed to call GetCurrentDirectory.");
 				}
-				fullPath_ = PathStringTy(buffer) + L"\\" + fullPath_;
+				fullPath_ = String(buffer) + L"\\" + fullPath_;
 			}
 
 			{
@@ -121,10 +119,10 @@ namespace Alime::base
 		return fullPath_ == L"";
 	}
 
-	PathStringTy  FilePath::GetName()const
+	String  FilePath::GetName()const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
-		if (index != PathStringTy::npos)
+		if (index != String::npos)
 			return fullPath_.substr(index + 1, fullPath_.length() - index);
 		return fullPath_;
 	}
@@ -132,18 +130,18 @@ namespace Alime::base
 	FilePath  FilePath::GetFolder()const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
-		if (index != PathStringTy::npos)
+		if (index != String::npos)
 			return fullPath_.substr(0, index);
 		return FilePath();
 	}
 
-	PathStringTy FilePath::GetFullPath()const
+	String FilePath::GetFullPath()const
 	{
 		return fullPath_;
 	}
 
 
-	PathStringTy FilePath::GetRelativePathFor(const FilePath& _filePath)
+	String FilePath::GetRelativePathFor(const FilePath& _filePath)
 	{
 		if (fullPath_.length() == 0 || _filePath.fullPath_.length() == 0 || fullPath_[0] != _filePath.fullPath_[0])
 		{
@@ -160,7 +158,7 @@ namespace Alime::base
 		return buffer;
 	}
 
-	FilePath  FilePath::operator/(const PathStringTy& relativePath)const
+	FilePath  FilePath::operator/(const String& relativePath)const
 	{
 		if (IsRoot())
 		{
@@ -172,9 +170,9 @@ namespace Alime::base
 		}
 	}
 
-	std::vector<PathStringTy> FilePath::GetPathComponents(const PathStringTy& path)
+	std::vector<String> FilePath::GetPathComponents(const String& path)
 	{
-		PathStringTy pathRemaining = path;
+		String pathRemaining = path;
 		std::wstring delimiter;
 		delimiter += FilePath::Delimiter;
 		return Alime::base::Split(path, delimiter);
@@ -182,8 +180,8 @@ namespace Alime::base
 
 	int  FilePath::Compare(const FilePath& a, const FilePath& b)
 	{
-		PathStringTy strA = a.fullPath_;
-		PathStringTy strB = b.fullPath_;
+		String strA = a.fullPath_;
+		String strB = b.fullPath_;
 		const wchar_t* bufA = strA.c_str();
 		const wchar_t* bufB = strB.c_str();
 		int length = strA.length() < strB.length() ? strA.length() : strB.length();
@@ -198,3 +196,5 @@ namespace Alime::base
 		return strA.length() - strB.length();
 	}
 }
+
+#endif

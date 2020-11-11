@@ -14,11 +14,14 @@ namespace Alime::base
 		virtual bool IsLimited()const = 0;
 		virtual bool IsAvailable()const = 0;
 		virtual void Close() = 0;
+
 		virtual pos_t Position()const = 0;
 		virtual pos_t Size()const = 0;
+
 		virtual void Seek(pos_t _size) = 0;
-		virtual void SeekFromBegin(pos_t _size) = 0;
 		virtual void SeekFromEnd(pos_t _size) = 0;
+		virtual void SeekFromBegin(pos_t _size) = 0;
+
 		virtual aint Read(void* _buffer, aint _size) = 0;
 		virtual aint Write(void* _buffer, aint _size) = 0;
 		virtual aint Peek(void* _buffer, aint _size) = 0;
@@ -39,4 +42,5 @@ namespace Alime::base
 		virtual void Close() = 0;
 		virtual int Read(void* _buffer, int _size) = 0;
 	};
+
 }

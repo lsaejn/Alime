@@ -203,9 +203,6 @@
     <ClInclude Include="Alime\base\fileSystem\file.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\fileSystem\folder.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Alime\base\fileSystem\filePath.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -231,6 +228,21 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\function\function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\base_define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\Directory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\FileInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\DirectoryInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\fileSystem\System.IO.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
