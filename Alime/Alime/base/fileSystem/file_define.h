@@ -2,28 +2,15 @@
 
 #include <string>
 
+#include <Alime/base/base_define.h>
 #include <Alime/base/compiler_specific.h>
 
 namespace Alime::base
 {
-
-#if defined(OS_POSIX)
-	typedef std::string PathString;
-#elif defined(OS_WIN)
-	using PathString = std::wstring;
-	using PathStringTy = std::wstring;
-#endif
-
-	using PathChar = typename PathString::value_type;
-	using PathCharTy = typename PathStringTy::value_type;
-	using pos_t = int64_t;
-	using aint= int64_t;
-
-
 	///传统fopen的api里
 	/// r和r+ 要求文件必须存在，否则返回句柄为空
 	/// w,a,w+,a+都会创建文件
-	/// 在a/a+模式下， 每次写人时会重新seek到文件尾部， 即使先前fseek到前面的某个位置。
+	/// 在a/a+模式下， 每次写入时会重新seek到文件尾部， 即使先前fseek到前面的某个位置。
 	/// a和a+的区别在于，a+可读(视a为特殊的w即可)
 	/// 在C#里, 增加了更多模式以便控制文件是否被创建
 	enum class FileMode
@@ -43,6 +30,9 @@ namespace Alime::base
 		ReadWrite
 	};
 
+	/// <summary>
+	/// 用于控件进程间文件共享权限，在windows下，这个设置非常模糊
+	/// </summary>
 	enum class FileShare
 	{
 		None,

@@ -11,11 +11,10 @@ namespace Alime::base
 	class FileStream : public virtual IStream
 	{
 	public:
-		using StringTy = std::wstring;
-		using pos_t = long long;
+		using String = String;
 	public:
-		FileStream(const StringTy& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
-		FileStream(const StringTy& fileName, FileMode fileMode=FileMode::Open);
+		FileStream(const String& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
+		FileStream(const String& fileName, FileMode fileMode=FileMode::Open);
 		~FileStream();
 
 		bool	CanRead()const;
@@ -35,7 +34,7 @@ namespace Alime::base
 		aint	Peek(void* _buffer, aint _size);
 
 	protected:
-		void Init(const StringTy& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);
+		void Init(const String& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);
 		FileAccess	accessRight_;
 		FILE* file_;
 	};

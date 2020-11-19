@@ -796,3 +796,16 @@ TEST_UNIT(test_toString)
 	re = to<std::string>("hello",3.1415,test);
 }
 
+//Concat
+TEST_UNIT(test_ConcatTemplate)
+{
+	std::string test1 = "what";
+	std::string test2 = "the";
+	std::string test3 = "fuck";
+	auto result1= Alime::base::Concat<std::string>(test1, test2, test3);
+
+	std::wstring wtest1 = L"Äã";
+	std::wstring wtest2 = L"Ëû";
+	std::wstring wtest3 = L"Âè";
+	auto result2 = Alime::base::Concat<std::wstring>(wtest1, wtest2, wtest3);
+}

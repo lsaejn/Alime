@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -106,7 +106,9 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,6 +179,7 @@
     <ClCompile Include="Alime\base\time\TimeStamp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alime\base\base_define.h" />
     <ClInclude Include="Alime\base\base_export.h" />
     <ClInclude Include="Alime\base\base_types.h" />
     <ClInclude Include="Alime\base\build_config.h" />
@@ -186,14 +189,17 @@
     <ClInclude Include="Alime\base\details\string_tokenizer.h" />
     <ClInclude Include="Alime\base\details\string_util_details.h" />
     <ClInclude Include="Alime\base\exceptionBase.h" />
+    <ClInclude Include="Alime\base\fileSystem\DirectoryInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\file.h" />
+    <ClInclude Include="Alime\base\fileSystem\FileInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\filePath.h" />
     <ClInclude Include="Alime\base\fileSystem\FileStream.h" />
     <ClInclude Include="Alime\base\fileSystem\file_define.h" />
-    <ClInclude Include="Alime\base\fileSystem\folder.h" />
+    <ClInclude Include="Alime\base\fileSystem\Directory.h" />
     <ClInclude Include="Alime\base\fileSystem\file_util.h" />
     <ClInclude Include="Alime\base\fileSystem\IStream.h" />
     <ClInclude Include="Alime\base\fileSystem\MemoryStream.h" />
+    <ClInclude Include="Alime\base\fileSystem\System.IO.h" />
     <ClInclude Include="Alime\base\function\function.h" />
     <ClInclude Include="Alime\base\Interface.h" />
     <ClInclude Include="Alime\base\macros.h" />

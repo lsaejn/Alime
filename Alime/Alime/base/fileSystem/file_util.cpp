@@ -36,22 +36,22 @@ namespace Alime::base
 {
 
 #if defined(OS_POSIX)
-	const PathChar kEndChar = '\0';
-	const PathChar kFilePathSeparators[] = "/";
-	const PathChar kFilePathCurrentDirectory[] = ".";
-	const PathChar kFilePathParentDirectory[] = "..";
-	const PathChar kFilePathExtensionSeparator = '.';
+	const Char kEndChar = '\0';
+	const Char kFilePathSeparators[] = "/";
+	const Char kFilePathCurrentDirectory[] = ".";
+	const Char kFilePathParentDirectory[] = "..";
+	const Char kFilePathExtensionSeparator = '.';
 #elif defined(OS_WIN)
-	const PathChar kEndChar = L'\0';
-	const PathChar kFilePathSeparators[] = L"\\/";
-	const PathChar kFilePathCurrentDirectory[] = L".";
-	const PathChar kFilePathParentDirectory[] = L"..";
-	const PathChar kFilePathExtensionSeparator = L'.';
+	const Char kEndChar = L'\0';
+	const Char kFilePathSeparators[] = L"\\/";
+	const Char kFilePathCurrentDirectory[] = L".";
+	const Char kFilePathParentDirectory[] = L"..";
+	const Char kFilePathExtensionSeparator = L'.';
 #endif  // OS_WIN
 
-	bool FilePathCurrentDirectory(PathString& directory_out)
+	bool FilePathCurrentDirectory(String& directory_out)
 	{
-		PathChar directory[MAX_PATH];
+		Char directory[MAX_PATH];
 		directory[0] = 0;
 		DWORD len = ::GetCurrentDirectoryW(MAX_PATH, directory);
 		if (len == 0 || len > MAX_PATH)
@@ -64,12 +64,12 @@ namespace Alime::base
 		return true;
 	}
 
-	bool IsFilePathSeparator(const PathChar separator)
+	bool IsFilePathSeparator(const Char separator)
 	{
 		if (separator == kEndChar)
 			return false;
 
-		size_t len = sizeof(kFilePathSeparators) / sizeof(PathChar);
+		size_t len = sizeof(kFilePathSeparators) / sizeof(Char);
 		for (size_t i = 0; i < len; i++)
 		{
 			if (separator == kFilePathSeparators[i])
@@ -79,34 +79,34 @@ namespace Alime::base
 		return false;
 	}
 
-	bool IsFilePathSeparator(const PathString& separator)
+	bool IsFilePathSeparator(const String& separator)
 	{
 		if (separator.empty())
 			return false;
-		PathChar c = separator[0];
+		Char c = separator[0];
 		return IsFilePathSeparator(c);
 	}
 
-	bool FilePathExtension(const PathString& filepath_in, PathString& extension_out)
+	bool FilePathExtension(const String& filepath_in, String& extension_out)
 	{
 		if (filepath_in.size() == 0)
 			return false;
 		bool ret = false;
-		PathString file_name;
+		String file_name;
 		if (FilePathApartFileName(filepath_in, file_name))
 		{
 			size_t pos = file_name.rfind(kFilePathExtensionSeparator);
-			if (pos != PathString::npos)
+			if (pos != String::npos)
 			{
-				extension_out = file_name.substr(pos, PathString::npos);
+				extension_out = file_name.substr(pos, String::npos);
 				ret = true;
 			}
 		}
 		return ret;
 	}
 
-	bool FilePathApartDirectory(const PathString& filepath_in,
-		PathString& directory_out)
+	bool FilePathApartDirectory(const String& filepath_in,
+		String& directory_out)
 	{
 		size_t index = filepath_in.size() - 1;
 		if (index <= 0 || filepath_in.size() == 0)
@@ -125,21 +125,21 @@ namespace Alime::base
 		return false;
 	}
 
-	bool FilePathApartFileName(const PathString& filepath_in,
-		PathString& filename_out)
+	bool FilePathApartFileName(const String& filepath_in,
+		String& filename_out)
 	{
 		if (filepath_in.size() == 0)
 			return false;
 		bool ret = true;
-		size_t separator_pos = PathString::npos;
-		size_t separators_count = sizeof(kFilePathSeparators) / sizeof(PathChar);
+		size_t separator_pos = String::npos;
+		size_t separators_count = sizeof(kFilePathSeparators) / sizeof(Char);
 		for (size_t index = 0; index < separators_count; index++)
 		{
 			separator_pos = filepath_in.rfind(kFilePathSeparators[index]);
-			if (separator_pos != PathString::npos)
+			if (separator_pos != String::npos)
 				break;
 		}
-		if (separator_pos++ != PathString::npos && separator_pos < filepath_in.size())
+		if (separator_pos++ != String::npos && separator_pos < filepath_in.size())
 			filename_out = filepath_in.substr(separator_pos);
 		else if (separator_pos >= filepath_in.size())
 			ret = false;
@@ -185,15 +185,15 @@ namespace Alime::base
 		return true;
 	}
 
-	bool ParsePathComponents(const PathChar* path,
-		std::list<PathString>& components)
+	bool ParsePathComponents(const Char* path,
+		std::list<String>& components)
 	{
-		return ParsePathComponentsT<PathChar>(path,
+		return ParsePathComponentsT<Char>(path,
 			kFilePathSeparators,
 			components);
 	}
 
-	bool IsDirectoryComponent(const PathString& component)
+	bool IsDirectoryComponent(const String& component)
 	{
 		if (component.empty())
 			return false;
@@ -205,23 +205,23 @@ namespace Alime::base
 #endif // OS_WIN
 	}
 
-	bool FilePathCompose(const PathString& directory_in,
-		const PathString& filename_in,
-		PathString& filepath_out)
+	bool FilePathCompose(const String& directory_in,
+		const String& filename_in,
+		String& filepath_out)
 	{
-		PathString directory;
+		String directory;
 		if (!FilePathApartDirectory(directory_in, directory))
 			return false;
 		filepath_out = directory + filename_in;
 		return true;
 	}
 
-	bool FilePathIsExist(const PathString& filepath_in, bool is_directory)
+	bool FilePathIsExist(const String& filepath_in, bool is_directory)
 	{
-		return FilePathIsExist((const PathChar*)filepath_in.c_str(), is_directory);
+		return FilePathIsExist((const Char*)filepath_in.c_str(), is_directory);
 	}
 
-	bool FilePathIsExist(const PathChar* filepath_in, bool is_directory)
+	bool FilePathIsExist(const Char* filepath_in, bool is_directory)
 	{
 		const DWORD file_attr = ::GetFileAttributesW(filepath_in);
 		if (file_attr != INVALID_FILE_ATTRIBUTES)
@@ -234,12 +234,12 @@ namespace Alime::base
 		return false;
 	}
 
-	FILE* OpenFile(const PathString& filepath, const PathChar* mode)
+	FILE* OpenFile(const String& filepath, const Char* mode)
 	{
 		return OpenFile(filepath.c_str(), mode);
 	}
 
-	FILE* OpenFile(const PathChar* filepath, const PathChar* mode)
+	FILE* OpenFile(const Char* filepath, const Char* mode)
 	{
 		return _wfsopen(filepath, mode, _SH_DENYNO);
 	}
@@ -251,17 +251,17 @@ namespace Alime::base
 		return fclose(file) == 0;
 	}
 
-	int ReadFile(const PathString& filepath, void* data_out, size_t size)
+	int ReadFile(const String& filepath, void* data_out, size_t size)
 	{
 		return ReadFile(filepath.c_str(), data_out, size);
 	}
 
-	int WriteFile(const PathString& filepath, const std::string& data)
+	int WriteFile(const String& filepath, const std::string& data)
 	{
 		return WriteFile(filepath.c_str(), data.c_str(), data.size());
 	}
 
-	int ReadFile(const PathChar* filepath, void* data_out, size_t size)
+	int ReadFile(const Char* filepath, void* data_out, size_t size)
 	{
 		ScopedWinHandle file(CreateFileW(filepath,
 			GENERIC_READ,
@@ -280,7 +280,7 @@ namespace Alime::base
 		return -1;
 	}
 
-	int WriteFile(const PathChar* filepath, const void* data, size_t size)
+	int WriteFile(const Char* filepath, const void* data, size_t size)
 	{
 		ScopedWinHandle file(CreateFileW(filepath,
 			GENERIC_WRITE,
@@ -300,7 +300,7 @@ namespace Alime::base
 		return -1;
 	}
 
-	bool ReadFileToString(const PathString& filepath, std::string& out)
+	bool ReadFileToString(const String& filepath, std::string& out)
 	{
 		std::unique_ptr<FILE/*, nbase::DeleterFileClose*/> file;
 #if defined(OS_WIN)
@@ -325,7 +325,7 @@ namespace Alime::base
 		return read_ok;
 	}
 
-	bool CopyAFile(const PathString& from_path, const PathString& to_path)
+	bool CopyAFile(const String& from_path, const String& to_path)
 	{
 		if (from_path.size() >= MAX_PATH ||
 			to_path.size() >= MAX_PATH) {
@@ -335,19 +335,19 @@ namespace Alime::base
 			false) != 0);
 	}
 
-	bool DeleteAFile(const PathString& filepath)
+	bool DeleteAFile(const String& filepath)
 	{
 		if (::DeleteFileW(filepath.c_str()) != 0)
 			return true;
 		return false;
 	}
 
-	bool CreateDirectory(const PathString& full_path)
+	bool CreateDirectory(const String& full_path)
 	{
 		return CreateDirectory(full_path.c_str());
 	}
 
-	bool CreateDirectory(const PathChar* full_path)
+	bool CreateDirectory(const Char* full_path)
 	{
 		if (full_path == nullptr)
 			return false;
@@ -355,7 +355,7 @@ namespace Alime::base
 		if (FilePathIsExist(full_path, true))
 			return true;
 
-		std::list<PathString> subpaths;
+		std::list<String> subpaths;
 		ParsePathComponents(full_path, subpaths);
 		if (subpaths.empty())
 			return false;
@@ -381,6 +381,12 @@ namespace Alime::base
 			}
 		}
 		return true;
+	}
+
+	int64_t GetFileSize(const String& filepath)
+	{
+		//fix me
+		return 0;
 	}
 
 };  // namespace nbase

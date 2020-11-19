@@ -18,7 +18,7 @@ TEST_UNIT(test_FilePath)
 	auto folderPath= folder.GetFullPath();
 
 
-	auto thisFile = Alime::base::File(L"D:\\公司文档\\pgcell - 副本.txt");
+	auto thisFile = Alime::base::File(L"./fileSystemTest.cpp");
 	std::string re;
 	Alime::base::Encoding encoding;
 	bool containsBom = false;

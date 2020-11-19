@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// Base type in boost
+/// </summary>
 namespace Alime
 {
     class NotCopyable

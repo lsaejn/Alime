@@ -48,6 +48,14 @@ namespace Alime::base
 	std::string		Concat(std::string_view str0, std::string_view str1);
 	std::wstring	Concat(std::wstring_view str0, std::wstring_view str1);
 
+	template<typename Rt, typename... Ts>
+	std::enable_if_t<sizeof...(Ts) >= 1, Rt>
+	Concat(Ts&&... args)
+	{
+		Rt re = to<Rt>(args...);
+		return re;
+	}
+
 	bool StartsWith(std::string_view src, std::string_view input, bool ignoreCase=false);
 	bool StartsWith(std::wstring_view src, std::wstring_view input, bool ignoreCase = false);
 

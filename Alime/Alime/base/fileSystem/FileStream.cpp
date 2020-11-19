@@ -7,20 +7,21 @@
 
 namespace Alime::base
 {
-	FileStream::FileStream(const StringTy& fileName, FileMode fileMode, FileAccess access, FileShare share)
+
+	FileStream::FileStream(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
 		:accessRight_(access)
 	{
 		Init(fileName, fileMode, access, share);
 	}
 
 	//最小权限
-	FileStream::FileStream(const StringTy& fileName, FileMode fileMode)
+	FileStream::FileStream(const String& fileName, FileMode fileMode)
 		: accessRight_(FileAccess::Read)
 	{
 		Init(fileName, fileMode, FileAccess::Read, FileShare::None);
 	}
 
-	void FileStream::Init(const StringTy& fileName, FileMode fileMode, FileAccess access, FileShare share)
+	void FileStream::Init(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
 	{
 		const wchar_t* mode = L"rb";//or rt
 		switch (fileMode)
