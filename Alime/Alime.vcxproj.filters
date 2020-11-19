@@ -233,5 +233,11 @@
     <ClInclude Include="Alime\base\function\function.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Alime\base\base_types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\Interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

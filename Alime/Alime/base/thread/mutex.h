@@ -21,6 +21,8 @@ namespace Alime
 		void lock()
 		{
 			EnterCriticalSection(&cs_);
+			if (cs_.LockCount > 1)
+				throw "recursive lock is not supported";
 		}
 
 		bool try_lock()

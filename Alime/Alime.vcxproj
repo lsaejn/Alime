@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\base_export.h" />
+    <ClInclude Include="Alime\base\base_types.h" />
     <ClInclude Include="Alime\base\build_config.h" />
     <ClInclude Include="Alime\base\compiler_specific.h" />
     <ClInclude Include="Alime\base\copyable.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Alime\base\fileSystem\IStream.h" />
     <ClInclude Include="Alime\base\fileSystem\MemoryStream.h" />
     <ClInclude Include="Alime\base\function\function.h" />
+    <ClInclude Include="Alime\base\Interface.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
     <ClInclude Include="Alime\base\portable.h" />
