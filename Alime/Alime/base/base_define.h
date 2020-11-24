@@ -1,7 +1,9 @@
 #pragma once
 
-#include <Alime/base/build_config.h>
+#include <string>
 #include <stdint.h>
+
+#include <Alime/base/build_config.h>
 
 typedef int8_t		aint8;
 typedef uint8_t		auint8;
@@ -11,6 +13,7 @@ typedef int32_t		aint32;
 typedef uint32_t	auint32;
 typedef int64_t		aint64;
 typedef uint64_t	auint64;
+typedef unsigned char abyte;
 #ifdef Alime64
 typedef aint64	 aint;
 typedef aint64	 asint;

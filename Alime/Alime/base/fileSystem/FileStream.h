@@ -6,12 +6,10 @@
 #include <Alime/base/fileSystem/IStream.h>
 #include <Alime/base/fileSystem/file_define.h>
 
-namespace Alime::base
+namespace Alime::base::System::IO
 {
 	class FileStream : public virtual IStream
 	{
-	public:
-		using String = String;
 	public:
 		FileStream(const String& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
 		FileStream(const String& fileName, FileMode fileMode=FileMode::Open);

@@ -1,9 +1,12 @@
 #pragma once
 
 #include <vector>
-#include <Alime/base/fileSystem/file_define.h>
+#include <Alime/base/base_define.h>
 
-namespace Alime::base
+/*
+辅助类, 之前是基类
+*/
+namespace Alime::base::System::IO
 {
 	class FilePath
 	{

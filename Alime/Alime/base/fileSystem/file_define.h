@@ -43,6 +43,17 @@ namespace Alime::base
 		Inheritable,//win32²»Ö§³Ö
 	};
 
+	// Null-terminated array of separators used to separate components in path.
+	extern const Char kEndChar;
+// Each character in this array is a valid separator
+	extern const Char kFilePathSeparators[];
+	// A special path component meaning "this directory."
+	extern const Char kFilePathCurrentDirectory[];
+	// A special path component meaning "the parent directory."
+	extern const Char kFilePathParentDirectory[];
+	// The character used to identify a file extension.
+	extern const Char kFilePathExtensionSeparator;
+
 };
 
 

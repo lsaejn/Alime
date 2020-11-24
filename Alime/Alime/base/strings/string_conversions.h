@@ -15,7 +15,7 @@ namespace Alime
 		std::basic_string<UTF16Char>	UTF8ToUTF16(std::string_view utf8);
 		std::basic_string<UTF32Char>	UTF8ToUTF32(std::string_view utf8);
 		std::basic_string<UTF32Char>	UTF16ToUTF32(std::basic_string_view<UTF16Char> utf16);
-		std::basic_string<UTF16Char>	UTF32ToUTF16(std::basic_string_view<UTF32Char> utf32);
+		std::basic_string<UTF16Char>   UTF32ToUTF16(std::basic_string_view<UTF32Char> utf32);
 
 		std::string		SysWideToUTF8(const std::wstring& wide);
 		std::wstring	SysUTF8ToWide(std::string_view utf8);

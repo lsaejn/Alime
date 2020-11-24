@@ -1,11 +1,11 @@
 #include "FileStream.h"
 
 #include <Alime/base/exceptionBase.h>
-#include <Alime/base/fileSystem/file_util.h>
+#include <Alime/base/fileSystem/File.h>
 
 //https://docs.microsoft.com/en-ca/cpp/c-runtime-library/reference/fsopen-wfsopen?f1url=https%3A%2F%2Fmsdn.microsoft.com%2Fquery%2Fdev16.query%3FappId%3DDev16IDEF1&l=ZH-CN&k=k(CORECRT_WSTDIO%2F_wfsopen);k(_wfsopen);k(DevLang-C%20%20);k(TargetOS-Windows)&rd=true&view=vs-2019
 
-namespace Alime::base
+namespace Alime::base::System::IO
 {
 
 	FileStream::FileStream(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
@@ -41,7 +41,7 @@ namespace Alime::base
 			}
 			break;
 		case FileMode::Open:
-			if (!FilePathIsExist(fileName, false))
+			if(!File::Exists(fileName))//if (!FilePathIsExist(fileName, false))
 			{
 				throw Error(L"Failed opening '" + fileName + L"', file_ do not exist.");
 			}
@@ -62,7 +62,7 @@ namespace Alime::base
 			}
 			break;
 		case FileMode::CreateNew:
-			if (FilePathIsExist(fileName, false))
+			if (!File::Exists(fileName))
 			{
 				throw Error(L"Failed opening '" + fileName + L"', file_ already exists.");
 			}

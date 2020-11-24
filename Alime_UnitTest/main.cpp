@@ -45,9 +45,37 @@ void printClass(T... args)
     std::cout << args...<< std::endl;
 }
 
+template<class Cont, class Func>
+using FmapFlattenOut = 
+std::decay_t<decltype(*std::begin(std::declval<Func>()(*std::begin(std::declval<Cont>()))))>;
+
+template<class Cont, class Func, class Out = FmapFlattenOut<Cont, Func>>
+std::vector<Out> fmap_flatten(Cont&& xs, Func&& f)
+{
+    std::vector<Out> ret;
+
+    for (auto&& x : xs)
+        for (auto&& y : f(x))
+            ret.push_back(std::move(y));
+
+    return ret;
+}
+
+std::vector<int> f(int x)
+{
+    std::vector<int> re;
+    for (int i = 0; i != x; ++i)
+        re.push_back(i);
+    return re;
+}
 
 int main(int argc, char** argv)
 {
+    {
+        std::vector<int> col{ 1,2,3,4,5 };
+        auto re=fmap_flatten(col, f);
+        re == col;
+    }
     printf("Running main() from gtest_main.cc\n");
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

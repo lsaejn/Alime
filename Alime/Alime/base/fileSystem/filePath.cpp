@@ -8,7 +8,9 @@
 #include "Shlwapi.h"
 #pragma comment(lib, "Shlwapi.lib")
 
-namespace Alime::base
+
+
+namespace Alime::base::System::IO
 {
 	FilePath::FilePath()
 	{
@@ -96,7 +98,6 @@ namespace Alime::base
 
 	bool	FilePath::IsFile()const
 	{
-		//return PathFileExistsW(fullPath_.data())&&!PathIsDirectoryW(fullPath_.data());
 		WIN32_FILE_ATTRIBUTE_DATA info;
 		BOOL result = GetFileAttributesEx(fullPath_.c_str(), GetFileExInfoStandard, &info);
 		if (!result)
