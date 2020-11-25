@@ -122,16 +122,15 @@ toAppend(Tgt*)
 
 //好，开始体力活
 #include <sstream>
-///warning dangerous implement
+///warning, dangerous implement
+///对于wchar，我们不考虑效率 
 template <class T>
 void toAppend(T value, std::wstring* result)
 {
     std::wostringstream os;
     os << value;
-    std::wstring str = os.str();
-    *result += str;
+    result->append(os.str());
 }
-///warning
 
 //char
 template <class Tgt>

@@ -794,6 +794,9 @@ TEST_UNIT(test_toString)
 	//re = to<std::string>(test);
 	re = to<std::string>("hello");
 	re = to<std::string>("hello",3.1415,test);
+
+
+
 }
 
 //Concat
@@ -803,9 +806,21 @@ TEST_UNIT(test_ConcatTemplate)
 	std::string test2 = "the";
 	std::string test3 = "fuck";
 	auto result1= Alime::base::Concat<std::string>(test1, test2, test3);
+	H_EXPECT_TRUE(result1 == "whatthefuck");
 
 	std::wstring wtest1 = L"你";
 	std::wstring wtest2 = L"他";
 	std::wstring wtest3 = L"妈";
 	auto result2 = Alime::base::Concat<std::wstring>(wtest1, wtest2, wtest3);
+	H_EXPECT_TRUE(result2 == L"你他妈");
+	const std::string testString = u8"尼玛了个";
+
+	wchar_t* wch = L"测试而已";
+	auto result3 = Alime::base::Concat<std::wstring>(wtest1, wtest2, wtest3, wch);
+
+	int i4 = 4;
+	auto result4 = Alime::base::Concat<std::wstring>(wtest1, wtest2, wtest3, wch, i4);
+
+	double d5 = 5.0001;
+	auto result5 = Alime::base::Concat<std::wstring>(wtest1, wtest2, wtest3, wch, i4, d5);
 }
