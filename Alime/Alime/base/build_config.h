@@ -4,29 +4,18 @@
 // Define platform macro
 #if defined(_WIN32)
 #define OS_WIN      1
+
 #if defined(_WIN64)
 #define Alime64
 #else
 #define Alime32
 #endif
-#elif defined(__APPLE__) && (defined(__i386__) || defined(__ARMEL__))
-#define OS_IOS      1
-#elif defined(__APPLE__)
-#define OS_MACOSX   1
+
 #elif defined(__linux__)
 #define OS_LINUX    1
-#elif defined(__FreeBSD__)
-#define OS_FREEBSD  1
-#else
-#error Please add support for your platform in build/build_config.h
-#endif
-
-// For access to standard POSIXish features, use OS_POSIX instead of a
-// more specific macro.
-#if defined(OS_MACOSX) || defined(OS_IOS) || defined(OS_LINUX) || defined(OS_FREEBSD)
 #define OS_POSIX    1
-// Use base::DataPack for name/value pairs.
-#define USE_BASE_DATA_PACK 1
+#else
+#error Please add support for your platform in build_config.h
 #endif
 
 // Use tcmalloc
@@ -40,7 +29,7 @@
 #elif defined(_MSC_VER)
 #define COMPILER_MSVC 1
 #else
-#error Please add support for your compiler in build/build_config.h
+#error Please add support for your compiler
 #endif
 
 // Processor architecture detection.  For more info on what's defined, see:
@@ -67,13 +56,16 @@
 // Type detection for wchar_t.
 #if defined(OS_WIN)
 #define WCHAR_T_IS_UTF16
-#elif defined(OS_POSIX) && defined(COMPILER_GCC) && \
-      defined(__WCHAR_MAX__) && \
-      (__WCHAR_MAX__ == 0x7fffffff || __WCHAR_MAX__ == 0xffffffff)
+#elif defined(OS_POSIX) && \
+	defined(COMPILER_GCC) && \
+	defined(__WCHAR_MAX__) && \
+	(__WCHAR_MAX__ == 0x7fffffff || __WCHAR_MAX__ == 0xffffffff)
 #define WCHAR_T_IS_UTF32
-#elif defined(OS_POSIX) && defined(COMPILER_GCC) && \
-      defined(__WCHAR_MAX__) && \
-      (__WCHAR_MAX__ == 0x7fff || __WCHAR_MAX__ == 0xffff)
+
+#elif defined(OS_POSIX) && \
+	defined(COMPILER_GCC) && \
+	defined(__WCHAR_MAX__) && \
+	(__WCHAR_MAX__ == 0x7fff || __WCHAR_MAX__ == 0xffff)
 // On Posix, we'll detect short wchar_t, but projects aren't guaranteed to
 // compile in this mode (in particular, Chrome doesn't). This is intended for
 // other projects using base who manage their own dependencies and make sure
