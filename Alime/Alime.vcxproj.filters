@@ -84,9 +84,6 @@
     <ClCompile Include="Alime\net\HttpWebResponse.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\stream\FileStream.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\stream\CharFormat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -255,9 +252,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\net\HttpWebResponse.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Alime\base\stream\FileStream.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\stream\Interfaces.h">

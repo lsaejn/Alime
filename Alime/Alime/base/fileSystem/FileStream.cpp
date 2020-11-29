@@ -163,11 +163,6 @@ namespace Alime::base::System::IO
 		file_ = _wfsopen(fileName.c_str(), mode, shFlag);
 	}
 
-	FileStream::~FileStream()
-	{
-		Close();
-	}
-
 	bool FileStream::CanRead()const
 	{
 		return file_ != 0 && (accessRight_ == FileAccess::Read || accessRight_ == FileAccess::ReadWrite);
@@ -196,15 +191,6 @@ namespace Alime::base::System::IO
 	bool FileStream::IsAvailable()const
 	{
 		return file_ != 0;
-	}
-
-	void FileStream::Close()
-	{
-		if (file_ != 0)
-		{
-			fclose(file_);
-			file_ = 0;
-		}
 	}
 
 	pos_t FileStream::Position() const

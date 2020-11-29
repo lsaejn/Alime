@@ -20,45 +20,24 @@ Classes:
 
 #include "../fileSystem/file_define.h"
 
-namespace vl
+//你可能会混乱wr/rd/in/out, 只要记住des/src是针对流而言就可以
+//比如 wr/out 都是写到流
+namespace Alime::base::Sysytem::IO
 {
-	namespace stream
-	{
-
-		/*
-		How UCS-4 translate to UTF-8
-		U-00000000 - U-0000007F:  0xxxxxxx
-		U-00000080 - U-000007FF:  110xxxxx 10xxxxxx
-		U-00000800 - U-0000FFFF:  1110xxxx 10xxxxxx 10xxxxxx
-		U-00010000 - U-001FFFFF:  11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-		U-00200000 - U-03FFFFFF:  111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-		U-04000000 - U-7FFFFFFF:  1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-		BOM:
-		FFFE	=Unicode			(vceUtf16)
-		FEFF	=Unicode Big Endian	(vceUtf16_be)
-		EFBBBF	=UTF-8				(vceUtf8)
-		other	=MBCS(GBK)			(vceMbcs)
-		*/
-
-/***********************************************************************
-Char Encoder and Decoder
-***********************************************************************/
-
 		/// <summary>Base type of all character encoder.</summary>
 		class CharEncoder : public IEncoder
 		{
 		protected:
-			IStream*						stream;
-			auint8						cacheBuffer[sizeof(wchar_t)];
-			aint							cacheSize;
+			IStream* stream;
+			auint8 cacheBuffer[sizeof(wchar_t)];
+			aint cacheSize;
 
-			virtual aint					WriteString(wchar_t* _buffer, aint chars)=0;
+			virtual aint	 WriteString(wchar_t* _buffer, aint chars)=0;
 		public:
 			CharEncoder();
-
-			void							Setup(IStream* _stream);
-			void							Close();
-			aint							Write(void* _buffer, aint _size);
+			void Setup(IStream* _stream);
+			void Close();
+			aint Write(void* _buffer, aint _size);
 		};
 		
 		/// <summary>Base type of all character decoder.</summary>
@@ -86,14 +65,14 @@ Mbcs
 		class MbcsEncoder : public CharEncoder
 		{
 		protected:
-			aint							WriteString(wchar_t* _buffer, aint chars);
+			aint WriteString(wchar_t* _buffer, aint chars);
 		};
 		
 		/// <summary>Encoder to transform text in a local code page to wchar_t.</summary>
 		class MbcsDecoder : public CharDecoder
 		{
 		protected:
-			aint							ReadString(wchar_t* _buffer, aint chars);
+			aint ReadString(wchar_t* _buffer, aint chars);
 		};
 
 /***********************************************************************
@@ -104,14 +83,14 @@ Utf-16
 		class Utf16Encoder : public CharEncoder
 		{
 		protected:
-			aint							WriteString(wchar_t* _buffer, aint chars);
+			aint WriteString(wchar_t* _buffer, aint chars);
 		};
 		
 		/// <summary>Decoder to transform UTF-16 text to wchar_t.</summary>
 		class Utf16Decoder : public CharDecoder
 		{
 		protected:
-			aint							ReadString(wchar_t* _buffer, aint chars);
+			aint ReadString(wchar_t* _buffer, aint chars);
 		};
 
 /***********************************************************************
@@ -254,10 +233,10 @@ Serialization
 			template<typename T>
 			struct Reader
 			{
-				stream::IStream&			input;
+				IStream&			input;
 				T							context;
 
-				Reader(stream::IStream& _input)
+				Reader(IStream& _input)
 					:input(_input)
 					, context(nullptr)
 				{
@@ -267,10 +246,10 @@ Serialization
 			template<typename T>
 			struct Writer
 			{
-				stream::IStream&			output;
+				IStream&			output;
 				T							context;
 
-				Writer(stream::IStream& _output)
+				Writer(IStream& _output)
 					:output(_output)
 					, context(nullptr)
 				{
@@ -697,7 +676,6 @@ Serialization
 			};\
 
 		}
-	}
 }
 
 

@@ -16,32 +16,9 @@ namespace Alime::base::System::IO
 		Utf8,
 		Unicode,
 		Utf16,
-		Utf16BE
+		Utf16BE,
+		Utf32,
 	};
-
-	/*class File
-	{
-	public:
-		File()=default;
-		File(const FilePath& filePath);
-		~File()=default;
-
-		const FilePath& GetFilePath() const;
-		bool ReadAllText(String& text, Encoding& encoding, bool& containsBom);
-		bool ReadAllText(String& text) const;
-		bool ReadAllLines(std::vector<String>& lines) const;
-		String ReadAllText() const;
-
-		bool WriteAllText(const String& text);
-		bool WriteAllLines(std::vector<String>& lines);
-
-		bool Exists()const;
-		bool Delete()const;
-		bool Rename(const String& newName)const;
-		void TestEncoding(unsigned char* buffer, int size, Encoding& encoding, bool& containsBom);
-	private:
-		FilePath	 filePath_;
-	};*/
 	class FileStream;
 	class File
 	{

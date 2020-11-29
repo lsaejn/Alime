@@ -1,10 +1,8 @@
 #include "CharFormat.h"
 #include <windows.h>
 
-namespace vl
+namespace Alime::base::Sysytem::IO
 {
-	namespace stream
-	{
 
 /***********************************************************************
 CharEncoder
@@ -852,5 +850,5 @@ CharEncoder
 				}
 			}
 		}
-	}
+
 }
