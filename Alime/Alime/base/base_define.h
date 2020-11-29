@@ -1,7 +1,8 @@
 #pragma once
-
+//portable header
 #include <string>
 #include <stdint.h>
+#include <sys/types.h>
 
 #include <Alime/base/build_config.h>
 
@@ -14,6 +15,7 @@ typedef uint32_t	auint32;
 typedef int64_t		aint64;
 typedef uint64_t	auint64;
 typedef unsigned char abyte;
+
 #ifdef Alime64
 typedef aint64	 aint;
 typedef aint64	 asint;
@@ -29,10 +31,17 @@ typedef aint64 pos_t;
 using String = std::wstring;
 using Char = wchar_t;
 #else
-//u8
 using String = std::string
 using Char = char;
-#endif // OS_WIN
+#endif
+
+
+#ifdef _WIN32
+#include <basetsd.h>
+using pid_t = int;//fix me, a compromise define
+using ssize_t = SSIZE_T;
+using mode_t = unsigned short;
+#endif
 
 
 

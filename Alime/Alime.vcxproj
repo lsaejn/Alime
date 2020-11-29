@@ -205,7 +205,6 @@
     <ClInclude Include="Alime\base\Interface.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
-    <ClInclude Include="Alime\base\portable.h" />
     <ClInclude Include="Alime\base\stream\CharFormat.h" />
     <ClInclude Include="Alime\base\stream\FileStream.h" />
     <ClInclude Include="Alime\base\stream\Interfaces.h" />

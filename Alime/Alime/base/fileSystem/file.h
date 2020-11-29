@@ -10,7 +10,7 @@
 
 namespace Alime::base::System::IO
 {
-	enum Encoding
+	enum class Encoding
 	{
 		Mbcs,
 		Utf8,
@@ -46,8 +46,9 @@ namespace Alime::base::System::IO
 	class File
 	{
 	public:
-		using String = const std::wstring&;
-
+		//using String = const std::wstring&;
+		static void AppendAllLines(String path, std::vector<String> contents);
+		static void AppendAllLines(String path, std::vector<String> contents, Encoding encoding);
 		static void AppendAllText(String path, String contents);
 		static void AppendAllText(String path, String contents, Encoding encoding);
 		//static StreamWriter AppendText(String path);

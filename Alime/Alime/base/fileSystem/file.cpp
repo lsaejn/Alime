@@ -1,5 +1,6 @@
 #include <Alime/base/fileSystem/file.h>
 #include <Alime/base/fileSystem/FileStream.h>
+#include <Alime/base/strings/string_conversions.h>
 
 #include "windows.h"
 
@@ -76,6 +77,23 @@ namespace Alime::base::System::IO
 		}
 		return true;
 	}*/
+
+	//u8÷±Ω”–¥»Î
+	void File::AppendAllLines(String path, std::vector<String> contents)
+	{
+		FileStream fs(path, FileMode::OpenOrCreate);
+		for (auto& line : contents)
+		{
+			auto u8Str=UTF16ToUTF8(line);
+			fs.Write((void*)u8Str.c_str(), u8Str.length());
+		}	
+	}
+
+	void File::AppendAllLines(String path, std::vector<String> contents, Encoding encoding)
+	{
+
+	}
+
 
 	void File::AppendAllText(String path, String contents)
 	{

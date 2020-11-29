@@ -218,9 +218,6 @@
     <ClInclude Include="Alime\base\fileSystem\filePath.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\portable.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Alime\base\fileSystem\file_define.h">
       <Filter>头文件</Filter>
     </ClInclude>
