@@ -84,13 +84,19 @@
     <ClCompile Include="Alime\net\HttpWebResponse.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\stream\CharFormat.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\file_define.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\StreamWriter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\details\CharFormat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,10 +260,16 @@
     <ClInclude Include="Alime\net\HttpWebResponse.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\stream\Interfaces.h">
+    <ClInclude Include="Alime\base\fileSystem\StreamReader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\stream\CharFormat.h">
+    <ClInclude Include="Alime\base\fileSystem\StreamWriter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\Interfaces.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\CharFormat.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

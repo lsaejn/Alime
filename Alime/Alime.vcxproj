@@ -161,7 +161,7 @@
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
-    <ClCompile Include="Alime\base\stream\CharFormat.cpp" />
+    <ClCompile Include="Alime\base\details\CharFormat.cpp" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
     <ClCompile Include="Alime\base\strings\string_util.cpp" />
     <ClCompile Include="Alime\base\system\IteratorHelper.cpp" />
@@ -180,6 +180,8 @@
     <ClCompile Include="Alime\base\time\TimeStamp.cpp" />
     <ClCompile Include="Alime\net\HttpWebRequest.cpp" />
     <ClCompile Include="Alime\net\HttpWebResponse.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\StreamWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\base_define.h" />
@@ -204,8 +206,8 @@
     <ClInclude Include="Alime\base\Interface.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
-    <ClInclude Include="Alime\base\stream\CharFormat.h" />
-    <ClInclude Include="Alime\base\stream\Interfaces.h" />
+    <ClInclude Include="Alime\base\details\CharFormat.h" />
+    <ClInclude Include="Alime\base\details\Interfaces.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />
     <ClInclude Include="Alime\base\strings\unicode.h" />
@@ -237,6 +239,8 @@
     <ClInclude Include="Alime\base\time\Timestamp.h" />
     <ClInclude Include="Alime\net\HttpWebRequest.h" />
     <ClInclude Include="Alime\net\HttpWebResponse.h" />
+    <ClInclude Include="Alime\base\fileSystem\StreamReader.h" />
+    <ClInclude Include="Alime\base\fileSystem\StreamWriter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

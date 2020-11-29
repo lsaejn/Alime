@@ -43,6 +43,16 @@ namespace Alime::base
 		Inheritable,//win32²»Ö§³Ö
 	};
 
+	enum class Encoding
+	{
+		Mbcs,
+		Utf8,
+		Unicode,
+		Utf16,
+		Utf16BE,
+		Utf32,
+	};
+
 	// Null-terminated array of separators used to separate components in path.
 	extern const Char kEndChar;
 // Each character in this array is a valid separator

@@ -10,15 +10,6 @@
 
 namespace Alime::base::System::IO
 {
-	enum class Encoding
-	{
-		Mbcs,
-		Utf8,
-		Unicode,
-		Utf16,
-		Utf16BE,
-		Utf32,
-	};
 	class FileStream;
 	class File
 	{
