@@ -206,7 +206,7 @@ Encoding Test
 		/// <param name="size">Size of the buffer in bytes.</param>
 		/// <param name="encoding">Returns the most possible encoding.</param>
 		/// <param name="containsBom">Returns true if the BOM information is at the beginning of the buffer.</param>
-		extern void							TestEncoding(unsigned char* buffer, aint size, BomEncoder::Encoding& encoding, bool& containsBom);
+		extern void	TestEncoding(unsigned char* buffer, aint size, BomEncoder::Encoding& encoding, bool& containsBom);
 
 }
 

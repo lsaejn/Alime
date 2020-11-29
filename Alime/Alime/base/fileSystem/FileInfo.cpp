@@ -56,13 +56,14 @@ namespace Alime::base::System::IO
 
 	DirectoryInfo FileInfo::Directory()
 	{
+		auto folder = filePath_.GetFolder();
 		return {};
 	}
 
 	aint64 FileInfo::Length()
 	{
 		WIN32_FILE_ATTRIBUTE_DATA fad;
-		if (GetFileAttributesExW(filePath_.GetFullPath().c_str(), GetFileExInfoStandard, &fad) == 0)
+		if (GetFileAttributesEx(filePath_.GetFullPath().c_str(), GetFileExInfoStandard, &fad) == 0)
 		{
 			//fix me
 			//throw 
