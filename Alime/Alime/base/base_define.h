@@ -14,6 +14,7 @@ typedef uint32_t	auint32;
 typedef int64_t		aint64;
 typedef uint64_t	auint64;
 typedef unsigned char abyte;
+
 #ifdef Alime64
 typedef aint64	 aint;
 typedef aint64	 asint;

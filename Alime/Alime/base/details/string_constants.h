@@ -1,24 +1,28 @@
 #pragma once
 #include <string_view>
+#include "Alime/base/macros.h"
 
 namespace Alime
 {
     namespace base
     {
-
+        /// quick judge with a char
 #define NOT_SPACE(x) ((x) != 0x20 && ((x) < 0 || 0x1d < (x)))
 
+        /// not within /r/n
 #define WHITESPACE_ASCII_NO_CR_LF      \
       0x09, /* CHARACTER TABULATION */ \
       0x0B, /* LINE TABULATION */      \
       0x0C, /* FORM FEED (FF) */       \
       0x20  /* SPACE */
 
+        /// all ascii
 #define WHITESPACE_ASCII                                                  \
   WHITESPACE_ASCII_NO_CR_LF, /* Comment to make clang-format linebreak */ \
       0x0A,                  /* LINE FEED (LF) */                         \
       0x0D                   /* CARRIAGE RETURN (CR) */
 
+        /// more specific in unicode
 #define WHITESPACE_UNICODE_NON_ASCII          \
       0x0085,     /* NEXT LINE (NEL) */           \
       0x00A0, /* NO-BREAK SPACE */            \
@@ -44,6 +48,7 @@ namespace Alime
   WHITESPACE_ASCII_NO_CR_LF, WHITESPACE_UNICODE_NON_ASCII
 
 #define WHITESPACE_UNICODE WHITESPACE_ASCII, WHITESPACE_UNICODE_NON_ASCII
+
         namespace details
         {   
             static bool IsWhitespace(std::string_view sv)
@@ -61,6 +66,29 @@ namespace Alime
                     return true;
                 return false;
             }
+
+            static bool IsWhitespace(char c)
+            {
+                static const char kWhitespaceASCII[] = { WHITESPACE_ASCII, 0 };
+                for (int i = 0; i != ARRAYSIZE(kWhitespaceASCII); ++i)
+                {
+                    if (c == kWhitespaceASCII[i])
+                        return true;
+                }
+                return false;
+            }
+
+            static bool IsWhitespace(wchar_t c)
+            {
+                static const wchar_t kWhitespaceASCII[] = { WHITESPACE_UNICODE, 0 };
+                for (int i = 0; i != ARRAYSIZE(kWhitespaceASCII); ++i)
+                {
+                    if (c == kWhitespaceASCII[i])
+                        return true;
+                }
+                return false;
+            }
+
         }
         /*
         const wchar_t kWhitespaceWide[] = { WHITESPACE_UNICODE, 0 };
