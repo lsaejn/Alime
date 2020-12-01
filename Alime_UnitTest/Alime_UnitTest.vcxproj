@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileStreamTest.cpp" />
     <ClCompile Include="fileSystemTest.cpp" />
     <ClCompile Include="httpTest.cpp" />
     <ClCompile Include="main.cpp" />

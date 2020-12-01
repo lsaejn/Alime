@@ -1,5 +1,6 @@
 #include <Alime/base/fileSystem/file.h>
 #include <Alime/base/fileSystem/FileStream.h>
+#include <Alime/base/strings/string_conversions.h>
 
 #include "windows.h"
 
@@ -77,9 +78,48 @@ namespace Alime::base::System::IO
 		return true;
 	}*/
 
+	//u8÷±Ω”–¥»Î
+	void File::AppendAllLines(String path, std::vector<String> contents)
+	{
+		FileStream fs(path, FileMode::OpenOrCreate);
+		for (auto& line : contents)
+		{
+			auto u8Str=UTF16ToUTF8(line);
+			fs.Write((void*)u8Str.c_str(), u8Str.length());
+		}	
+	}
+
+	void File::AppendAllLines(String path, std::vector<String> contents, Encoding encoding)
+	{
+		FileStream fs(path, FileMode::OpenOrCreate);
+		for (auto& line : contents)
+		{
+			if (encoding == Encoding::Utf8)
+			{
+				auto u8Str = UTF16ToUTF8(line);
+				fs.Write((void*)u8Str.c_str(), u8Str.length());
+				fs.Write("\r\n", 2);
+			}
+			//fix me
+			else if (encoding == Encoding::Unicode)
+			{
+				fs.Write((void*)line.c_str(), line.length()*2);
+				fs.Write(L"\r\n", 4);
+			}
+			else if (encoding == Encoding::Mbcs)
+			{
+				auto defaultStr = SysWideToNativeMB(line);
+				fs.Write((void*)defaultStr.c_str(), defaultStr.length());
+				fs.Write("\r\n", 2);
+			}
+		}
+	}
+
 	void File::AppendAllText(String path, String contents)
 	{
-
+		FileStream fs(path, FileMode::OpenOrCreate);
+		auto u8Str = UTF16ToUTF8(contents);
+		fs.Write((void*)u8Str.c_str(), u8Str.length());
 	}
 
 	void File::AppendAllText(String path, String contents, Encoding encoding)
@@ -89,12 +129,12 @@ namespace Alime::base::System::IO
 
 	void File::Copy(String sourceFileName, String destFileName)
 	{
-
+		File::Copy(sourceFileName.c_str(), destFileName.c_str(), false);
 	}
 
 	void File::Copy(String sourceFileName, String destFileName, bool overwrite)
 	{
-
+		::CopyFile(sourceFileName.c_str(), destFileName.c_str(), overwrite);
 	}
 
 	FileStream File::Create(String path)
@@ -114,7 +154,7 @@ namespace Alime::base::System::IO
 
 	bool File::Delete(String path)
 	{
-		if (::DeleteFileW(path.c_str()) != 0)
+		if (::DeleteFile(path.c_str()) != 0)
 			return true;
 		return false;
 	}

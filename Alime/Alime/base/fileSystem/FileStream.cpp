@@ -14,11 +14,24 @@ namespace Alime::base::System::IO
 		Init(fileName, fileMode, access, share);
 	}
 
-	//最小权限
 	FileStream::FileStream(const String& fileName, FileMode fileMode)
 		: accessRight_(FileAccess::Read)
 	{
-		Init(fileName, fileMode, FileAccess::Read, FileShare::None);
+		Init(fileName, fileMode, FileAccess::ReadWrite, FileShare::ReadWrite);
+	}
+
+	FileStream::~FileStream()
+	{
+		Close();
+	}
+
+	void	FileStream::Close()
+	{
+		if(file_)
+		{
+			fclose(file_);
+			file_=nullptr;
+		}
 	}
 
 	void FileStream::Init(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
@@ -100,12 +113,12 @@ namespace Alime::base::System::IO
 			}
 			else if (access == FileAccess::ReadWrite)
 			{
-				mode = L"r+b";
+				mode = L"w+b";
 				accessRight_ = FileAccess::ReadWrite;
 			}
 			else if (access == FileAccess::Write)
 			{
-				mode = L"r+b";
+				mode = L"w+b";
 				accessRight_ = FileAccess::Write;
 			}
 			break;
@@ -147,15 +160,7 @@ namespace Alime::base::System::IO
 			throw Error(L"Invalid file_ share mode.");
 			break;
 		}
-		//if (shFlag == _SH_DENYRW)
-		//	file_ = _wfopen(fileName.c_str(), mode);
-		//else
-			file_ = _wfsopen(fileName.c_str(), mode, shFlag);
-	}
-
-	FileStream::~FileStream()
-	{
-		Close();
+		file_ = _wfsopen(fileName.c_str(), mode, shFlag);
 	}
 
 	bool FileStream::CanRead()const
@@ -186,15 +191,6 @@ namespace Alime::base::System::IO
 	bool FileStream::IsAvailable()const
 	{
 		return file_ != 0;
-	}
-
-	void FileStream::Close()
-	{
-		if (file_ != 0)
-		{
-			fclose(file_);
-			file_ = 0;
-		}
 	}
 
 	pos_t FileStream::Position() const
@@ -282,6 +278,8 @@ namespace Alime::base::System::IO
 	{
 		//CHECK_ERROR(file_ != 0, L"FileStream::Read(pos_t)#Stream is closed, cannot perform this operation.");
 		//CHECK_ERROR(_size >= 0, L"FileStream::Read(void*, vint)#Argument size cannot be negative.");
+		if (!CanRead())
+			throw Error(L"No Access to Write");
 		return fread(_buffer, 1, _size, file_);
 	}
 
@@ -289,6 +287,8 @@ namespace Alime::base::System::IO
 	{
 		//CHECK_ERROR(file_ != 0, L"FileStream::Write(pos_t)#Stream is closed, cannot perform this operation.");
 		//CHECK_ERROR(_size >= 0, L"FileStream::Write(void*, vint)#Argument size cannot be negative.");
+		if(!CanWrite())
+			throw Error(L"No Access to Write");
 		return fwrite(_buffer, 1, _size, file_);
 	}
 
@@ -308,4 +308,11 @@ namespace Alime::base::System::IO
 		}
 		return -1;
 	}
+
+	void FileStream::CheckFileHandle()
+	{
+		if(file_ != 0)
+			throw Error(L"Stream is closed, cannot perform this operation");
+	}
+
 }

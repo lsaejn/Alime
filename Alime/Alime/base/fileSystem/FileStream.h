@@ -32,6 +32,9 @@ namespace Alime::base::System::IO
 		aint	Peek(void* _buffer, aint _size);
 
 	protected:
+		void CheckFileHandle();
+
+	protected:
 		void Init(const String& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);
 		FileAccess	accessRight_;
 		FILE* file_;

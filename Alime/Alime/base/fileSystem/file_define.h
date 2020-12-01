@@ -7,7 +7,7 @@
 
 namespace Alime::base
 {
-	///传统fopen的api里
+	/// 传统fopen的api里
 	/// r和r+ 要求文件必须存在，否则返回句柄为空
 	/// w,a,w+,a+都会创建文件
 	/// 在a/a+模式下， 每次写入时会重新seek到文件尾部， 即使先前fseek到前面的某个位置。
@@ -41,6 +41,16 @@ namespace Alime::base
 		Write,
 		Delete,//没用
 		Inheritable,//win32不支持
+	};
+
+	enum class Encoding
+	{
+		Mbcs,
+		Utf8,
+		Unicode,
+		Utf16,
+		Utf16BE,
+		Utf32,
 	};
 
 	// Null-terminated array of separators used to separate components in path.
