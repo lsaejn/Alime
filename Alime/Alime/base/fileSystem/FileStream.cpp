@@ -20,6 +20,20 @@ namespace Alime::base::System::IO
 		Init(fileName, fileMode, FileAccess::ReadWrite, FileShare::ReadWrite);
 	}
 
+	FileStream::FileStream(FileStream&& fs)
+	{
+		file_ = fs.file_;
+		accessRight_ = fs.accessRight_;
+		fs.file_ = nullptr;
+	}
+
+	FileStream& FileStream::operator=(FileStream&& fs)
+	{
+		file_ = fs.file_;
+		accessRight_ = fs.accessRight_;
+		return *this;
+	}
+
 	FileStream::~FileStream()
 	{
 		Close();

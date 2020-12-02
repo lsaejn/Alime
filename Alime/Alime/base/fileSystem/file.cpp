@@ -134,12 +134,37 @@ namespace Alime::base::System::IO
 
 	void File::Copy(String sourceFileName, String destFileName, bool overwrite)
 	{
-		::CopyFile(sourceFileName.c_str(), destFileName.c_str(), overwrite);
+		::CopyFile(sourceFileName.c_str(), destFileName.c_str(), !overwrite);
+	}
+
+	void File::Move(String sourceFileName, String destFileName)
+	{
+		File::Move(sourceFileName, destFileName, false);
+	}
+
+	void File::Move(String sourceFileName, String destFileName, bool overwrite)
+	{
+		if (!File::Exists(sourceFileName))
+			throw "source file balabalaba";
+		bool ret = ::CopyFile(sourceFileName.c_str(), destFileName.c_str(), !overwrite);
+		if (ret == 0)//failed, fix me
+			throw "...";//fix me
+		else
+		{
+			if (!Delete(sourceFileName))
+			{
+				throw "...";//fix me
+			}
+		}
 	}
 
 	FileStream File::Create(String path)
 	{
-		return {L""};
+		//we did not use CreateFile becz we still need to return a fileStream
+		FileStream fs(path, FileMode::Create, FileAccess::ReadWrite, FileShare::ReadWrite);
+		if (!fs.IsAvailable())
+			throw "failed to open";
+		return std::move(fs);
 	}
 
 	FileStream File::Create(String path, int bufferSize)

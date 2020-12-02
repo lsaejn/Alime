@@ -8,11 +8,19 @@
 
 namespace Alime::base::System::IO
 {
+	//fix me, copyable?
 	class FileStream : public virtual IStream
 	{
 	public:
 		FileStream(const String& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
 		FileStream(const String& fileName, FileMode fileMode=FileMode::Open);
+
+		FileStream(FileStream&& fs);
+		FileStream(const FileStream& fs)=delete;
+		
+		FileStream& operator=(const FileStream&) = delete;
+		FileStream& operator=(FileStream&& fs);
+
 		~FileStream();
 
 		bool	CanRead()const;

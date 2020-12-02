@@ -13,6 +13,9 @@ namespace Alime::base::System::IO
 	class FileStream;
 	class File
 	{
+	private:
+		File()=delete;
+		~File() = delete;
 	public:
 		//using String = const std::wstring&;
 		static void AppendAllLines(String path, std::vector<String> contents);

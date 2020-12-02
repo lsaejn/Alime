@@ -37,3 +37,21 @@ TEST_UNIT(test_FileStream)
 	//std::string s = (char*)buffer;
 	//fs.Close();
 }
+
+#include <thread>
+TEST_UNIT(test_File)
+{
+	std::thread t;
+
+	auto fs=Alime::base::System::IO::File::Create(L"fuckyou.txt");
+	//auto fs2 = fs;
+	fs.Close();
+
+	fs=(Alime::base::System::IO::FileStream(L"fuckyou.txt"));
+	if (fs.CanWrite())
+	{
+		char buffer[] = "this is a test to write ÄãºÃ in u8";
+		auto ret=fs.Write(buffer, sizeof(buffer));
+		ret = sizeof(buffer);
+	}
+}
