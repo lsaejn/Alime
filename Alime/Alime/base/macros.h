@@ -110,6 +110,12 @@ inline void ignore_varaible(const Ts&&... )
 
 #ifndef COUNT_OF
 #define COUNT_OF(array)			(sizeof(array)/sizeof(array[0]))
+
+template<typename T, int N>
+constexpr int ARRAYSIZE(const T(&arg)[N])
+{
+	return N;
+}
 #endif
 
 // define some format string
