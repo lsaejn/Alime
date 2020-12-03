@@ -15,6 +15,7 @@ typedef uint32_t	auint32;
 typedef int64_t		aint64;
 typedef uint64_t	auint64;
 typedef unsigned char abyte;
+static_assert(sizeof (abyte) == sizeof(int8_t), "size error");
 
 #ifdef Alime64
 typedef aint64	 aint;

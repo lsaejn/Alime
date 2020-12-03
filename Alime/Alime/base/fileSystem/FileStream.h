@@ -46,6 +46,8 @@ namespace Alime::base::System::IO
 		void Init(const String& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);
 		FileAccess	accessRight_;
 		FILE* file_;
+	private:
+		abyte* buffer[4096];
 	};
 }
 

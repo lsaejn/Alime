@@ -126,19 +126,6 @@ Bom
 		/// <summary>Encoder to transform text from wchar_t. A BOM will be added at the beginning.</summary>
 		class BomEncoder :public IEncoder
 		{
-		public:
-			/// <summary>Text encoding.</summary>
-			enum Encoding
-			{
-				/// <summary>Multi-bytes character string.</summary>
-				Mbcs,
-				/// <summary>UTF-8.</summary>
-				Utf8,
-				/// <summary>UTF-16.</summary>
-				Utf16,
-				/// <summary>Big endian UTF-16.</summary>
-				Utf16BE
-			};
 		protected:
 			Encoding						encoding;
 			IEncoder*						encoder;
@@ -206,7 +193,7 @@ Encoding Test
 		/// <param name="size">Size of the buffer in bytes.</param>
 		/// <param name="encoding">Returns the most possible encoding.</param>
 		/// <param name="containsBom">Returns true if the BOM information is at the beginning of the buffer.</param>
-		extern void	TestEncoding(unsigned char* buffer, aint size, BomEncoder::Encoding& encoding, bool& containsBom);
+		extern void	TestEncoding(unsigned char* buffer, aint size, Encoding& encoding, bool& containsBom);
 
 }
 

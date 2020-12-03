@@ -11,6 +11,27 @@
 namespace Alime::base::System::IO
 {
 	class FileStream;
+
+	enum class FileAttributes
+	{
+		ReadOnly = 1,
+		Hidden = 2,
+		System = 4,
+		Directory = 16,
+		Archive = 32,
+		Device = 64,
+		Normal = 128,
+		Temporary = 256,
+		SparseFile = 512,
+		ReparsePoint = 1024,
+		Compressed = 2048,
+		Offline = 4096,
+		NotContentIndexed = 8192,
+		Encrypted = 16384,
+		//IntegrityStream = 32768, // win32 did not support here
+		//NoScrubData = 131072
+	};
+
 	class File
 	{
 	private:
@@ -33,7 +54,7 @@ namespace Alime::base::System::IO
 		static bool Delete(String path);
 		static void Encrypt(String path);
 		static bool Exists(String path);
-		//static FileAttributes GetAttributes(String path);
+		static FileAttributes GetAttributes(String path);
 		//static DateTime GetCreationTime(String path);
 		//static DateTime GetCreationTimeUtc(String path);
 		//static DateTime GetLastAccessTime(String path);
@@ -55,7 +76,7 @@ namespace Alime::base::System::IO
 		static String ReadAllText(String path, Encoding encoding);
 		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName);
 		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName, bool ignoreMetadataErrors);
-		//static void SetAttributes(String path, FileAttributes fileAttributes);
+		static void SetAttributes(String path, FileAttributes fileAttributes);
 		//static void SetCreationTime(String path, DateTime creationTime);
 		//static void SetCreationTimeUtc(String path, DateTime creationTimeUtc);
 		//static void SetLastAccessTime(String path, DateTime lastAccessTime);

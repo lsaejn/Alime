@@ -337,16 +337,16 @@ BomEncoder
 		{
 			switch(encoding)
 			{
-			case Mbcs:
+			case Encoding::Mbcs:
 				encoder=new MbcsEncoder;
 				break;
-			case Utf8:
+			case Encoding::Utf8:
 				encoder=new Utf8Encoder;
 				break;
-			case Utf16:
+			case Encoding::Utf16:
 				encoder=new Utf16Encoder;
 				break;
-			case Utf16BE:
+			case Encoding::Utf16BE:
 				encoder=new Utf16BEEncoder;
 				break;
 			}
@@ -361,15 +361,15 @@ BomEncoder
 		{
 			switch(encoding)
 			{
-			case Mbcs:
+			case Encoding::Mbcs:
 				break;
-			case Utf8:
+			case Encoding::Utf8:
 				_stream->Write((void*)"\xEF\xBB\xBF", 3);
 				break;
-			case Utf16:
+			case Encoding::Utf16:
 				_stream->Write((void*)"\xFF\xFE", 2);
 				break;
-			case Utf16BE:
+			case Encoding::Utf16BE:
 				_stream->Write((void*)"\xFE\xFF", 2);
 				break;
 			}
@@ -693,26 +693,26 @@ CharEncoder
 		}
 #endif
 
-		void TestEncoding(unsigned char* buffer, aint size, BomEncoder::Encoding& encoding, bool& containsBom)
+		void TestEncoding(unsigned char* buffer, aint size, Encoding& encoding, bool& containsBom)
 		{
 			if (size >= 3 && strncmp((char*)buffer, "\xEF\xBB\xBF", 3) == 0)
 			{
-				encoding = BomEncoder::Utf8;
+				encoding = Encoding::Utf8;
 				containsBom = true;
 			}
 			else if (size >= 2 && strncmp((char*)buffer, "\xFF\xFE", 2) == 0)
 			{
-				encoding = BomEncoder::Utf16;
+				encoding = Encoding::Utf16;
 				containsBom = true;
 			}
 			else if (size >= 2 && strncmp((char*)buffer, "\xFE\xFF", 2) == 0)
 			{
-				encoding = BomEncoder::Utf16BE;
+				encoding = Encoding::Utf16BE;
 				containsBom = true;
 			}
 			else
 			{
-				encoding = BomEncoder::Mbcs;
+				encoding = Encoding::Mbcs;
 				containsBom = false;
 
 				bool utf16HitSurrogatePairs = false;
@@ -725,9 +725,9 @@ CharEncoder
 				aint roughCount = (roughMbcs ? 1 : 0) + (roughUtf8 ? 1 : 0) + (roughUtf16 ? 1 : 0) + (roughUtf16BE ? 1 : 0);
 				if (roughCount == 1)
 				{
-					if (roughUtf8) encoding = BomEncoder::Utf8;
-					else if (roughUtf16) encoding = BomEncoder::Utf16;
-					else if (roughUtf16BE) encoding = BomEncoder::Utf16BE;
+					if (roughUtf8) encoding = Encoding::Utf8;
+					else if (roughUtf16) encoding = Encoding::Utf16;
+					else if (roughUtf16BE) encoding = Encoding::Utf16BE;
 				}
 				else if (roughCount > 1)
 				{
