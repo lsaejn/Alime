@@ -266,10 +266,10 @@ namespace Alime
 			Sleep(static_cast<unsigned long>(milliseconds));
 		}
 
-		void sleep_until(Alime::Timestamp t)
-		{	// sleep until _Abs_time
-			sleep_for(static_cast<int>((t - Timestamp::Now()).toMilliseconds()));
-		}
+		//void sleep_until(Alime::Timestamp t)
+		//{	// sleep until _Abs_time
+		//	sleep_for(static_cast<int>((t - Timestamp::Now()).toMilliseconds()));
+		//}
 
 	}	// namespace this_thread
 }

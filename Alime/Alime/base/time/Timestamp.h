@@ -4,16 +4,29 @@
 #include <string>
 
 
-namespace Alime 
+namespace Alime::base
 {
-	class Timestamp 
+	enum class DateTimeKind
+	{
+		Unspecified = 0,
+		Utc = 1,
+		Local = 2
+	};
+
+	class DateTime
 	{
 	public:
-		Timestamp();
-		explicit Timestamp(int64_t nanoseconds); //rarely used
-		explicit Timestamp(const struct timeval& t);
+		DateTime();
+		/// <summary>
+		/// <param name="ticks">
+		/// A date and time expressed in the number of 100-nanosecond intervals that have
+		/// elapsed since January 1, 0001 at 00:00:00.000 in the Gregorian calendar.
+		///</param>
+		/// </summary>
+		explicit DateTime(int64_t ticks); //rarely used
+		explicit DateTime(const struct timeval& t);
 
-		static Timestamp Now(); // returns the current local time.
+		static DateTime Now(); // returns the current local time.
 
 		struct timeval TimeVal() const;
 		void To(struct timeval* t) const;
@@ -29,22 +42,21 @@ namespace Alime
 		void Add(Duration d);
 
 		bool IsEpoch() const;
-		bool operator< (const Timestamp& rhs) const;
-		bool operator==(const Timestamp& rhs) const;
+		bool operator< (const DateTime& rhs) const;
+		bool operator==(const DateTime& rhs) const;
 
-		Timestamp operator+=(const Duration& rhs);
-		Timestamp operator+ (const Duration& rhs) const;
-		Timestamp operator-=(const Duration& rhs);
-		Timestamp operator- (const Duration& rhs) const;
-		Duration  operator- (const Timestamp& rhs) const;
+		DateTime operator+=(const Duration& rhs);
+		DateTime operator+ (const Duration& rhs) const;
+		DateTime operator-=(const Duration& rhs);
+		DateTime operator- (const Duration& rhs) const;
+		Duration  operator- (const DateTime& rhs) const;
 
 		bool valid() const;
-		static Timestamp invalid();
+		static DateTime invalid();
 		std::string toString() const;// 以字符形式打印ticks
 		std::string toFormattedString(bool showMicroseconds = true) const;
 	private:
-		// ns_ gives the number of nanoseconds elapsed since the Epoch
-		// 1970-01-01 00:00:00 +0000 (UTC).
+		//the number of ticks that represent the dateand time of this instance.
 		int64_t ns_;
 	};
 }

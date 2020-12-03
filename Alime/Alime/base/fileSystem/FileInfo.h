@@ -2,20 +2,21 @@
 
 #include "filePath.h"
 #include "Alime/base/base_define.h"
+#include <Alime/base/fileSystem/FileSystemInfo.h>
 
 
 namespace Alime::base::System::IO
 {
 	class DirectoryInfo;
 
-	class FileInfo
+	class FileInfo: public FileSystemInfo
 	{
 	private:
-		FilePath filePath_;
+		
 
 	public:
 		FileInfo() = default;
-		FileInfo(const FilePath& _filePath);
+		//FileInfo(const FilePath& _filePath);
 		FileInfo(String fileName);
 		~FileInfo()=default;
 

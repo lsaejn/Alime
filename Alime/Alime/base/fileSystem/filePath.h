@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <Alime/base/base_define.h>
+#include <Alime/base/fileSystem/file_define.h>
 
 /*
 辅助类, 之前是基类
@@ -14,7 +15,7 @@ namespace Alime::base::System::IO
 		String fullPath_;
 		void	Initialize();
 	public:
-		static const wchar_t Delimiter = L'\\';
+		static const Char Delimiter;
 		FilePath();
 		FilePath(const String& _filePath);
 		FilePath(const wchar_t* _filePath);

@@ -314,7 +314,7 @@ namespace Alime::base::System::IO
 		FileStream fs(path, FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
 		if (fs.CanRead())
 		{
-			auto fileLen=fs.Size();
+			auto fileLen=static_cast<size_t>(fs.Size());//fix me, use buffer insteadly?
 			std::vector<abyte> result;
 			result.reserve(fileLen);
 			fs.Read(&result[0], fileLen);
@@ -342,7 +342,7 @@ namespace Alime::base::System::IO
 
 	String File::ReadAllText(String path, Encoding encoding)
 	{
-		//fix me, we will do this in StreamReader
+		//fix me, we will implement this in StreamReader
 		return {};
 	}
 

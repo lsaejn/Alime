@@ -4,14 +4,14 @@
 
 namespace Alime::base::System::IO
 {
-	FileInfo::FileInfo(const FilePath& filePath)
-		:filePath_(filePath)
-	{
+	//FileInfo::FileInfo(const FilePath& filePath)
+	//	:filePath_(filePath)
+	//{
 
-	}
+	//}
 
 	FileInfo::FileInfo(String fileName)
-		: filePath_(fileName)
+		: FileSystemInfo(fileName)
 	{
 
 	}

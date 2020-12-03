@@ -53,6 +53,28 @@ namespace Alime::base
 		Utf32,
 	};
 
+	enum class FileAttributes
+	{
+		ReadOnly = 1,
+		Hidden = 2,
+		System = 4,
+		Directory = 16,
+		Archive = 32,
+		Device = 64,
+		Normal = 128,
+		Temporary = 256,
+		SparseFile = 512,
+		ReparsePoint = 1024,
+		Compressed = 2048,
+		Offline = 4096,
+		NotContentIndexed = 8192,
+		Encrypted = 16384,
+		//IntegrityStream = 32768, // win32 did not support here
+		//NoScrubData = 131072
+	};
+
+	extern const Char Delimiter;
+
 	// Null-terminated array of separators used to separate components in path.
 	extern const Char kEndChar;
 // Each character in this array is a valid separator

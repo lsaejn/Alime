@@ -8,10 +8,13 @@
 #include "Shlwapi.h"
 #pragma comment(lib, "Shlwapi.lib")
 
+extern const Char kDelimiter;
 
-
+const Char Alime::base::System::IO::FilePath::Delimiter= kDelimiter;
 namespace Alime::base::System::IO
 {
+	
+
 	FilePath::FilePath()
 	{
 		Initialize();

@@ -157,6 +157,7 @@
     <ClCompile Include="Alime.cpp" />
     <ClCompile Include="Alime\base\details\string_constants.h" />
     <ClCompile Include="Alime\base\fileSystem\file.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\file_define.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Alime\base\fileSystem\FileInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\filePath.h" />
     <ClInclude Include="Alime\base\fileSystem\FileStream.h" />
+    <ClInclude Include="Alime\base\fileSystem\FileSystemInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\file_define.h" />
     <ClInclude Include="Alime\base\fileSystem\Directory.h" />
     <ClInclude Include="Alime\base\fileSystem\IStream.h" />

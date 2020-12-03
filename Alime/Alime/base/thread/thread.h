@@ -98,7 +98,7 @@ namespace Alime
 		void yield() noexcept;
 		//
 		void sleep_for(int milliseconds);
-		void sleep_until(Alime::Timestamp t);
+		//void sleep_until(Alime::Timestamp t);
 	}	// namespace this_thread
 }
 
