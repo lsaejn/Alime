@@ -21,8 +21,8 @@ namespace Alime::base::System::IO
 		~FileInfo()=default;
 
 		bool Exists() const;
-		bool Delete() const;
-		bool Rename(const String& newName) const;
+		void Delete() const;
+		bool Rename(const String& newName) const;//·ÇC#½Ó¿Ú
 
 		//bool IsReadOnly{ get; set; }
 		String DirectoryName();

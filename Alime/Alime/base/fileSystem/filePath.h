@@ -15,7 +15,7 @@ namespace Alime::base::System::IO
 		String fullPath_;
 		void	Initialize();
 	public:
-		static const Char Delimiter;
+		static Char Delimiter;
 		FilePath();
 		FilePath(const String& _filePath);
 		FilePath(const wchar_t* _filePath);

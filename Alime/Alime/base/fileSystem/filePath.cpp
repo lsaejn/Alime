@@ -3,14 +3,14 @@
 
 #include <Alime/base/fileSystem/filePath.h>
 #include <Alime/base/strings/string_util.h>
+#include <Alime/base/fileSystem/file_define.h>
 
 #ifdef OS_WIN
 #include "Shlwapi.h"
 #pragma comment(lib, "Shlwapi.lib")
 
-extern const Char kDelimiter;
 
-const Char Alime::base::System::IO::FilePath::Delimiter= kDelimiter;
+Char Alime::base::System::IO::FilePath::Delimiter= kDelimiter;
 namespace Alime::base::System::IO
 {
 	

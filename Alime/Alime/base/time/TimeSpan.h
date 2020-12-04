@@ -10,7 +10,7 @@ A Duration represents the elapsed time between two instantsas an int64
 nanosecond count. The representation limits the largest representable duration to approximately 290 years.
 This class is modified from Evpp
 */
-	class  Duration 
+	class TimeSpan 
 	{
 	public:
 		static const int64_t kNanosecond = 1LL;
@@ -20,18 +20,18 @@ This class is modified from Evpp
 		static const int64_t kMinute = 60 * kSecond;
 		static const int64_t kHour = 60 * kMinute;
 
-		static Duration Seconds(double count);
-		static Duration Milliseconds(double count);
-		static Duration Microseconds(double count);
-		static Duration Minutes(double count);
-		static Duration Hours(double count);
-		static Duration Nanoseconds(int64_t count);
+		static TimeSpan Seconds(double count);
+		static TimeSpan Milliseconds(double count);
+		static TimeSpan Microseconds(double count);
+		static TimeSpan Minutes(double count);
+		static TimeSpan Hours(double count);
+		static TimeSpan Nanoseconds(int64_t count);
 	public:
-		Duration();
-		explicit Duration(const struct timeval& t);
-		explicit Duration(int64_t nanoseconds);
-		explicit Duration(int nanoseconds);
-		explicit Duration(double seconds);
+		TimeSpan();
+		explicit TimeSpan(const struct timeval& t);
+		explicit TimeSpan(int64_t nanoseconds);
+		explicit TimeSpan(int nanoseconds);
+		explicit TimeSpan(double seconds);
 
 		// Nanoseconds returns the duration as an integer nanosecond count.
 		int64_t toNanoseconds() const;
@@ -46,16 +46,16 @@ This class is modified from Evpp
 		bool IsZero() const;
 		bool Valid() const;
 
-		bool operator< (const Duration& rhs) const;
-		bool operator<=(const Duration& rhs) const;
-		bool operator> (const Duration& rhs) const;
-		bool operator>=(const Duration& rhs) const;
-		bool operator==(const Duration& rhs) const;
+		bool operator< (const TimeSpan& rhs) const;
+		bool operator<=(const TimeSpan& rhs) const;
+		bool operator> (const TimeSpan& rhs) const;
+		bool operator>=(const TimeSpan& rhs) const;
+		bool operator==(const TimeSpan& rhs) const;
 
-		Duration operator+=(const Duration& rhs);
-		Duration operator-=(const Duration& rhs);
-		Duration operator*=(int ns);
-		Duration operator/=(int ns);
+		TimeSpan operator+=(const TimeSpan& rhs);
+		TimeSpan operator-=(const TimeSpan& rhs);
+		TimeSpan operator*=(int ns);
+		TimeSpan operator/=(int ns);
 
 	private:
 		int64_t ns_; // nanoseconds

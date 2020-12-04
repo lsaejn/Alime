@@ -44,9 +44,9 @@ namespace Alime::base::System::IO
 		return true;
 	}
 
-	bool FileInfo::Delete()const
+	void FileInfo::Delete() const
 	{
-		return DeleteFile(filePath_.GetFullPath().c_str()) != 0;
+		DeleteFile(filePath_.GetFullPath().c_str());
 	}
 
 	String FileInfo::DirectoryName()
@@ -62,15 +62,12 @@ namespace Alime::base::System::IO
 
 	aint64 FileInfo::Length()
 	{
-		WIN32_FILE_ATTRIBUTE_DATA fad;
-		if (GetFileAttributesEx(filePath_.GetFullPath().c_str(), GetFileExInfoStandard, &fad) == 0)
-		{
-			//fix me
-			//throw 
-		}
+		if (!base_->dataInitialized_)
+			throw "fileinfobase not initialized";
 		LARGE_INTEGER li;
-		li.LowPart = fad.nFileSizeLow;
-		li.HighPart = fad.nFileSizeHigh;
+		li.LowPart = base_->fileAddtribute_.nFileSizeLow;
+		li.HighPart = base_->fileAddtribute_.nFileSizeHigh;
+		//return r=((long)fad.nFileSizeHigh) << 32 | fad.nFileSizeLow & 0xFFFFFFFFL;
 		return li.QuadPart;
 	}
 

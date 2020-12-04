@@ -73,8 +73,8 @@ namespace Alime::base
 		//NoScrubData = 131072
 	};
 
+	/*
 	extern const Char Delimiter;
-
 	// Null-terminated array of separators used to separate components in path.
 	extern const Char kEndChar;
 // Each character in this array is a valid separator
@@ -85,6 +85,23 @@ namespace Alime::base
 	extern const Char kFilePathParentDirectory[];
 	// The character used to identify a file extension.
 	extern const Char kFilePathExtensionSeparator;
+	*/
+
+#if defined(OS_POSIX)
+	const Char kEndChar = '\0';
+#define kDelimiter = L'/';
+	const Char kFilePathSeparators[] = "/";
+	const Char kFilePathCurrentDirectory[] = ".";
+	const Char kFilePathParentDirectory[] = "..";
+	const Char kFilePathExtensionSeparator = '.';
+#elif defined(OS_WIN)
+	const Char kEndChar = L'\0';
+#define kDelimiter L'\\';
+	const Char kFilePathSeparators[] = L"\\/";
+	const Char kFilePathCurrentDirectory[] = L".";
+	const Char kFilePathParentDirectory[] = L"..";
+	const Char kFilePathExtensionSeparator = L'.';
+#endif  // OS_WIN
 
 };
 

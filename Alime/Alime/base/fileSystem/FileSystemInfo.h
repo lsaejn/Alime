@@ -2,11 +2,20 @@
 #include <Alime/base/base_define.h>
 #include <Alime/base/fileSystem/file_define.h>
 #include <Alime/base/fileSystem/filePath.h>
-#include <Alime/base/time/Timestamp.h>
+#include <Alime/base/time/DateTime.h>
 
+#ifdef OS_WIN
+#include "windows.h"
+#else
+
+#endif // OS_POSIX
 namespace Alime::base::System::IO
 {
-	struct FileSystemInfoBase;
+	struct FileSystemInfoBase
+	{
+		WIN32_FILE_ATTRIBUTE_DATA fileAddtribute_ ;
+		bool dataInitialized_ = false;
+	};
 
 	class FileSystemInfo
 	{
@@ -15,13 +24,13 @@ namespace Alime::base::System::IO
 
 		FileSystemInfo();
 		FileSystemInfo(String filename);
-		~FileSystemInfo();
+		virtual ~FileSystemInfo();
 		//FileSystemInfo(SerializationInfo info, StreamingContext context);
 	public:
 		DateTime LastWriteTime;
 		DateTime LastAccessTimeUtc;
 		DateTime LastAccessTime;
-		virtual String FullName()=0;
+		virtual String FullName();
 		String Extension;
 		bool Exists() const;
 		DateTime CreationTime;
@@ -30,7 +39,7 @@ namespace Alime::base::System::IO
 		DateTime CreationTimeUtc;
 		String Name;
 
-		virtual void Delete()=0;
+		virtual void Delete() const;
 		//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
 		void Refresh();
 		String ToString();
@@ -39,7 +48,7 @@ namespace Alime::base::System::IO
 		//String fullPath_;
 		String originalPath_;
 		FilePath filePath_;
-	private:
+	protected:
 		FileSystemInfoBase* base_;
 		
 		void Init();

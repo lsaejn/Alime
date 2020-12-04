@@ -2,11 +2,11 @@
 #include <Alime/base/fileSystem/FileStream.h>
 #include <Alime/base/fileSystem/file.h>
 #include <iostream>
-using namespace Alime::base;
+
 //巴拉巴拉
 TEST_UNIT(FileStreamRequest)
 {
-	using System::IO::FileStream;
+	using Alime::base::System::IO::FileStream;
 	FileStream fs(L"FileStreamTest.cpp");
 	if (fs.CanRead())
 	{
@@ -27,5 +27,21 @@ TEST_UNIT(FileTest)
 	lines.push_back(L"你好1");
 	lines.push_back(L"你好2");
 	lines.push_back(L"你好3");
-	System::IO::File::AppendAllLines(L"FileStreamTest2.cpp", lines);
+	Alime::base::System::IO::File::AppendAllLines(L"FileStreamTest2.cpp", lines);
+}
+
+
+#include <Alime/base/fileSystem/FileInfo.h>
+//we have to compare with C# now due to reason that we modify Datetime class totally
+TEST_UNIT(FileInfo)
+{
+	auto filename = L"D:\\wpfAutoUpdate\\LoveCSharp\\bin\\Debug\\netcoreapp3.1\\2.txt";
+	Alime::base::System::IO::FileInfo fi(filename);
+	auto fc=fi.CreationTime;
+	fc.Ticks();
+	fi.CreationTimeUtc;
+	auto len=fi.Length();
+
+
+	//f_in_cSharp.CreationTime();
 }

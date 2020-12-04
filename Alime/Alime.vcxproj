@@ -158,7 +158,6 @@
     <ClCompile Include="Alime\base\details\string_constants.h" />
     <ClCompile Include="Alime\base\fileSystem\file.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp" />
-    <ClCompile Include="Alime\base\fileSystem\file_define.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
@@ -177,8 +176,8 @@
     <ClCompile Include="Alime\base\third_party\double-conversion\string-to-double.cc" />
     <ClCompile Include="Alime\base\third_party\double-conversion\strtod.cc" />
     <ClCompile Include="Alime\base\thread\thread.cpp" />
-    <ClCompile Include="Alime\base\time\Duration.cpp" />
-    <ClCompile Include="Alime\base\time\TimeStamp.cpp" />
+    <ClCompile Include="Alime\base\time\TimeSpan.cpp" />
+    <ClCompile Include="Alime\base\time\DateTime.cpp" />
     <ClCompile Include="Alime\net\HttpWebRequest.cpp" />
     <ClCompile Include="Alime\net\HttpWebResponse.cpp" />
     <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp" />
@@ -236,9 +235,9 @@
     <ClInclude Include="Alime\base\thread\mutex.h" />
     <ClInclude Include="Alime\base\thread\spinLock.h" />
     <ClInclude Include="Alime\base\thread\thread.h" />
-    <ClInclude Include="Alime\base\time\Duration.h" />
+    <ClInclude Include="Alime\base\time\TimeSpan.h" />
     <ClInclude Include="Alime\base\time\GetTimeOfDay.h" />
-    <ClInclude Include="Alime\base\time\Timestamp.h" />
+    <ClInclude Include="Alime\base\time\DateTime.h" />
     <ClInclude Include="Alime\net\HttpWebRequest.h" />
     <ClInclude Include="Alime\net\HttpWebResponse.h" />
     <ClInclude Include="Alime\base\fileSystem\StreamReader.h" />

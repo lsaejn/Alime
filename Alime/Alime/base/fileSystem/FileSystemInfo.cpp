@@ -1,10 +1,6 @@
 #include "FileSystemInfo.h"
 
-#ifdef OS_WIN
 #include "windows.h"
-#else
-
-#endif // OS_POSIX
 
 namespace Alime::base::System::IO
 {
@@ -12,22 +8,42 @@ namespace Alime::base::System::IO
 	{
 		constexpr int sz = sizeof(FILETIME);
 		static_assert(sizeof(FILETIME) == 8, "filetime could be optimized");
+
+		/// <summary>
+		/// 辅助函数，转换一个FILETIME到DateTime。
+		/// </summary>
+		/// <param name="ft">elapsed since 1601year 1month 1day in the Gregorian calendar.</param>
+		/// <returns></returns>
 		DateTime FTIMEToDateTime(FILETIME ft)
 		{
 			auto ticks = ((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
+			//elapsed since January 1, 0001 at 00:00 : 00.000 in the Gregorian calendar.
+			ticks += 504911520000000000;//
 			return DateTime(static_cast<aint64>(ticks));
 		}
+
+		DateTime LocalFtimeToUTCDateTime(FILETIME localtime)
+		{
+			FILETIME utcTime = { 0 };
+			BOOL ret = LocalFileTimeToFileTime(&localtime, &utcTime);
+			if (!ret)
+				throw "failed to switch";
+			return FTIMEToDateTime(utcTime);
+		}
+
+
+
+		WINBASEAPI
+			BOOL
+			WINAPI
+			FileTimeToSystemTime(
+				__in  CONST FILETIME* lpFileTime,
+				__out LPSYSTEMTIME lpSystemTime
+			);
+
 	}
 
-	struct FileSystemInfoBase
-	{
-#ifdef OS_WIN
-		WIN32_FILE_ATTRIBUTE_DATA fileAddtribute_ = { 0 };
-#else
-		
-#endif // OS_POSIX
-		bool dataInitialized_ = false;
-	};
+
 
 	FileSystemInfo::FileSystemInfo()
 		:base_(new FileSystemInfoBase())
@@ -36,7 +52,13 @@ namespace Alime::base::System::IO
 	}
 
 	FileSystemInfo::FileSystemInfo(String filename)
-		:filePath_(filename)
+		:filePath_(filename),
+		base_(new FileSystemInfoBase())
+	{
+		Init();
+	}
+
+	FileSystemInfo::~FileSystemInfo()
 	{
 
 	}
@@ -51,43 +73,41 @@ namespace Alime::base::System::IO
 		return false;
 	}
 
-	void FileSystemInfo::Delete()
+	void FileSystemInfo::Delete() const
 	{
-
+		//fix me
 	}
 	//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
+	// This should not throw, instead we store the result so that we can throw it
+	// when someone actually accesses a property
 	void FileSystemInfo::Refresh()
 	{
-
+		if(Exists())
+			Init();
 	}
 
 	String FileSystemInfo::ToString()
 	{
-		return {};
+		return L"Class FileSystemInfo";
 	}
 
 
 
 	void FileSystemInfo::Init()
 	{
+		//assert base
 		auto _data = &base_->fileAddtribute_;
 		GetFileAttributesEx(FullName().c_str(), GetFileExInfoStandard, _data);
-		FILETIME ft = _data->ftCreationTime;
-		auto ticks=((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-		CreationTime= DateTime(static_cast<aint64>(_data->ftCreationTime.dwHighDateTime));
-		//LastWriteTimeUtc= _data->;
+		CreationTime = FTIMEToDateTime(_data->ftCreationTime);
+		CreationTimeUtc= LocalFtimeToUTCDateTime(_data->ftCreationTime);
+		LastWriteTime= FTIMEToDateTime(_data->ftLastWriteTime);
+		LastWriteTimeUtc= LocalFtimeToUTCDateTime(_data->ftLastWriteTime);
+		LastAccessTime = FTIMEToDateTime(_data->ftLastAccessTime);
+		LastAccessTimeUtc= LocalFtimeToUTCDateTime(_data->ftLastAccessTime);
 		Attributes=(FileAttributes)_data->dwFileAttributes;
-		//LastWriteTime = _data->ftLastWriteTime;
-		//LastAccessTimeUtc= _data->ftLastAccessTime;
-		//LastAccessTime= _data->ftLastAccessTime;
-		//CreationTimeUtc=;
-		//_data->dwFileAttributes = (int)info->FileAttributes;
-		//_data->ftCreationTime = *((Interop.Kernel32.FILE_TIME*) & info->CreationTime);
-		//_data->ftLastAccessTime = *((Interop.Kernel32.FILE_TIME*) & info->LastAccessTime);
-		//_data->ftLastWriteTime = *((Interop.Kernel32.FILE_TIME*) & info->LastWriteTime);
-		//_data->nFileSizeHigh = (uint)(info->EndOfFile >> 32);
-		//_data->nFileSizeLow = (uint)info->EndOfFile;
-		base_->dataInitialized_= 1;
+		//我们不取文件大小，是因为文件夹可能很大...
+		//return ((long)_data.nFileSizeHigh) << 32 | _data.nFileSizeLow & 0xFFFFFFFFL;
+		base_->dataInitialized_= true;
 	}
 
 }

@@ -60,12 +60,6 @@
     <ClCompile Include="Alime\base\system\win32_utility.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\time\Duration.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Alime\base\time\TimeStamp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\thread\thread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -87,9 +81,6 @@
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\fileSystem\file_define.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -100,6 +91,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\time\DateTime.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\time\TimeSpan.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,12 +194,6 @@
     <ClInclude Include="Alime\base\system\win32_utility.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\time\Timestamp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Alime\base\time\Duration.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Alime\base\time\GetTimeOfDay.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -276,6 +267,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\fileSystem\FileSystemInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\time\DateTime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\time\TimeSpan.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

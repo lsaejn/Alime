@@ -4,8 +4,8 @@
 #include <assert.h>
 
 #include "Alime/base/notCopyable.h"
-#include "Alime/base/time/Timestamp.h"
-#include "Alime/base/time/duration.h"
+#include "Alime/base/time/DateTime.h"
+#include "Alime/base/time/TimeSpan.h"
 
 
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
