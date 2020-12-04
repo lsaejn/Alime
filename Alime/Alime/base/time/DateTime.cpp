@@ -27,25 +27,16 @@ namespace Alime::base
 	{
 	}
 
-	DateTime::DateTime(int64_t ticks, DateTimeKind kind)
-	{
-		if(kind==DateTimeKind::Utc)
-			ticks
-	}
-
-	DateTime::DateTime(int year, int month, int day)
-	{
-
-	}
-
-	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second)
-	{
-
-	}
-
 	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
 	{
-
+		tm t;
+		t.tm_year = year;
+		t.tm_mon = month;
+		t.tm_mday = day;
+		t.tm_hour = hour;
+		t.tm_min = minute;
+		t.tm_sec = second;
+		ns_ = mktime(&t) + millisecond * TimeSpan::kMillisecond;
 	}
 
 	DateTime DateTime::Now()
@@ -78,7 +69,13 @@ namespace Alime::base
 
 	int64_t DateTime::Ticks()
 	{
-		return ns_;
+		//fix me
+		return ns_/100;
+	}
+
+	aint DateTime::Second()
+	{
+
 	}
 
 	int64_t DateTime::Unix() const
@@ -94,6 +91,59 @@ namespace Alime::base
 	int64_t DateTime::UnixMicro() const
 	{
 		return ns_ / TimeSpan::kMicrosecond;
+	}
+
+	aint DateTime::Day()
+	{
+		time_t seconds = static_cast<time_t>(ns_ / TimeSpan::kSecond);
+		struct tm tm_time;
+		//gmtime_r(&seconds, &tm_time);
+		gmtime_s(&tm_time, &seconds);
+		return tm_time.tm_mday;
+	}
+
+	aint DateTime::Year()
+	{
+		time_t seconds = static_cast<time_t>(ns_ / TimeSpan::kSecond);
+		struct tm tm_time;
+		//gmtime_r(&seconds, &tm_time);
+		gmtime_s(&tm_time, &seconds);
+		return tm_time.tm_year;
+	}
+
+	aint DateTime::Month()
+	{
+		time_t seconds = static_cast<time_t>(ns_ / TimeSpan::kSecond);
+		struct tm tm_time;
+		gmtime_s(&tm_time, &seconds);
+		return tm_time.tm_mon;
+	}
+
+	aint DateTime::Minute()
+	{
+		auto tm = GetTmFromNanoSec();
+		tm.tm_min;
+	}
+
+	aint DateTime::Millisecond()
+	{
+
+	}
+
+	aint DateTime::Hour()
+	{
+		auto tm = GetTmFromNanoSec();
+		return tm.tm_hour;
+	}
+
+	aint DateTime::DayOfYear()
+	{
+		return GetTmFromNanoSec().tm_yday;
+	}
+
+	aint DateTime::DayOfWeek()
+	{
+		return GetTmFromNanoSec().tm_wday;
 	}
 
 	bool DateTime::operator< (const DateTime& rhs) const
@@ -181,5 +231,104 @@ namespace Alime::base
 	DateTime DateTime::invalid()
 	{
 		return DateTime();
+	}
+
+	tm DateTime::GetTmFromNanoSec()
+	{
+		time_t seconds = static_cast<time_t>(ns_ / Alime::TimeSpan::kSecond);
+		struct tm tm_time;
+		//gmtime_r(&seconds, &tm_time);
+		gmtime_s(&tm_time, &seconds);
+		return tm_time;
+	}
+
+	DateTime DateTime::Add(TimeSpan value) const
+	{
+
+	}
+
+	DateTime DateTime::AddDays(double value)
+	{
+
+	}
+
+	DateTime DateTime::AddHours(double value)
+	{
+
+	}
+
+	DateTime DateTime::AddMilliseconds(double value)
+	{
+
+	}
+
+	DateTime DateTime::AddMinutes(double value)
+	{
+
+	}
+
+	DateTime DateTime::AddMonths(int months)
+	{
+
+	}
+
+	DateTime DateTime::AddSeconds(double value)
+	{
+
+	}
+
+	DateTime DateTime::AddTicks(long value)
+	{
+
+	}
+
+	DateTime DateTime::AddYears(int value)
+	{
+
+	}
+
+	int DateTime::CompareTo(DateTime value)
+	{
+
+	}
+
+	bool DateTime::Equals(DateTime value)
+	{
+
+	}
+
+	DateTime DateTime::Subtract(TimeSpan value)
+	{
+
+	}
+
+	TimeSpan DateTime::Subtract(DateTime value)
+	{
+
+	}
+
+	long DateTime::ToFileTime()
+	{
+
+	}
+
+	long DateTime::ToFileTimeUtc()
+	{
+
+	}
+
+	DateTime DateTime::ToLocalTime()
+	{
+
+	}
+
+	String DateTime::ToLongDateString()
+	{
+
+	}
+
+	String DateTime::ToLongTimeString()
+	{
+
 	}
 }
