@@ -36,6 +36,7 @@ This class is modified from Evpp
 		explicit TimeSpan(double seconds);
 
 		// Nanoseconds returns the duration as an integer nanosecond count.
+		int64_t toNanoSeconds() const;
 		int64_t Ticks() const;
 		double toSeconds() const;
 		double toMilliseconds() const;
@@ -60,7 +61,7 @@ This class is modified from Evpp
 		TimeSpan operator/=(int ns);
 
 	private:
-		int64_t ticks_; // nanoseconds
+		int64_t ticks_;
 	};
-} // namespace end
+}
 

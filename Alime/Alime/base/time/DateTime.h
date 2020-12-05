@@ -80,16 +80,14 @@ namespace Alime::base::System
 	};
 
 	/// <summary>
-	/// 为了和C#兼容, 参数中的ticks以100nanosecond为单位，since January 1, 0001 at 00:00:00.000
-	/// 为了效率，还是妥协了，c++时间基本用来做fd。
-	/// 这导致实时调试的不便
+	/// DateTime 维护一个自0000-01-01(UTC)以来的ticks
+	/// 只为计算方便, 并不注重效率
 	/// </summary>
 	class DateTime
 	{
 	public:
-		static const DateTime MaxValue;
-		static const DateTime MinValue;
 		static const DateTime UnixEpoch;
+		static const DateTime FileTimeEpoch;
 	public:
 		DateTime();
 		explicit DateTime(int64_t ticks); //DateTimeKind

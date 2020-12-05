@@ -2,7 +2,7 @@
 Fix me.
 this source code is a supplement to windows, ...need to move
 it to the directory "portability" and modify the macro.
-un...like this?
+un...like this? i'm not sure
 #include "Alime/portability.h"
 #include "getTimeOfday.h" //after macro modified
 

@@ -8,8 +8,8 @@
 
 namespace Alime::base::System
 {
-	int daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	int daysInMonthOfLeapYears[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	const int daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	const int daysInMonthOfLeapYears[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	//algorithm
 	//https://blog.csdn.net/Solstice/article/details/5814486
 	int getJulianDayNumber(int year, int month, int day)
@@ -86,7 +86,6 @@ namespace Alime::base::System
 		return ticks_ == 0;
 	}
 
-	//fix me
 	DateTime::DateTime(const struct timeval& t)
 	{
 		ticks_ = (t.tv_sec * TimeSpan::kSecond + t.tv_usec * TimeSpan::kMicrosecond) + kTickOf1970_01_01;
@@ -99,13 +98,38 @@ namespace Alime::base::System
 			+ second*TimeSpan::kSecond
 			+ millisecond * TimeSpan::kMillisecond;
 	}
-	//fix me
+
 	DateTime DateTime::Now()
+	{
+		static bool cached = false;
+		static int secondsAhead = 0;
+		if (!cached)
+		{
+			time_t t = time(nullptr);
+			tm pTm1;
+			localtime_s(&pTm1, &t);
+			tm pTm2;
+			gmtime_s(&pTm2, &t);
+			time_t tik = mktime(&pTm2);
+			auto secondsAhead = t - tik;
+		}
+		return DateTime(DateTime::UtcNow().ticks_+ secondsAhead*TimeSpan::kSecond);
+	}
+
+	DateTime DateTime::Today()
+	{
+		static const int64_t kSecondOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * 24 * 3600;
+		auto second = static_cast<int64_t>(utcsecond());
+		second = second - second % (24 * 3600);
+		return DateTime((second+ kSecondOf1970_01_01)* TimeSpan::kSecond);
+	}
+
+	DateTime DateTime::UtcNow()
 	{
 #if  ALIME_HAS_NOT_CPP11_OR_HIGHER
 		return DateTime(std::chrono::TimeSpan_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 #else
-		return DateTime((utcmicrosecond() * TimeSpan::kMicrosecond)+ kTickOf1970_01_01);
+		return DateTime((utcmicrosecond() * TimeSpan::kMicrosecond) + kTickOf1970_01_01);
 #endif
 	}
 
