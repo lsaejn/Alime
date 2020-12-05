@@ -3,9 +3,9 @@
 
 
 struct timeval;
-namespace Alime 
+namespace Alime::base::System
 {
-	/*
+/*
 A Duration represents the elapsed time between two instantsas an int64
 nanosecond count. The representation limits the largest representable duration to approximately 290 years.
 This class is modified from Evpp

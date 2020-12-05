@@ -33,6 +33,9 @@
     <ClCompile Include="FileStreamTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DateTimeTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\gmockd.lib" />

@@ -44,7 +44,6 @@ TEST_UNIT(test_File)
 	std::thread t;
 
 	auto fs=Alime::base::System::IO::File::Create(L"fuckyou.txt");
-	//auto fs2 = fs;
 	fs.Close();
 
 	fs=(Alime::base::System::IO::FileStream(L"fuckyou.txt"));

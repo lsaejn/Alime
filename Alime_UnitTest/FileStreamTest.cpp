@@ -16,7 +16,7 @@ TEST_UNIT(FileStreamRequest)
 		std::cout << str;
 		auto ret = str.empty();
 	}
-	ASSERT_TRUE(!fs.CanWrite());
+	ASSERT_TRUE(fs.CanWrite());
 
 }
 

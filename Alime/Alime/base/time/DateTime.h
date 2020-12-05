@@ -6,9 +6,10 @@
 
 /*
 由于历史原因，unix下表示时间的结构体极其混乱
+
 struct timeval
 {
-	long tv_sec;
+	long tv_sec;//from 1970/1/1
 	long tv_usec;
 };
 
@@ -27,13 +28,55 @@ int tm_isdst; //日光节约时间的旗标
 
 */
 
-namespace Alime::base
+namespace Alime::base::System
 {
+	struct YearMonthDay
+	{
+		int year; // [1900..2500]
+		int month;  // [1..12]
+		int day;  // [1..31]
+	};
+
 	enum class DateTimeKind
 	{
 		Unspecified = 0,
 		Utc = 1,
 		Local = 2
+	};
+
+	//
+// 摘要:
+//     Specifies the day of the week.
+	enum class DayOfWeek
+	{
+		//
+		// 摘要:
+		//     Indicates Sunday.
+		Sunday = 0,
+		//
+		// 摘要:
+		//     Indicates Monday.
+		Monday = 1,
+		//
+		// 摘要:
+		//     Indicates Tuesday.
+		Tuesday = 2,
+		//
+		// 摘要:
+		//     Indicates Wednesday.
+		Wednesday = 3,
+		//
+		// 摘要:
+		//     Indicates Thursday.
+		Thursday = 4,
+		//
+		// 摘要:
+		//     Indicates Friday.
+		Friday = 5,
+		//
+		// 摘要:
+		//     Indicates Saturday.
+		Saturday = 6
 	};
 
 	/// <summary>
@@ -74,21 +117,21 @@ namespace Alime::base
 		struct timeval TimeVal() const;
 		void To(struct timeval* t) const;
 
+		// we deprecate those
 		// Unix returns t as a Unix time, the number of seconds elapsed since January 1, 1970 UTC.
-		int64_t Unix() const;
-
+		int64_t Unix() const=delete;
 		// the number of nanoseconds/microseconds elapsed since January 1, 1970 UTC. The result is undefined
 		// if the Unix time in nanoseconds/microsecond cannot be represented by an int64.
-		int64_t UnixNano() const;
-		int64_t UnixMicro() const;
+		int64_t UnixNano() const = delete;
+		int64_t UnixMicro() const = delete;
 
 		bool IsEpoch() const;
 
 		static int Compare(DateTime t1, DateTime t2);
 		static int DaysInMonth(int year, int month);
 		static bool Equals(DateTime t1, DateTime t2);
-		static DateTime FromFileTime(long fileTime);
-		static DateTime FromFileTimeUtc(long fileTime);
+		//static DateTime FromFileTime(long fileTime);
+		//static DateTime FromFileTimeUtc(long fileTime);
 		static bool IsLeapYear(int year);
 		static DateTime Parse(String s);
 
@@ -106,8 +149,8 @@ namespace Alime::base
 		bool Equals(DateTime value);
 		DateTime Subtract(TimeSpan value);
 		TimeSpan Subtract(DateTime value);
-		long ToFileTime();
-		long ToFileTimeUtc();
+		//long ToFileTime();
+		//long ToFileTimeUtc();
 		DateTime ToLocalTime();
 		String ToLongDateString();
 		String ToLongTimeString();
@@ -123,10 +166,11 @@ namespace Alime::base
 		bool valid() const;
 		static DateTime invalid();
 		std::string toString() const;// 以字符形式打印ticks
-		std::string toFormattedString(bool showMicroseconds = true) const;
+		
 		
 	private:
 		tm GetTmFromTick();
+		std::string toFormattedString(bool showMicroseconds = true) const;
 		//the number of ticks that represent the dateand time of this instance.
 		int64_t ticks_;
 	};

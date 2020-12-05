@@ -1,7 +1,7 @@
 #include "TimeSpan.h"
 #include <WinSock2.h>
 
-namespace Alime
+namespace Alime::base::System
 {
 	TimeSpan::TimeSpan()
 		: ticks_(0) {}

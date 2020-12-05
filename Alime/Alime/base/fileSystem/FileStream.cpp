@@ -31,6 +31,7 @@ namespace Alime::base::System::IO
 	{
 		file_ = fs.file_;
 		accessRight_ = fs.accessRight_;
+		fs.file_ = nullptr;
 		return *this;
 	}
 
