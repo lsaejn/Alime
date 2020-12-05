@@ -37,9 +37,8 @@ namespace Alime::base
 	};
 
 	/// <summary>
-	/// windows中的时区不像unix一样写在文件里,这绝对是一个挑战
 	/// 为了和C#兼容, 参数中的ticks以100nanosecond为单位，since January 1, 0001 at 00:00:00.000
-	/// 不可避免受历史影响，DateTime内部维护一个unix风格的nanosecond
+	/// 为了效率，还是妥协了，c++时间基本用来做fd。
 	/// 这导致实时调试的不便
 	/// </summary>
 	class DateTime
@@ -53,7 +52,7 @@ namespace Alime::base
 		explicit DateTime(int64_t ticks); //DateTimeKind
 		explicit DateTime(const struct timeval& t);
 		//DateTime(int64_t ticks, DateTimeKind kind);
-		DateTime(int year, int month, int day, int hour, int minute=0, int second=0, int millisecond=0);
+		DateTime(int year, int month, int day, int hour=0, int minute=0, int second=0, int millisecond=0);
 
 		static DateTime Now(); // returns the current local time.
 		static DateTime Today();
@@ -70,7 +69,7 @@ namespace Alime::base
 		aint Day();
 		aint Year();
 		DateTime Date();
-		DateTimeKind Kind();
+		//DateTimeKind Kind();
 
 		struct timeval TimeVal() const;
 		void To(struct timeval* t) const;
@@ -127,9 +126,9 @@ namespace Alime::base
 		std::string toFormattedString(bool showMicroseconds = true) const;
 		
 	private:
-		tm GetTmFromNanoSec();
+		tm GetTmFromTick();
 		//the number of ticks that represent the dateand time of this instance.
-		int64_t ns_;
+		int64_t ticks_;
 	};
 
 	static DateTime operator +(DateTime d, TimeSpan t);

@@ -13,12 +13,14 @@ This class is modified from Evpp
 	class TimeSpan 
 	{
 	public:
-		static const int64_t kNanosecond = 1LL;
-		static const int64_t kMicrosecond = 1000 * kNanosecond;
+		static const int64_t kTick = 1LL;
+		static const int64_t kMicrosecond = 10 * kTick;
 		static const int64_t kMillisecond = 1000 * kMicrosecond;
 		static const int64_t kSecond = 1000 * kMillisecond;
 		static const int64_t kMinute = 60 * kSecond;
 		static const int64_t kHour = 60 * kMinute;
+		static const int64_t kDay = 24 * kHour;
+		static const int64_t kWeek = 7 * kDay;
 
 		static TimeSpan Seconds(double count);
 		static TimeSpan Milliseconds(double count);
@@ -34,7 +36,7 @@ This class is modified from Evpp
 		explicit TimeSpan(double seconds);
 
 		// Nanoseconds returns the duration as an integer nanosecond count.
-		int64_t toNanoseconds() const;
+		int64_t Ticks() const;
 		double toSeconds() const;
 		double toMilliseconds() const;
 		double toMicroseconds() const;
@@ -58,7 +60,7 @@ This class is modified from Evpp
 		TimeSpan operator/=(int ns);
 
 	private:
-		int64_t ns_; // nanoseconds
+		int64_t ticks_; // nanoseconds
 	};
 } // namespace end
 

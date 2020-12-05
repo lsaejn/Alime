@@ -4,51 +4,51 @@
 namespace Alime
 {
 	TimeSpan::TimeSpan()
-		: ns_(0) {}
+		: ticks_(0) {}
 
 	TimeSpan::TimeSpan(const struct timeval& t)
-		: ns_(t.tv_sec * kSecond + t.tv_usec * kMicrosecond) {}
+		: ticks_(t.tv_sec * kSecond + t.tv_usec * kMicrosecond) {}
 
 	TimeSpan::TimeSpan(int64_t nanoseconds)
-		: ns_(nanoseconds) {}
+		: ticks_(nanoseconds) {}
 
 	TimeSpan::TimeSpan(int nanoseconds)
-		: ns_(nanoseconds) {}
+		: ticks_(nanoseconds) {}
 
 	TimeSpan::TimeSpan(double seconds)
-		: ns_(static_cast<int64_t>(seconds * kSecond)) {}
+		: ticks_(static_cast<int64_t>(seconds * kSecond)) {}
 
-	int64_t TimeSpan::toNanoseconds() const {
-		return ns_;
+	int64_t TimeSpan::Ticks() const {
+		return ticks_;
 	}
 
 	double TimeSpan::toSeconds() const {
-		return double(ns_) / kSecond;
+		return double(ticks_) / kSecond;
 	}
 
 	double TimeSpan::toMilliseconds() const {
-		return double(ns_) / kMillisecond;
+		return double(ticks_) / kMillisecond;
 	}
 
 	double TimeSpan::toMicroseconds() const {
-		return double(ns_) / kMicrosecond;
+		return double(ticks_) / kMicrosecond;
 	}
 
 	double TimeSpan::toMinutes() const {
-		return double(ns_) / kMinute;
+		return double(ticks_) / kMinute;
 	}
 
 	double TimeSpan::toHours() const {
-		return double(ns_) / kHour;
+		return double(ticks_) / kHour;
 	}
 
 	bool TimeSpan::IsZero() const {
-		return ns_ == 0;
+		return ticks_ == 0;
 	}
 
 	bool TimeSpan::Valid() const
 	{
-		return ns_ >= 0;
+		return ticks_ >= 0;
 	}
 
 	struct timeval TimeSpan::TimeVal() const {
@@ -58,47 +58,47 @@ namespace Alime
 	}
 
 	void TimeSpan::To(struct timeval* t) const {
-		t->tv_sec = static_cast<long>(ns_ / kSecond);
-		t->tv_usec = static_cast<long>(ns_ % kSecond) / static_cast<long>(kMicrosecond);
+		t->tv_sec = static_cast<long>(ticks_ / kSecond);
+		t->tv_usec = static_cast<long>(ticks_ % kSecond) / static_cast<long>(kMicrosecond);
 	}
 
 	bool TimeSpan::operator<(const TimeSpan& rhs) const {
-		return ns_ < rhs.ns_;
+		return ticks_ < rhs.ticks_;
 	}
 
 	bool TimeSpan::operator<=(const TimeSpan& rhs) const {
-		return ns_ <= rhs.ns_;
+		return ticks_ <= rhs.ticks_;
 	}
 
 	bool TimeSpan::operator>(const TimeSpan& rhs) const {
-		return ns_ > rhs.ns_;
+		return ticks_ > rhs.ticks_;
 	}
 
 	bool TimeSpan::operator>=(const TimeSpan& rhs) const {
-		return ns_ >= rhs.ns_;
+		return ticks_ >= rhs.ticks_;
 	}
 
 	bool TimeSpan::operator==(const TimeSpan& rhs) const {
-		return ns_ == rhs.ns_;
+		return ticks_ == rhs.ticks_;
 	}
 
 	TimeSpan TimeSpan::operator+=(const TimeSpan& rhs) {
-		ns_ += rhs.ns_;
+		ticks_ += rhs.ticks_;
 		return *this;
 	}
 
 	TimeSpan TimeSpan::operator-=(const TimeSpan& rhs) {
-		ns_ -= rhs.ns_;
+		ticks_ -= rhs.ticks_;
 		return *this;
 	}
 
 	TimeSpan TimeSpan::operator*=(int n) {
-		ns_ *= n;
+		ticks_ *= n;
 		return *this;
 	}
 
 	TimeSpan TimeSpan::operator/=(int n) {
-		ns_ /= n;
+		ticks_ /= n;
 		return *this;
 	}
 
