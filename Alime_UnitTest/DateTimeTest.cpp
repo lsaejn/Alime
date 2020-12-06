@@ -7,6 +7,19 @@
 TEST_UNIT(DateTime_TEST)
 {
 	{
+		Alime::base::System::DateTime dtm = Alime::base::System::DateTime::Now();
+		Alime::base::System::DateTime dtm2 = Alime::base::System::DateTime::UtcNow();
+
+		auto Str=dtm.ToLongTimeString();
+		auto utc=dtm.ToUniversalTime();
+
+		
+		auto Str2 = dtm2.ToLongTimeString();
+
+		getchar();
+	}
+
+	{
 		int year = 2020;
 		int month = 12;
 		int day = 5;

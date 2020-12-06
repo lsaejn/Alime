@@ -35,6 +35,8 @@ namespace Alime::base::System
 		return ymd;
 	}
 
+
+
 	const int64_t kSecondsPerMinute = 60;
 	const int64_t kSecondsPerHour = 60 * kSecondsPerMinute;
 	const int64_t kSecondsPerDay = 24 * kSecondsPerHour;
@@ -46,6 +48,12 @@ namespace Alime::base::System
 
 	const aint64 kTickOf1900_01_01 = (kJulianDayOf1900_01_01 - kJulianDayOf0001_01_01) * TimeSpan::kDay;
 	const aint64 kTickOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * TimeSpan::kDay;
+
+	struct YearMonthDay getYearMonthDayFromTicks(int64_t ticks)
+	{
+		auto days = ticks / TimeSpan::kDay+ kJulianDayOf0001_01_01;
+		return getYearMonthDay(days);
+	}
 	//Julian=UTC=GMT
 	int64_t GetTicksFromDateInfo(int year, int month, int day, 
 		int hour=0, int minute = 0,int second = 0, int millisecond = 0)
@@ -101,19 +109,7 @@ namespace Alime::base::System
 
 	DateTime DateTime::Now()
 	{
-		static bool cached = false;
-		static int secondsAhead = 0;
-		if (!cached)
-		{
-			time_t t = time(nullptr);
-			tm pTm1;
-			localtime_s(&pTm1, &t);
-			tm pTm2;
-			gmtime_s(&pTm2, &t);
-			time_t tik = mktime(&pTm2);
-			auto secondsAhead = t - tik;
-		}
-		return DateTime(DateTime::UtcNow().ticks_+ secondsAhead*TimeSpan::kSecond);
+		return DateTime(DateTime::UtcNow().ToLocalTime());
 	}
 
 	DateTime DateTime::Today()
@@ -164,11 +160,14 @@ namespace Alime::base::System
 	aint DateTime::Day()
 	{
 		return GetTmFromTick().tm_mday;
+		return getYearMonthDayFromTicks(ticks_).day;
 	}
 
 	aint DateTime::Year()
 	{
-		return GetTmFromTick().tm_year;
+		int test = GetTmFromTick().tm_year + 1900;
+		return getYearMonthDayFromTicks(ticks_).year;
+
 	}
 
 	DateTime DateTime::Date()
@@ -179,7 +178,8 @@ namespace Alime::base::System
 
 	aint DateTime::Month()
 	{
-		return GetTmFromTick().tm_mon;
+		 auto r=GetTmFromTick().tm_mon;
+		 return getYearMonthDayFromTicks(ticks_).month;
 	}
 
 	aint DateTime::Minute()
@@ -260,25 +260,22 @@ namespace Alime::base::System
 		return buf;
 	}
 
-	std::string DateTime::toFormattedString(bool showMicroseconds) const
+	String DateTime::toFormattedString(bool showMicroseconds)
 	{
-		char buf[64] = { 0 };
-		time_t seconds = static_cast<time_t>(ticks_ / TimeSpan::kSecond);
-		struct tm tm_time;
-		//gmtime_r(&seconds, &tm_time);
-		gmtime_s(&tm_time, &seconds);
+		wchar_t buf[64] = { 0 };
+		auto tm_time = GetTmFromTick();
 
 		if (showMicroseconds)
 		{
 			int microseconds = static_cast<int>((ticks_% TimeSpan::kSecond) / 1000);
-			snprintf(buf, sizeof(buf), "%4d%02d%02d %02d:%02d:%02d.%06d",
+			_snwprintf(buf, sizeof(buf), L"%4d%02d%02d %02d:%02d:%02d.%06d",
 				tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
 				tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec,
 				microseconds);
 		}
 		else
 		{
-			snprintf(buf, sizeof(buf), "%4d%02d%02d %02d:%02d:%02d",
+			_snwprintf(buf, sizeof(buf), L"%4d%02d%02d %02d:%02d:%02d",
 				tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
 				tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
 		}
@@ -390,11 +387,6 @@ namespace Alime::base::System
 		return TimeSpan(ticks_ - value.Ticks());
 	}
 
-	DateTime DateTime::ToLocalTime()
-	{
-		return {};
-	}
-
 	String DateTime::ToLongDateString()
 	{
 		wchar_t buf[64] = { 0 };
@@ -415,8 +407,7 @@ namespace Alime::base::System
 
 	String DateTime::ToLongTimeString()
 	{
-		toFormattedString(true);
-		return {};
+		return toFormattedString(true);
 	}
 
 	int DateTime::Compare(DateTime t1, DateTime t2)
@@ -444,4 +435,30 @@ namespace Alime::base::System
 		return {};
 	}
 
+	DateTime DateTime::ToUniversalTime()
+	{
+		return DateTime(ticks_ - TicksLocalTimeAhead());
+	}
+
+	aint DateTime::TicksLocalTimeAhead()
+	{
+		static bool cached = false;
+		static int secondsAhead = 0;
+		if (!cached)
+		{
+			time_t t = time(nullptr);
+			tm pTm1;
+			localtime_s(&pTm1, &t);
+			tm pTm2;
+			gmtime_s(&pTm2, &t);
+			time_t tik = mktime(&pTm2);
+			secondsAhead = t - tik;
+		}
+		return secondsAhead;
+	}
+
+	DateTime DateTime::ToLocalTime()
+	{
+		return DateTime( ticks_ + TicksLocalTimeAhead()*TimeSpan::kSecond);
+	}
 }

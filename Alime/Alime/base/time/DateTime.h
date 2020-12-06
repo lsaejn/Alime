@@ -30,6 +30,7 @@ int tm_isdst; //日光节约时间的旗标
 
 namespace Alime::base::System
 {
+	class IFormatProvider;
 	struct YearMonthDay
 	{
 		int year; // [1900..2500]
@@ -49,33 +50,12 @@ namespace Alime::base::System
 //     Specifies the day of the week.
 	enum class DayOfWeek
 	{
-		//
-		// 摘要:
-		//     Indicates Sunday.
 		Sunday = 0,
-		//
-		// 摘要:
-		//     Indicates Monday.
 		Monday = 1,
-		//
-		// 摘要:
-		//     Indicates Tuesday.
 		Tuesday = 2,
-		//
-		// 摘要:
-		//     Indicates Wednesday.
 		Wednesday = 3,
-		//
-		// 摘要:
-		//     Indicates Thursday.
 		Thursday = 4,
-		//
-		// 摘要:
-		//     Indicates Friday.
 		Friday = 5,
-		//
-		// 摘要:
-		//     Indicates Saturday.
 		Saturday = 6
 	};
 
@@ -149,9 +129,14 @@ namespace Alime::base::System
 		TimeSpan Subtract(DateTime value);
 		//long ToFileTime();
 		//long ToFileTimeUtc();
+		String ToString(String format, IFormatProvider provider);
+		String ToString(IFormatProvider provider);
+
+		DateTime ToUniversalTime();//仅当dateTime表示localtime时调用
 		DateTime ToLocalTime();
 		String ToLongDateString();
 		String ToLongTimeString();
+		std::string toString() const;// 以字符形式打印ticks
 
 		bool operator< (const DateTime& rhs) const;
 		bool operator==(const DateTime& rhs) const;
@@ -163,12 +148,11 @@ namespace Alime::base::System
 
 		bool valid() const;
 		static DateTime invalid();
-		std::string toString() const;// 以字符形式打印ticks
-		
 		
 	private:
+		aint TicksLocalTimeAhead();
 		tm GetTmFromTick();
-		std::string toFormattedString(bool showMicroseconds = true) const;
+		String toFormattedString(bool showMicroseconds = true);
 		//the number of ticks that represent the dateand time of this instance.
 		int64_t ticks_;
 	};
