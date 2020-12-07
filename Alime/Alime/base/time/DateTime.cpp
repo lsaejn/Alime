@@ -8,8 +8,10 @@
 
 namespace Alime::base::System
 {
-	const int daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	const int daysInMonthOfLeapYears[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	const int kDaysInMonth[2][12] = {
+		 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+		 { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+	};
 	//algorithm
 	//https://blog.csdn.net/Solstice/article/details/5814486
 	int getJulianDayNumber(int year, int month, int day)
@@ -34,8 +36,6 @@ namespace Alime::base::System
 		ymd.year = b * 100 + d - 4800 + (m / 10);
 		return ymd;
 	}
-
-
 
 	const int64_t kSecondsPerMinute = 60;
 	const int64_t kSecondsPerHour = 60 * kSecondsPerMinute;
@@ -101,8 +101,13 @@ namespace Alime::base::System
 
 	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
 	{
+		if (day>kDaysInMonth[IsLeapYear(year)][month])
+		{
+			throw "invalid day number";
+		}
 		ticks_ = (getJulianDayNumber(year, month, day)- kJulianDayOf0001_01_01) * kSecondsPerDay* TimeSpan::kSecond
-			+ hour*TimeSpan::kHour+TimeSpan::kMinute
+			+ hour*TimeSpan::kHour
+			+ minute*TimeSpan::kMinute
 			+ second*TimeSpan::kSecond
 			+ millisecond * TimeSpan::kMillisecond;
 	}
@@ -114,6 +119,10 @@ namespace Alime::base::System
 
 	DateTime DateTime::Today()
 	{
+		auto date=Now();
+		auto ymd=getYearMonthDayFromTicks(date.Ticks());
+		return DateTime(ymd.year, ymd.month, ymd.day);
+		//fix me
 		static const int64_t kSecondOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * 24 * 3600;
 		auto second = static_cast<int64_t>(utcsecond());
 		second = second - second % (24 * 3600);
@@ -159,26 +168,22 @@ namespace Alime::base::System
 
 	aint DateTime::Day()
 	{
-		return GetTmFromTick().tm_mday;
 		return getYearMonthDayFromTicks(ticks_).day;
 	}
 
 	aint DateTime::Year()
 	{
-		int test = GetTmFromTick().tm_year + 1900;
 		return getYearMonthDayFromTicks(ticks_).year;
-
 	}
 
 	DateTime DateTime::Date()
 	{
-		tm tm= GetTmFromTick();
-		return DateTime(tm.tm_year, tm.tm_mon, tm.tm_mday);
+		auto ymd= getYearMonthDayFromTicks(ticks_);
+		return DateTime(ymd.year, ymd.month, ymd.day);
 	}
 
 	aint DateTime::Month()
 	{
-		 auto r=GetTmFromTick().tm_mon;
 		 return getYearMonthDayFromTicks(ticks_).month;
 	}
 
@@ -204,9 +209,9 @@ namespace Alime::base::System
 		return GetTmFromTick().tm_yday;
 	}
 
-	aint DateTime::DayOfWeek()
+	DayOfWeek DateTime::DayInWeek()
 	{
-		return GetTmFromTick().tm_wday;
+		return DayOfWeek((getJulianDayNumber(Year(), Month(), Day()) + 1) % kDaysPerWeek);
 	}
 
 	bool DateTime::operator< (const DateTime& rhs) const
@@ -308,7 +313,7 @@ namespace Alime::base::System
 		return DateTime(ticks_ + value.Ticks());
 	}
 
-	DateTime DateTime::AddDays(double value)
+	DateTime DateTime::AddDays(double value) const
 	{
 		return DateTime((ticks_ + value * TimeSpan::kDay));
 	}
@@ -331,23 +336,24 @@ namespace Alime::base::System
 	DateTime DateTime::AddMonths(int months)
 	{
 		//整个人都虚脱了.....
-		time_t seconds = static_cast<time_t>((ticks_-kTickOf1970_01_01) / TimeSpan::kSecond);
-		struct tm tm_time;
-		gmtime_s(&tm_time, &seconds);
-		auto ymd=getYearMonthDay(getJulianDayNumber(tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday));
+		auto ymd=getYearMonthDayFromTicks(ticks_);
+		//time_t seconds = static_cast<time_t>((ticks_-kTickOf1970_01_01) / TimeSpan::kSecond);
+		//struct tm tm_time;
+		//gmtime_s(&tm_time, &seconds);
+		//auto ymd=getYearMonthDay(getJulianDayNumber(tm_time.tm_year+1900, tm_time.tm_mon+1, tm_time.tm_mday));
 		ymd.month = (ymd.month + months-1) % 12+1;
-		ymd.year += (ymd.month + months%12 ) % 13;
-		if (IsLeapYear(ymd.year))
+		ymd.year += months / 12+(ymd.month + months%12)/12 ;
+		if (IsLeapYear(ymd.year))//要小心2月份
 		{
-			auto lastDay = daysInMonthOfLeapYears[ymd.month - 1];
+			auto lastDay = kDaysInMonth[1][ymd.month - 1];
 			ymd.day = ymd.day > lastDay ? lastDay : ymd.day;
 		}
 		else
 		{
-			ymd.day = ymd.day > daysInMonth[ymd.month - 1] ? daysInMonth[ymd.month - 1] : ymd.day;
+			ymd.day = ymd.day > kDaysInMonth[0][ymd.month - 1] ? kDaysInMonth[0][ymd.month - 1] : ymd.day;
 		}
-		return DateTime(tm_time.tm_year+ (tm_time.tm_mon + months) / 12+1900
-			, (tm_time.tm_mon+months)%12+1, tm_time.tm_mday, tm_time.tm_sec);
+		return DateTime(DateTime(ymd.year, ymd.month
+			, ymd.day, Hour(), Minute(),Second()).Ticks()+ticks_%TimeSpan::kSecond);
 	}
 
 	DateTime DateTime::AddSeconds(double value)
@@ -422,7 +428,9 @@ namespace Alime::base::System
 
 	bool DateTime::IsLeapYear(int year)
 	{
-		return getJulianDayNumber(year, 2, 29) != (year, 3, 1);
+		if (year < 0)
+			throw "year must be 1-9999";
+		return getJulianDayNumber(year, 2, 29) != getJulianDayNumber(year, 3, 1);
 	}
 
 	bool DateTime::Equals(DateTime t1, DateTime t2)

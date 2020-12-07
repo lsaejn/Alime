@@ -26,6 +26,13 @@ int tm_yday; //从今年1月1日到目前的天数，范围0-365
 int tm_isdst; //日光节约时间的旗标
 };
 
+时区:
+由于欧洲使用夏令时，
+美国:每年的三月第二个周日开始,十一月的第一个周日结束
+英国:每年三月的最后一个星期日开始，到10月的最后一个星期日结束，10月的最后一个星期日就是冬令时的开始时间。
+比如，对于2020年的美国，3月8日是星期日
+2020年的夏令时时间是3月8号，周日凌晨2点开始。即周一2点
+2020年11月1号，凌晨1点结束，然后我们就又会回归到冬令时啦！
 */
 
 namespace Alime::base::System
@@ -61,7 +68,7 @@ namespace Alime::base::System
 
 	/// <summary>
 	/// DateTime 维护一个自0000-01-01(UTC)以来的ticks
-	/// 只为计算方便, 并不注重效率
+	/// 只为计算方便, 并不注重效率, 不要用于定时任务
 	/// </summary>
 	class DateTime
 	{
@@ -86,7 +93,7 @@ namespace Alime::base::System
 		aint Millisecond();
 		aint Hour();
 		aint DayOfYear();
-		aint DayOfWeek();
+		DayOfWeek DayInWeek();
 		aint Day();
 		aint Year();
 		DateTime Date();
@@ -115,7 +122,7 @@ namespace Alime::base::System
 
 		void Add(TimeSpan d);
 		DateTime Add(TimeSpan value) const;
-		DateTime AddDays(double value);
+		DateTime AddDays(double value) const;
 		DateTime AddHours(double value);
 		DateTime AddMilliseconds(double value);
 		DateTime AddMinutes(double value);

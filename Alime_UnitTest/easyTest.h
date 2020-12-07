@@ -36,6 +36,7 @@
 #define H_EXPECT_EQUAL(x, y) H_TEST_ASSERT((x)==(y))
 #define H_EXPECT_TRUE(x) H_TEST_ASSERT(x)
 #define H_EXPECT_FALSE(x) H_TEST_ASSERT(!(x))
+#define H_EXPECT_ANY_THROW(x) EXPECT_ANY_THROW((x))
 
 
 
