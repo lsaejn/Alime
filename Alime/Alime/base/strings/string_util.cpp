@@ -165,20 +165,6 @@ namespace Alime::base
 			return replaced;
 		}
 
-		inline int vsnprintfT(char* dst, size_t count, const char* format, va_list ap)
-		{
-			return vsnprintf(dst, count, format, ap);
-		}
-
-		inline int vsnprintfT(wchar_t* dst, size_t count, const wchar_t* format, va_list ap)
-		{
-#if defined(OS_WIN)	
-			return _vsnwprintf(dst, count, format, ap);
-#else	
-			return vswprintf(dst, count, format, ap);
-#endif	
-		}
-
 		template<typename CharType>
 		void StringAppendVT(const CharType* format, va_list ap, std::basic_string<CharType>& output)
 		{

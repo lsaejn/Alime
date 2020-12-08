@@ -4,130 +4,19 @@
 #include <Alime/base/time/DateTime.cpp>
 
 using namespace Alime::base::System;
-TEST_UNIT(DateTime_TEST)
+TEST_UNIT(DateTime_TEST_ToString)
 {
+	//test toString series
 	{
-		EXPECT_ANY_THROW(
-			{
-				bool ret = DateTime::IsLeapYear(-4);
-			}
-		);
-		ASSERT_TRUE(DateTime::IsLeapYear(0));
-		ASSERT_TRUE(DateTime::IsLeapYear(4));
-		ASSERT_TRUE(DateTime::IsLeapYear(2020));
-		ASSERT_TRUE(!DateTime::IsLeapYear(2021));
-		ASSERT_TRUE(!DateTime::IsLeapYear(2022));
-		ASSERT_TRUE(!DateTime::IsLeapYear(2023));
-		ASSERT_TRUE(DateTime::IsLeapYear(2024));
-		ASSERT_TRUE(!DateTime::IsLeapYear(2025));
-		ASSERT_TRUE(!DateTime::IsLeapYear(2026));
-
-		ASSERT_TRUE(DateTime::IsLeapYear(1900));
-		int num=getJulianDayNumber(1900, 2, 29);
-		ASSERT_TRUE(num==2415080);
-		DateTime aDay(1900, 2, 29);
+		DateTime t(2022, 2, 3, 3, 22, 43, 223);
+		String localDateStr = t.ToLongDateString();
+		String lts = t.ToLongTimeString();
+		String st = t.ToShortDateString();
+		String sts = t.ToShortTimeString();
+		String ts = t.ToString();
+		t.AddDays(1);
 	}
-	{
-		//is 2012/01/01 a Sunday?
-		DateTime d(2012, 1, 1);
-		auto dow=d.DayInWeek();
-		int doy = d.DayOfYear();
-		//When is the 1000th after 2009/12/25
-		DateTime d2(2009, 12, 25);
-		auto strTime = d2.ToLongTimeString();
-		d2 = d2.AddDays(1000);
-		ASSERT_TRUE(d2.Year() == 2012);
-		ASSERT_TRUE(d2.Month() == 9);
-		ASSERT_TRUE(d2.Day() == 20);
-	}
-	{
-		const int kDaysInMonth[2][12] = {
-		 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
-		 { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
-		};
 
-		int juliaDayNumber = 2415021;
-		int weekDay = 1;
-		ASSERT_TRUE(juliaDayNumber==getJulianDayNumber(1900, 1, 1));
-		DateTime d(1900, 1, 1);
-
-		ASSERT_TRUE(d.Year() == 1900);
-		ASSERT_TRUE(d.Month() == 1);
-		ASSERT_TRUE(d.Day() == 1);
-		for (int year = 1900; year < 2500; ++year)
-		{
-			for (int month = 1; month < 12; ++month)
-			{
-				for (int day = 1; day < kDaysInMonth[DateTime::IsLeapYear(year)][month]; ++day)
-				{
-					if (day == 28)
-					{
-						int stop = 1;
-					}
-					DateTime temp(year, month, day);
-					auto ymd = getYearMonthDayFromTicks(temp.Ticks());
-					ASSERT_TRUE(ymd.year == year);
-					ASSERT_TRUE(ymd.month == month);
-					ASSERT_TRUE(ymd.day == day);
-					//ASSERT_TRUE((int)temp.DayInWeek() == weekDay);
-
-					++juliaDayNumber;
-					weekDay = (weekDay + 1) % 7;
-				}
-			}
-		}
-	}
-	{
-		DateTime date = Alime::base::System::DateTime::Now();
-		auto strTime=date.ToLongTimeString();
-
-		date = Alime::base::System::DateTime::UtcNow();
-		strTime = date.ToLongTimeString();
-
-		DateTime date2(2020, 12, 7);
-		strTime = date2.ToLongTimeString();
-
-		auto today=DateTime::Today();
-		today.ToLongTimeString();
-		time_t tt = time(NULL);
-		tm* tm_t = localtime(&tt);
-
-		ASSERT_TRUE(today.Year() == tm_t->tm_year + 1900);
-		ASSERT_TRUE(today.Month() == tm_t->tm_mon + 1);
-		ASSERT_TRUE(today.Day() == tm_t->tm_mday);
-		ASSERT_TRUE(today.Hour() == 0);
-		ASSERT_TRUE(today.Minute() == 0);
-		ASSERT_TRUE(today.Second() == 0);
-		ASSERT_TRUE(today.Millisecond()== 0);
-	}
-	{
-		//test local now
-		DateTime date= Alime::base::System::DateTime::Now();
-		auto Str = date.ToLongTimeString();
-		
-		time_t tt = time(NULL);
-		tm* tm_t = localtime(&tt);
-		ASSERT_TRUE(tm_t->tm_year+1900 == date.Year());
-		ASSERT_TRUE(tm_t->tm_mon+1 == date.Month());
-		ASSERT_TRUE(tm_t->tm_mday == date.Day());
-		ASSERT_TRUE(tm_t->tm_hour == date.Hour());
-		ASSERT_TRUE(tm_t->tm_min == date.Minute());
-		ASSERT_TRUE(tm_t->tm_sec == date.Second());
-	}
-	{
-		//test utc now
-		DateTime date = Alime::base::System::DateTime::UtcNow();
-		auto Str = date.ToLongTimeString();
-
-		time_t tt = time(NULL);
-		tm* tm_t = gmtime(&tt);
-		ASSERT_TRUE(tm_t->tm_year + 1900 == date.Year());
-		ASSERT_TRUE(tm_t->tm_mon + 1 == date.Month());
-		ASSERT_TRUE(tm_t->tm_mday == date.Day());
-		ASSERT_TRUE(tm_t->tm_hour == date.Hour());
-		ASSERT_TRUE(tm_t->tm_min == date.Minute());
-		ASSERT_TRUE(tm_t->tm_sec == date.Second());
-	}
 	//test add sub
 	{
 		DateTime date(2021, 2, 28, 16, 30);
@@ -151,16 +40,15 @@ TEST_UNIT(DateTime_TEST)
 
 		ASSERT_TRUE(date.Year() == 2021);
 		date=date.AddYears(0);
-		ASSERT_TRUE(date.Year() == 2022);
-		ASSERT_TRUE(DateTime::IsLeapYear(date.Year()));
+		ASSERT_TRUE(date.Year() == 2021);
+		ASSERT_TRUE(!DateTime::IsLeapYear(date.Year()));
 		ASSERT_TRUE(date.Month() == 2);
 		ASSERT_TRUE(date.Day() == 28);
 		date = date.AddDays(1);
-		ASSERT_TRUE(date.Year() == 2022);
-		ASSERT_TRUE(date.Month() == 2);
-		ASSERT_TRUE(date.Day() == 29);
-		date = date.AddDays(1);
-		ASSERT_TRUE(date.Year() == 2022);
+		ASSERT_TRUE(date.Year() == 2021);
+		ASSERT_FALSE(date.Month() == 2);
+		ASSERT_FALSE(date.Day() == 29);
+		ASSERT_TRUE(date.Year() == 2021);
 		ASSERT_TRUE(date.Month() == 3);
 		ASSERT_TRUE(date.Day() == 1);
 
@@ -187,7 +75,6 @@ TEST_UNIT(DateTime_TEST)
 		
 		auto Str2 = dtm2.ToLongTimeString();
 
-		getchar();
 	}
 
 	{
@@ -275,5 +162,160 @@ TEST_UNIT(DateTime_TEST)
 
 	bool flag = Alime::base::System::DateTime::IsLeapYear(d.Year());
 	
+}
 
+TEST_UNIT(DateTime_TEST_MilliSecond)
+{
+	//test MilliSecond
+	{
+		DateTime d(2020, 12, 8, 10, 38, 22, 320);
+		auto re = d.Millisecond();
+		ASSERT_TRUE(re == 320);
+	}
+}
+
+TEST_UNIT(DateTime_TEST_IsLeapYear)
+{
+	{
+		EXPECT_ANY_THROW(
+			{
+				bool ret = DateTime::IsLeapYear(-4);
+			}
+		);
+		EXPECT_ANY_THROW(
+			{
+				DateTime aDay(1900, 2, 29);
+			}
+		);
+		ASSERT_TRUE(DateTime::IsLeapYear(0));
+		ASSERT_TRUE(DateTime::IsLeapYear(4));
+		ASSERT_TRUE(DateTime::IsLeapYear(2020));
+		ASSERT_TRUE(!DateTime::IsLeapYear(2021));
+		ASSERT_TRUE(!DateTime::IsLeapYear(2022));
+		ASSERT_TRUE(!DateTime::IsLeapYear(2023));
+		ASSERT_TRUE(DateTime::IsLeapYear(2024));
+		ASSERT_TRUE(!DateTime::IsLeapYear(2025));
+		ASSERT_TRUE(!DateTime::IsLeapYear(2026));
+
+		ASSERT_FALSE(DateTime::IsLeapYear(1900));
+		int num = getJulianDayNumber(1900, 2, 29);
+		ASSERT_TRUE(num == 2415080);
+		
+	}
+}
+
+TEST_UNIT(DateTime_TEST_Days)
+{
+	{
+		//is 2012/01/01 a Sunday?
+		DateTime d(2012, 1, 1);
+		auto dow = d.DayInWeek();
+		int doy = d.DayOfYear();
+		//When is the 1000th after 2009/12/25
+		DateTime d2(2009, 12, 25);
+		auto strTime = d2.ToLongTimeString();
+		d2 = d2.AddDays(1000);
+		ASSERT_TRUE(d2.Year() == 2012);
+		ASSERT_TRUE(d2.Month() == 9);
+		ASSERT_TRUE(d2.Day() == 20);
+	}
+}
+
+TEST_UNIT(DateTime_TEST_JulianDayNumber)
+{
+		const int kDaysInMonth[2][12] = {
+		 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+		 { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+		};
+
+		int juliaDayNumber = 2415021;
+		int weekDay = 1;
+		ASSERT_TRUE(juliaDayNumber == getJulianDayNumber(1900, 1, 1));
+		DateTime d(1900, 1, 1);
+
+		ASSERT_TRUE(d.Year() == 1900);
+		ASSERT_TRUE(d.Month() == 1);
+		ASSERT_TRUE(d.Day() == 1);
+		for (int year = 1900; year < 2500; ++year)
+		{
+			for (int month = 1; month < 12; ++month)
+			{
+				for (int day = 1; day < kDaysInMonth[DateTime::IsLeapYear(year)][month-1]; ++day)
+				{
+					if (day == 28)
+					{
+						int stop = 1;
+					}
+					DateTime temp(year, month, day);
+					auto ymd = getYearMonthDayFromTicks(temp.Ticks());
+					auto ymd2 = getYearMonthDay(juliaDayNumber);
+					ASSERT_TRUE(ymd.year == year);
+					if (ymd.month != month)
+					{
+						getchar();
+					}
+					ASSERT_TRUE(ymd.month == month);
+					ASSERT_TRUE(ymd.day == day);
+					//ASSERT_TRUE((int)temp.DayInWeek() == weekDay);
+
+					++juliaDayNumber;
+					weekDay = (weekDay + 1) % 7;
+				}
+			}
+		}
+}
+
+TEST_UNIT(DateTime_TEST_NowSeries)
+{
+	{
+		DateTime date = Alime::base::System::DateTime::Now();
+		auto strTime = date.ToLongTimeString();
+
+		date = Alime::base::System::DateTime::UtcNow();
+		strTime = date.ToLongTimeString();
+
+		DateTime date2(2020, 12, 7);
+		strTime = date2.ToLongTimeString();
+
+		auto today = DateTime::Today();
+		today.ToLongTimeString();
+		time_t tt = time(NULL);
+		tm* tm_t = localtime(&tt);
+
+		ASSERT_TRUE(today.Year() == tm_t->tm_year + 1900);
+		ASSERT_TRUE(today.Month() == tm_t->tm_mon + 1);
+		ASSERT_TRUE(today.Day() == tm_t->tm_mday);
+		ASSERT_TRUE(today.Hour() == 0);
+		ASSERT_TRUE(today.Minute() == 0);
+		ASSERT_TRUE(today.Second() == 0);
+		ASSERT_TRUE(today.Millisecond() == 0);
+	}
+	{
+		//test local now
+		DateTime date = Alime::base::System::DateTime::Now();
+		auto Str = date.ToLongTimeString();
+
+		time_t tt = time(NULL);
+		tm* tm_t = localtime(&tt);
+		ASSERT_TRUE(tm_t->tm_year + 1900 == date.Year());
+		ASSERT_TRUE(tm_t->tm_mon + 1 == date.Month());
+		ASSERT_TRUE(tm_t->tm_mday == date.Day());
+		ASSERT_TRUE(tm_t->tm_hour == date.Hour());
+		ASSERT_TRUE(tm_t->tm_min == date.Minute());
+		ASSERT_TRUE(tm_t->tm_sec == date.Second());
+	}
+	{
+		//test utc now
+		DateTime date = Alime::base::System::DateTime::UtcNow();
+		auto Str = date.ToLongTimeString();
+
+		time_t tt = time(NULL);
+		tm* tm_t = gmtime(&tt);
+		ASSERT_TRUE(tm_t->tm_year + 1900 == date.Year());
+		ASSERT_TRUE(tm_t->tm_mon + 1 == date.Month());
+		ASSERT_TRUE(tm_t->tm_mday == date.Day());
+		ASSERT_TRUE(tm_t->tm_hour == date.Hour());
+		ASSERT_TRUE(tm_t->tm_min == date.Minute());
+		ASSERT_TRUE(tm_t->tm_sec == date.Second());
+	}
 }

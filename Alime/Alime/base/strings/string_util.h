@@ -11,6 +11,7 @@
 
 namespace Alime::base
 {
+	
 	enum class StringSplitOptions
 	{
 		None = 0,
@@ -132,4 +133,32 @@ namespace Alime::base
 	bool ValidateGB2312Stream(const void* stream, unsigned length);
 	bool ValidateGBKStream(const void* stream, unsigned length);
 	bool ValidateBIG5Stream(const void* stream, unsigned length);
+
+
+	namespace
+	{
+		inline int vsnprintfT(char* dst, size_t count, const char* format, va_list ap)
+		{
+			return vsnprintf(dst, count, format, ap);
+		}
+
+		inline int vsnprintfT(wchar_t* dst, size_t count, const wchar_t* format, va_list ap)
+		{
+#if defined(OS_WIN)	
+			return _vsnwprintf(dst, count, format, ap);
+#else	
+			return vswprintf(dst, count, format, ap);
+#endif	
+		}
+	}
+
+	template<typename CharTy>
+	int VsnprintfT(CharTy* buffer, size_t count, const CharTy* format, ...)
+	{
+		va_list args;
+		va_start(args, format);	
+		int c=vsnprintfT(buffer, count, format, args);
+		va_end(args);
+		return count;
+	}
 }

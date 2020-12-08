@@ -35,6 +35,9 @@ int tm_isdst; //日光节约时间的旗标
 2020年11月1号，凌晨1点结束，然后我们就又会回归到冬令时啦！
 */
 
+/*
+我们先完成windows的部分
+*/
 namespace Alime::base::System
 {
 	class IFormatProvider;
@@ -136,14 +139,18 @@ namespace Alime::base::System
 		TimeSpan Subtract(DateTime value);
 		//long ToFileTime();
 		//long ToFileTimeUtc();
-		String ToString(String format, IFormatProvider provider);
-		String ToString(IFormatProvider provider);
-
 		DateTime ToUniversalTime();//仅当dateTime表示localtime时调用
 		DateTime ToLocalTime();
+
 		String ToLongDateString();
 		String ToLongTimeString();
-		std::string toString() const;// 以字符形式打印ticks
+
+		String ToShortDateString();
+		String ToShortTimeString();
+
+		//String ToString(String format, IFormatProvider provider);
+		//String ToString(IFormatProvider provider);
+		String ToString() const;// 以字符形式打印ticks
 
 		bool operator< (const DateTime& rhs) const;
 		bool operator==(const DateTime& rhs) const;
@@ -157,9 +164,9 @@ namespace Alime::base::System
 		static DateTime invalid();
 		
 	private:
-		aint TicksLocalTimeAhead();
-		tm GetTmFromTick();
-		String toFormattedString(bool showMicroseconds = true);
+		aint64 TicksLocalTimeAhead();
+		tm GetTmFromTick() const;
+		String toFormattedString(bool showMicroseconds = true) const;
 		//the number of ticks that represent the dateand time of this instance.
 		int64_t ticks_;
 	};

@@ -29,8 +29,15 @@ namespace Alime::base
 			return description_;
 		}
 
+		const wchar_t* Message() const
+		{
+			return description_;
+		}
+
 	private:
 		bool memoryLocated_;
 		const wchar_t* description_;
 	};
 }
+
+#define CHECK_ERROR(condition,msgInfo) do{if(!(condition))throw Alime::base::Error(msgInfo);}while(0)
