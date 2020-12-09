@@ -6,8 +6,9 @@
 #include <Alime/base/fileSystem/file_define.h>
 #include <Alime/base/fileSystem/filePath.h>
 #include <Alime/base/fileSystem/IStream.h>
+#include <Alime/base/time/DateTime.h>
 
-
+//fix me, String-> const String&
 namespace Alime::base::System::IO
 {
 	class FileStream;
@@ -17,7 +18,6 @@ namespace Alime::base::System::IO
 		File()=delete;
 		~File() = delete;
 	public:
-		//using String = const std::wstring&;
 		static void AppendAllLines(String path, std::vector<String> contents);
 		static void AppendAllLines(String path, std::vector<String> contents, Encoding encoding);
 		static void AppendAllText(String path, String contents);
@@ -34,12 +34,12 @@ namespace Alime::base::System::IO
 		static void Encrypt(String path);
 		static bool Exists(String path);
 		static FileAttributes GetAttributes(String path);
-		//static DateTime GetCreationTime(String path);
-		//static DateTime GetCreationTimeUtc(String path);
-		//static DateTime GetLastAccessTime(String path);
-		//static DateTime GetLastAccessTimeUtc(String path);
-		//static DateTime GetLastWriteTime(String path);
-		//static DateTime GetLastWriteTimeUtc(String path);
+		static DateTime GetCreationTime(String path);
+		static DateTime GetCreationTimeUtc(String path);
+		static DateTime GetLastAccessTime(String path);
+		static DateTime GetLastAccessTimeUtc(String path);
+		static DateTime GetLastWriteTime(String path);
+		static DateTime GetLastWriteTimeUtc(String path);
 		static void Move(String sourceFileName, String destFileName);
 		static void Move(String sourceFileName, String destFileName, bool overwrite);
 		static FileStream Open(String path, FileMode mode);
@@ -56,12 +56,12 @@ namespace Alime::base::System::IO
 		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName);
 		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName, bool ignoreMetadataErrors);
 		static void SetAttributes(String path, FileAttributes fileAttributes);
-		//static void SetCreationTime(String path, DateTime creationTime);
-		//static void SetCreationTimeUtc(String path, DateTime creationTimeUtc);
-		//static void SetLastAccessTime(String path, DateTime lastAccessTime);
-		//static void SetLastAccessTimeUtc(String path, DateTime lastAccessTimeUtc);
-		//static void SetLastWriteTime(String path, DateTime lastWriteTime);
-		//static void SetLastWriteTimeUtc(String path, DateTime lastWriteTimeUtc);
+		static void SetCreationTime(String path, DateTime creationTime);
+		static void SetCreationTimeUtc(String path, DateTime creationTimeUtc);
+		static void SetLastAccessTime(String path, DateTime lastAccessTime);
+		static void SetLastAccessTimeUtc(String path, DateTime lastAccessTimeUtc);
+		static void SetLastWriteTime(String path, DateTime lastWriteTime);
+		static void SetLastWriteTimeUtc(String path, DateTime lastWriteTimeUtc);
 		static void WriteAllBytes(String path, std::vector<abyte> bytes);
 		static void WriteAllLines(String path, std::vector<String> contents);
 		static void WriteAllLines(String path, std::vector<String> contents, Encoding encoding);
