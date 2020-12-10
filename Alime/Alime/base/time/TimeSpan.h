@@ -6,9 +6,8 @@ struct timeval;
 namespace Alime::base::System
 {
 /*
-A Duration represents the elapsed time between two instantsas an int64
-nanosecond count. The representation limits the largest representable duration to approximately 290 years.
-This class is modified from Evpp
+A Duration represents the elapsed time between two instantsas an unsigned64 tick.
+The representation limits the largest representable duration to approximately 58000 years.
 */
 	class TimeSpan 
 	{
@@ -61,7 +60,7 @@ This class is modified from Evpp
 		TimeSpan operator/=(int ns);
 
 	private:
-		int64_t ticks_;
+		uint64_t ticks_;
 	};
 }
 
