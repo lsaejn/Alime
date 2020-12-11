@@ -87,25 +87,31 @@ struct LastElementType<0>
 
 template <class... Ts>
 struct LastElement
-    : std::decay<typename LastElementType<sizeof...(Ts), Ts...>::type> {};
+    : std::decay<typename LastElementType<sizeof...(Ts), Ts...>::type>
+{
+};
 
 
 //helper
-//我们加入标准库字符类，只要u8char和wchar_t
-template <class T>
-struct IsSomeString : std::false_type {};
+//支持u8和wchar_t
 
-//嗯...暂时不支持wchar_t，因为数值型的部分全部需要计算长度
-//wchar_t的append,我们全部交给wostringstream
+template <class T>
+struct IsSomeString : std::false_type
+{
+};
+
 template <typename Alloc>
 struct IsSomeString<std::basic_string<char, std::char_traits<char>, Alloc>>
-    : std::true_type {};
+    : std::true_type
+{
+};
 
-///warning 并未完成的功能
 template <typename Alloc>
 struct IsSomeString<std::basic_string<wchar_t, std::char_traits<wchar_t>, Alloc>>
-    : std::true_type {};
-///warning end
+    : std::true_type
+{
+};
+
 
 //先声明一下，我们需要toAppend
 template <class Ts>
@@ -162,10 +168,10 @@ typename std::enable_if<
  template <class Tgt>
  typename std::enable_if<IsSomeString<Tgt>::value>::type toAppend(
      std::string_view value,
-     Tgt* result) {
+     Tgt* result)
+ {
      result->append(value.data(), value.size());
  }
-
 
 
 //int32_t and int64_t
@@ -219,7 +225,8 @@ typename std::enable_if <
     toAppend<Tgt>(static_cast<Intermediate>(value), result);
 }
 
-namespace detail {
+namespace detail 
+{
     constexpr int kConvMaxDecimalInShortestLow = -6;
     constexpr int kConvMaxDecimalInShortestHigh = 21;
 } // namespace detail

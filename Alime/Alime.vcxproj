@@ -182,6 +182,7 @@
     <ClCompile Include="Alime\net\HttpWebResponse.cpp" />
     <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp" />
     <ClCompile Include="Alime\base\fileSystem\StreamWriter.cpp" />
+    <ClCompile Include="Alime\base\time\Locale.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\base_define.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Alime\net\HttpWebResponse.h" />
     <ClInclude Include="Alime\base\fileSystem\StreamReader.h" />
     <ClInclude Include="Alime\base\fileSystem\StreamWriter.h" />
+    <ClInclude Include="Alime\base\time\Locale.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -318,6 +318,7 @@ namespace Alime::base::System::IO
 			std::vector<abyte> result;
 			result.reserve(fileLen);
 			fs.Read(&result[0], fileLen);
+			return result;
 		}
 		else
 			throw "fuck";

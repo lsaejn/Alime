@@ -35,6 +35,8 @@
 #include "strtod.h"
 #include "utils.h"
 
+#pragma warning (disable: 4244)
+
 namespace double_conversion {
 
 namespace {
