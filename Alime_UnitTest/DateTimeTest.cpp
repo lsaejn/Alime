@@ -14,7 +14,7 @@ TEST_UNIT(DateTime_TEST_ToString)
 		String st = t.ToShortDateString();
 		String sts = t.ToShortTimeString();
 		String ts = t.ToString();
-		t.AddDays(1);
+		t=t.AddDays(1);
 	}
 
 	//test add sub

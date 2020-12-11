@@ -20,8 +20,6 @@ namespace Alime::base::System::IO
 	class FileSystemInfo
 	{
 	protected:
-		
-
 		FileSystemInfo();
 		FileSystemInfo(String filename);
 		virtual ~FileSystemInfo();

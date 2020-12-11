@@ -16,7 +16,6 @@ namespace Alime::base::System::IO
 
 	public:
 		FileInfo() = default;
-		//FileInfo(const FilePath& _filePath);
 		FileInfo(String fileName);
 		~FileInfo()=default;
 
@@ -36,7 +35,7 @@ namespace Alime::base::System::IO
 		//FileStream Create();
 		//StreamWriter CreateText();
 		//void Decrypt();
-		//override void Delete();
+		void Delete();
 		//void Encrypt();
 		void MoveTo(String destFileName);
 		void MoveTo(String destFileName, bool overwrite);

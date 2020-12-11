@@ -41,12 +41,7 @@ int tm_isdst; //日光节约时间的旗标
 namespace Alime::base::System
 {
 	class IFormatProvider;
-	struct YearMonthDay
-	{
-		int year; // [1900..2500]
-		int month;  // [1..12]
-		int day;  // [1..31]
-	};
+
 
 	enum class DateTimeKind
 	{
@@ -88,14 +83,14 @@ namespace Alime::base::System
 		static DateTime Now(); // returns the current local time.
 		static DateTime Today();
 		static DateTime UtcNow();
-		aint64 Ticks();
+		aint64 Ticks() const;
 		aint Second();
 		
 		aint Month();
 		aint Minute();
 		aint Millisecond();
 		aint Hour();
-		aint DayOfYear();
+		aint DayOfYear(); //from 0
 		DayOfWeek DayInWeek();
 		aint Day();
 		aint Year();
@@ -167,8 +162,19 @@ namespace Alime::base::System
 		aint64 TicksLocalTimeAhead();
 		tm GetTmFromTick() const;
 		String toFormattedString(bool showMicroseconds = true) const;
+		void CheckDate();
+		void InitFromTicks(aint64 ticks);
 		//the number of ticks that represent the dateand time of this instance.
-		int64_t ticks_;
+		//int64_t ticks_;
+		aint year_;
+		aint month_;
+		aint day_;
+		aint hour_;
+		aint minute_;
+		aint second_;
+		aint millisecond_;
+		aint microsecond_;
+		aint nanosecond_;
 	};
 
 	static DateTime operator +(DateTime d, TimeSpan t);

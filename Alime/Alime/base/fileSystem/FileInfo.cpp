@@ -94,6 +94,14 @@ namespace Alime::base::System::IO
 		return FileInfo{ destFilePath };
 	}
 
+	void FileInfo::Delete()
+	{
+		if (DeleteFile(GetFullPath().c_str()) == 0)
+		{
+			throw "failed to delete file.";
+		}
+	}
+
 	void FileInfo::MoveTo(String destFileName)
 	{
 		return MoveTo(destFileName, false);

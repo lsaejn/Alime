@@ -15,15 +15,36 @@ namespace Alime::base::System
 		 { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
 	};
 
-	void CheckDate(int year, int month, int day,
-		int hour = 0, int minute = 0, int second = 0, int millisecond = 0)
+	struct YearMonthDay
 	{
-		CHECK_ERROR(!((year > 0 && year < 9999)
+		int year; // [1900..2500]
+		int month;  // [1..12]
+		int day;  // [1..31]
+	};
+
+	struct TimeInfo
+	{
+		aint hour;
+		aint minute;
+		aint second;
+		aint millisecond;
+		aint microsecond;
+		aint nanosecond;
+	};
+
+	void CheckDateInfo(int year, int month, int day,
+		int hour = 0, int minute = 0, int second = 0, int millisecond = 0, int microsecond=0,
+		int nanosecond=0)
+	{
+		CHECK_ERROR(((year > 0 && year < 9999)
 			&& (month > 0 && month < 13)
 			&& (day > 0 && day <= kDaysInMonth[DateTime::IsLeapYear(year)][month-1])
 			&& (hour >= 0 && hour < 24)
 			&& (second >= 0 && second < 60)
-			&& (millisecond >= 0 && millisecond < 1000))
+			&& (millisecond >= 0 && millisecond < 1000)
+			&& (microsecond >= 0 && microsecond < 1000)
+			&& (nanosecond >= 0 && nanosecond < 1000)
+			)
 			, L"bad year");
 	}
 
@@ -69,9 +90,29 @@ namespace Alime::base::System
 		auto days =static_cast<aint> (ticks / TimeSpan::kDay+ kJulianDayOf0001_01_01);
 		return getYearMonthDay(days);
 	}
+
+	struct TimeInfo getTimeInfoFromTicks(int64_t ticks)
+	{
+		ticks = ticks % TimeSpan::kDay;
+		TimeInfo ti;
+		ti.hour =static_cast<aint>( ticks / TimeSpan::kHour);
+		ticks = ticks % TimeSpan::kHour;
+		ti.minute = static_cast<aint>(ticks / TimeSpan::kMinute);
+		ticks = ticks % TimeSpan::kMinute;
+		ti.second = static_cast<aint>(ticks / TimeSpan::kSecond);
+		ticks = ticks % TimeSpan::kSecond;
+		ti.millisecond = static_cast<aint>(ticks / TimeSpan::kMillisecond);
+		ticks = ticks % TimeSpan::kMillisecond;
+		ti.microsecond = static_cast<aint>(ticks / TimeSpan::kMicrosecond);
+		ticks = ticks % TimeSpan::kMicrosecond;
+		ti.nanosecond = static_cast<aint>(ticks * 100);
+		return ti;
+	}
+
 	//Julian=UTC=GMT
-	int64_t GetTicksFromDateInfo(int year, int month, int day, 
-		int hour=0, int minute = 0,int second = 0, int millisecond = 0)
+	int64_t GetTicksFromDateInfo(int year=0, int month=0, int day=0, int hour=0,
+		int minute = 0,int second = 0, int millisecond = 0, int microsecond=0,
+		int nanosecond=0)
 	{
 		return
 			(getJulianDayNumber(year, month, day) - kJulianDayOf0001_01_01)* TimeSpan::kDay
@@ -79,7 +120,8 @@ namespace Alime::base::System
 			+ minute * TimeSpan::kMinute
 			+ second * TimeSpan::kSecond
 			+ millisecond * TimeSpan::kMillisecond
-			/*+ nanosecond / 100*/;
+			+ microsecond* TimeSpan::kMicrosecond
+			+ nanosecond/100;
 	}
 
 	int64_t GetTimetFromDateInfo(int year, int month, int day,
@@ -95,36 +137,56 @@ namespace Alime::base::System
 namespace Alime::base::System
 {
 	DateTime::DateTime()
-		: ticks_(0)
+		: year_(0),
+		month_(0),
+		day_(0),
+		hour_(0),
+		minute_(0),
+		second_(0),
+		millisecond_(0),
+		microsecond_(0),
+		nanosecond_(0)
 	{
 	}
 
 	DateTime::DateTime(int64_t ticks)
-		: ticks_(ticks)
 	{
+		InitFromTicks(ticks);
 	}
 
 	bool DateTime::IsEpoch() const
 	{
-		return ticks_ == 0;
+		return GetTicksFromDateInfo (year_, month_, day_, minute_, 
+			second_, millisecond_, microsecond_, nanosecond_)== 0;
 	}
 
 	DateTime::DateTime(const struct timeval& t)
+		:DateTime((t.tv_sec* TimeSpan::kSecond + t.tv_usec * TimeSpan::kMicrosecond) + kTickOf1970_01_01)
 	{
-		ticks_ = (t.tv_sec * TimeSpan::kSecond + t.tv_usec * TimeSpan::kMicrosecond) + kTickOf1970_01_01;
 	}
 
 	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
+		: year_(year),
+		month_(month),
+		day_(day),
+		hour_(hour),
+		minute_(minute),
+		second_(second),
+		millisecond_(millisecond),
+		microsecond_(0),
+		nanosecond_(0)
 	{
+		CheckDate();
 		if (day>kDaysInMonth[IsLeapYear(year)][month-1])
 		{
 			throw "invalid day number";
 		}
-		ticks_ = (getJulianDayNumber(year, month, day)- kJulianDayOf0001_01_01) * kSecondsPerDay* TimeSpan::kSecond
-			+ hour*TimeSpan::kHour
-			+ minute*TimeSpan::kMinute
-			+ second*TimeSpan::kSecond
-			+ millisecond * TimeSpan::kMillisecond;
+	}
+
+	void DateTime::CheckDate()
+	{
+		CheckDateInfo(year_, month_, day_, hour_, minute_, second_, 
+			millisecond_, microsecond_, nanosecond_);
 	}
 
 	DateTime DateTime::Now()
@@ -154,15 +216,31 @@ namespace Alime::base::System
 #endif
 	}
 
+	void DateTime::InitFromTicks(aint64 ticks)
+	{
+		auto ymd = getYearMonthDayFromTicks(ticks);
+		year_ = ymd.year;
+		month_ = ymd.month;
+		day_ = ymd.day;
+		auto t_info = getTimeInfoFromTicks(ticks);
+		hour_ = t_info.hour;
+		minute_ = t_info.minute;
+		second_ = t_info.second;
+		millisecond_ = t_info.millisecond;
+		microsecond_ = t_info.microsecond;
+		nanosecond_ = t_info.nanosecond;
+	}
+
 	void DateTime::Add(TimeSpan d)
 	{
-		ticks_ += d.Ticks();
+		auto ticks = Ticks() + d.Ticks();
+		InitFromTicks(ticks);
 	}
 
 	void DateTime::To(struct timeval* t) const
 	{
-		t->tv_sec = static_cast<long>(ticks_ - kTickOf1970_01_01 / TimeSpan::kSecond) ;
-		t->tv_usec = static_cast<long>(ticks_ % TimeSpan::kSecond) / static_cast<long>(TimeSpan::kMicrosecond);
+		t->tv_sec = static_cast<long>(Ticks() - kTickOf1970_01_01 / TimeSpan::kSecond) ;
+		t->tv_usec = static_cast<long>(Ticks() % TimeSpan::kSecond) / static_cast<long>(TimeSpan::kMicrosecond);
 	}
 
 	struct timeval DateTime::TimeVal() const
@@ -172,57 +250,57 @@ namespace Alime::base::System
 		return t;
 	}
 
-	int64_t DateTime::Ticks()
+	int64_t DateTime::Ticks() const
 	{
-		return ticks_;
+		return GetTicksFromDateInfo(year_, month_, day_, hour_, minute_, second_, millisecond_, microsecond_, nanosecond_);
 	}
 
 	aint DateTime::Second()
 	{
-		return (ticks_/TimeSpan::kSecond)%60;
+		return second_;
 	}
 
 	aint DateTime::Day()
 	{
-		return getYearMonthDayFromTicks(ticks_).day;
+		return day_;
 	}
 
 	aint DateTime::Year()
 	{
-		return getYearMonthDayFromTicks(ticks_).year;
+		return year_;
 	}
 
 	DateTime DateTime::Date()
 	{
-		auto ymd= getYearMonthDayFromTicks(ticks_);
-		return DateTime(ymd.year, ymd.month, ymd.day);
+		return DateTime(year_, month_, day_);
 	}
 
 	aint DateTime::Month()
 	{
-		 return getYearMonthDayFromTicks(ticks_).month;
+		 return month_;
 	}
 
 	aint DateTime::Minute()
 	{
-		auto tm = GetTmFromTick();
-		return tm.tm_min;
+		return minute_;
 	}
 
 	aint DateTime::Millisecond()
 	{
-		return (ticks_/ TimeSpan::kMillisecond)%1000;
+		return millisecond_;
 	}
 
 	aint DateTime::Hour()
 	{
-		auto tm = GetTmFromTick();
-		return tm.tm_hour;
+		return hour_;
 	}
 
 	aint DateTime::DayOfYear()
 	{
-		return GetTmFromTick().tm_yday;
+		auto year = Year();
+		int firstDay=getJulianDayNumber(year, 1, 1);
+		int day = getJulianDayNumber(year, 1, 1);
+		return firstDay-day;
 	}
 
 	DayOfWeek DateTime::DayInWeek()
@@ -232,17 +310,18 @@ namespace Alime::base::System
 
 	bool DateTime::operator< (const DateTime& rhs) const
 	{
-		return ticks_ < rhs.ticks_;
+		return Ticks() < rhs.Ticks();
 	}
 
 	bool DateTime::operator==(const DateTime& rhs) const
 	{
-		return ticks_ == rhs.ticks_;
+		return Ticks() == rhs.Ticks();
 	}
 
 	DateTime DateTime::operator+=(const TimeSpan& rhs)
 	{
-		ticks_ += rhs.Ticks();
+		auto total=Ticks()+ rhs.Ticks();
+		InitFromTicks(total);
 		return *this;
 	}
 
@@ -255,7 +334,8 @@ namespace Alime::base::System
 
 	DateTime DateTime::operator-=(const TimeSpan& rhs)
 	{
-		ticks_ -= rhs.Ticks();
+		auto total = Ticks() - rhs.Ticks();
+		InitFromTicks(total);
 		return *this;
 	}
 
@@ -268,7 +348,7 @@ namespace Alime::base::System
 
 	TimeSpan DateTime::operator-(const DateTime& rhs) const
 	{
-		return TimeSpan(ticks_ - rhs.ticks_);
+		return TimeSpan(Ticks() - rhs.Ticks());
 	}
 
 	//linux只能精确到毫秒
@@ -295,15 +375,15 @@ namespace Alime::base::System
 		auto tm_time = GetTmFromTick();
 		if (showMicroseconds)
 		{
-			int microseconds = static_cast<int>((ticks_% TimeSpan::kSecond) / 1000);
-			VsnprintfT(buf, sizeof(buf), L"%4d%02d%02d %02d:%02d:%02d.%06d",
+			int microseconds = static_cast<int>((Ticks()% TimeSpan::kSecond) / 1000);
+			VsnprintfT(buf, sizeof(buf), L"%4d/%02d/%02d %02d:%02d:%02d.%06d",
 				tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
 				tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec,
 				microseconds);
 		}
 		else
 		{
-			_snwprintf(buf, sizeof(buf), L"%4d%02d%02d %02d:%02d:%02d",
+			_snwprintf(buf, sizeof(buf), L"%4d/%02d/%02d %02d:%02d:%02d",
 				tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
 				tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
 		}
@@ -312,7 +392,7 @@ namespace Alime::base::System
 
 	bool DateTime::valid() const
 	{
-		return  ticks_ > 0;
+		return  Ticks() > 0;
 	}
 
 	DateTime DateTime::invalid()
@@ -322,7 +402,7 @@ namespace Alime::base::System
 
 	tm DateTime::GetTmFromTick() const
 	{
-		time_t secondsFromUnixEpoch = static_cast<time_t>((ticks_- kTickOf1970_01_01) / TimeSpan::kSecond);
+		time_t secondsFromUnixEpoch = static_cast<time_t>((Ticks()- kTickOf1970_01_01) / TimeSpan::kSecond);
 		struct tm tm_time;
 #ifdef OS_POSIX
 		//gmtime_r(&seconds, &tm_time);
@@ -333,33 +413,33 @@ namespace Alime::base::System
 
 	DateTime DateTime::Add(TimeSpan value) const
 	{
-		return DateTime(ticks_ + value.Ticks());
+		return DateTime(Ticks() + value.Ticks());
 	}
 
 	DateTime DateTime::AddDays(double value) const
 	{
-		return DateTime((ticks_ + static_cast<int64_t>(value * TimeSpan::kDay)));
+		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kDay)));
 	}
 
 	DateTime DateTime::AddHours(double value)
 	{
-		return DateTime((ticks_ + static_cast<int64_t>( value * TimeSpan::kHour)));
+		return DateTime((Ticks() + static_cast<int64_t>( value * TimeSpan::kHour)));
 	}
 
 	DateTime DateTime::AddMilliseconds(double value)
 	{
-		return DateTime((ticks_ + static_cast<int64_t>(value * TimeSpan::kMillisecond)));
+		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kMillisecond)));
 	}
 
 	DateTime DateTime::AddMinutes(double value)
 	{
-		return DateTime((ticks_ + static_cast<int64_t>(value * TimeSpan::kMinute)));
+		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kMinute)));
 	}
 
 	DateTime DateTime::AddMonths(int months)
 	{
 		//整个人都虚脱了.....
-		auto ymd=getYearMonthDayFromTicks(ticks_);
+		auto ymd=getYearMonthDayFromTicks(Ticks());
 		//time_t seconds = static_cast<time_t>((ticks_-kTickOf1970_01_01) / TimeSpan::kSecond);
 		//struct tm tm_time;
 		//gmtime_s(&tm_time, &seconds);
@@ -376,17 +456,17 @@ namespace Alime::base::System
 			ymd.day = ymd.day > kDaysInMonth[0][ymd.month - 1] ? kDaysInMonth[0][ymd.month - 1] : ymd.day;
 		}
 		return DateTime(DateTime(ymd.year, ymd.month
-			, ymd.day, Hour(), Minute(),Second()).Ticks()+ticks_%TimeSpan::kSecond);
+			, ymd.day, Hour(), Minute(),Second()).Ticks()+ Ticks() %TimeSpan::kSecond);
 	}
 
 	DateTime DateTime::AddSeconds(double value)
 	{
-		return DateTime(ticks_ + static_cast<int64_t>(value * TimeSpan::kSecond));
+		return DateTime(Ticks() + static_cast<int64_t>(value * TimeSpan::kSecond));
 	}
 
 	DateTime DateTime::AddTicks(long value)
 	{
-		return DateTime(ticks_ + value);
+		return DateTime(Ticks() + value);
 	}
 
 	DateTime DateTime::AddYears(int value)
@@ -401,19 +481,19 @@ namespace Alime::base::System
 
 	bool DateTime::Equals(DateTime value)
 	{
-		return ticks_ == value.ticks_;
+		return Ticks() == value.Ticks();
 	}
 
 	DateTime DateTime::Subtract(TimeSpan value)
 	{
 		//fix me
-		return DateTime(ticks_ - value.Ticks());
+		return DateTime(Ticks() - value.Ticks());
 	}
 
 	TimeSpan DateTime::Subtract(DateTime value)
 	{
 		//fix me
-		return TimeSpan(ticks_ - value.Ticks());
+		return TimeSpan(Ticks() - value.Ticks());
 	}
 
 	String DateTime::ToLongDateString()
@@ -422,7 +502,7 @@ namespace Alime::base::System
 		//gmtime_s(&tm_time, &seconds);
 		Char buf[64];
 		{
-			int microseconds = static_cast<int>((ticks_ % TimeSpan::kSecond) / 1000);
+			int microseconds = static_cast<int>((Ticks() % TimeSpan::kSecond) / 1000);
 			_snwprintf(buf, sizeof(buf), L"%4d/%02d/%02d",
 				ymd.year, ymd.month, ymd.day);
 		}
@@ -433,7 +513,7 @@ namespace Alime::base::System
 	{
 		Char buf[64] = { 0 };
 		auto tm_time = GetTmFromTick();
-		int microseconds = static_cast<int>((ticks_ % TimeSpan::kSecond) / 1000);
+		int microseconds = static_cast<int>((Ticks() % TimeSpan::kSecond) / 1000);
 		_snwprintf(buf, sizeof(buf), L"%02d:%02d:%02d",
 			tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
 		return buf;
@@ -455,7 +535,7 @@ namespace Alime::base::System
 
 	int DateTime::Compare(DateTime t1, DateTime t2)
 	{
-		auto ret = t1.ticks_ - t2.ticks_;
+		auto ret = t1.Ticks() - t2.Ticks();
 		return ret==0 ? 0: ret>0 ? 1: -1;
 	}
 
@@ -473,7 +553,7 @@ namespace Alime::base::System
 
 	bool DateTime::Equals(DateTime t1, DateTime t2)
 	{
-		return t1.ticks_ == t2.ticks_;
+		return t1.Ticks() == t2.Ticks();
 	}
 	
 	DateTime DateTime::Parse(String s)
@@ -483,7 +563,7 @@ namespace Alime::base::System
 
 	DateTime DateTime::ToUniversalTime()
 	{
-		return DateTime(ticks_ - TicksLocalTimeAhead());
+		return DateTime(Ticks() - TicksLocalTimeAhead());
 	}
 
 	aint64 DateTime::TicksLocalTimeAhead()
@@ -505,6 +585,6 @@ namespace Alime::base::System
 
 	DateTime DateTime::ToLocalTime()
 	{
-		return DateTime( ticks_ + TicksLocalTimeAhead()*TimeSpan::kSecond);
+		return DateTime(Ticks() + TicksLocalTimeAhead()*TimeSpan::kSecond);
 	}
 }
