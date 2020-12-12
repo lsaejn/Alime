@@ -161,7 +161,7 @@
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
-    <ClCompile Include="Alime\base\details\CharFormat.cpp" />
+    <ClCompile Include="Alime\base\details\CharEncode.cpp" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
     <ClCompile Include="Alime\base\strings\string_util.cpp" />
     <ClCompile Include="Alime\base\system\IteratorHelper.cpp" />
@@ -208,7 +208,7 @@
     <ClInclude Include="Alime\base\Interface.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
-    <ClInclude Include="Alime\base\details\CharFormat.h" />
+    <ClInclude Include="Alime\base\details\CharEncode.h" />
     <ClInclude Include="Alime\base\details\Interfaces.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />

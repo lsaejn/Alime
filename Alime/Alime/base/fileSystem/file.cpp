@@ -1,8 +1,8 @@
+#include "windows.h"
+
 #include <Alime/base/fileSystem/file.h>
 #include <Alime/base/fileSystem/FileStream.h>
 #include <Alime/base/strings/string_conversions.h>
-
-#include "windows.h"
 
 namespace
 {
@@ -54,7 +54,7 @@ namespace
 		}
 		else
 		{
-			encoding = Encoding::Mbcs;
+			encoding = Encoding::Unknown;
 			containsBom = false;
 		}
 	}
@@ -64,57 +64,8 @@ namespace
 
 namespace Alime::base::System::IO
 {
-	
-
-
-
-	//File::File(const FilePath& filePath)
-	//	:filePath_(filePath)
-	//{
-	//}
-
-	//const FilePath& File::GetFilePath()const
-	//{
-	//	return filePath_;
-	//}
-
-	/*bool File::ReadAllText(String& text, Encoding& encoding, bool& containsBom)
-	{
-		std::vector<unsigned char> buffer;
-
-		FileStream fileStream(filePath_.GetFullPath(),FileMode::Open,FileAccess::Read,FileShare::ReadWrite);
-		if (!fileStream.IsAvailable())
-			return false;
-		if (fileStream.Size() == 0)
-		{
-			text = L"";
-			encoding = Encoding::Mbcs;
-			containsBom = false;
-			return true;
-		}
-		buffer.resize((int)fileStream.Size());
-		int count = fileStream.Read(&buffer[0], buffer.size());
-
-		TestEncoding(&buffer[0], buffer.size(), encoding, containsBom);
-
-		int bomSize = 0;
-		if (containsBom)
-		{
-			if (encoding == Encoding::Utf8)
-				bomSize = 3;
-			else if(encoding== Encoding::Utf16 || encoding == Encoding::Utf16BE)
-				bomSize = 2;
-			text.reserve(buffer.size()- bomSize);
-		}
-		for (int i = bomSize; i != buffer.size(); ++i)
-		{
-			text.push_back(buffer[i]);
-		}
-		return true;
-	}*/
-
 	//u8÷±Ω”–¥»Î
-	void File::AppendAllLines(String path, std::vector<String> contents)
+	void File::AppendAllLines(const String& path, std::vector<String> contents)
 	{
 		FileStream fs(path, FileMode::OpenOrCreate);
 		for (auto& line : contents)
@@ -124,7 +75,7 @@ namespace Alime::base::System::IO
 		}	
 	}
 
-	void File::AppendAllLines(String path, std::vector<String> contents, Encoding encoding)
+	void File::AppendAllLines(const String& path, std::vector<String> contents, Encoding encoding)
 	{
 		FileStream fs(path, FileMode::OpenOrCreate);
 		for (auto& line : contents)
@@ -150,34 +101,34 @@ namespace Alime::base::System::IO
 		}
 	}
 
-	void File::AppendAllText(String path, String contents)
+	void File::AppendAllText(const String& path, const String& contents)
 	{
 		FileStream fs(path, FileMode::OpenOrCreate);
 		auto u8Str = UTF16ToUTF8(contents);
 		fs.Write((void*)u8Str.c_str(), u8Str.length());
 	}
 
-	void File::AppendAllText(String path, String contents, Encoding encoding)
+	void File::AppendAllText(const String& path, const String& contents, Encoding encoding)
 	{
 
 	}
 
-	void File::Copy(String sourceFileName, String destFileName)
+	void File::Copy(const String& sourceFileName, const String& destFileName)
 	{
 		File::Copy(sourceFileName.c_str(), destFileName.c_str(), false);
 	}
 
-	void File::Copy(String sourceFileName, String destFileName, bool overwrite)
+	void File::Copy(const String& sourceFileName, const String& destFileName, bool overwrite)
 	{
 		::CopyFile(sourceFileName.c_str(), destFileName.c_str(), !overwrite);
 	}
 
-	void File::Move(String sourceFileName, String destFileName)
+	void File::Move(const String& sourceFileName, const String& destFileName)
 	{
 		File::Move(sourceFileName, destFileName, false);
 	}
 
-	void File::Move(String sourceFileName, String destFileName, bool overwrite)
+	void File::Move(const String& sourceFileName, const String& destFileName, bool overwrite)
 	{
 		if (!File::Exists(sourceFileName))
 			throw "source file balabalaba";
@@ -193,7 +144,7 @@ namespace Alime::base::System::IO
 		}
 	}
 
-	FileStream File::Create(String path)
+	FileStream File::Create(const String& path)
 	{
 		//we did not use CreateFile becz we still need to return a fileStream
 		FileStream fs(path, FileMode::Create, FileAccess::ReadWrite, FileShare::ReadWrite);
@@ -202,7 +153,7 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	FileStream File::Create(String path, int bufferSize)
+	FileStream File::Create(const String& path, int bufferSize)
 	{
 		FileStream fs(path, FileMode::Create, FileAccess::ReadWrite, FileShare::ReadWrite);
 		if (!fs.IsAvailable())
@@ -211,24 +162,24 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	void File::Decrypt(String path)
+	void File::Decrypt(const String& path)
 	{
 
 	}
 
-	bool File::Delete(String path)
+	bool File::Delete(const String& path)
 	{
 		if (::DeleteFile(path.c_str()) != 0)
 			return true;
 		return false;
 	}
 
-	void File::Encrypt(String path)
+	void File::Encrypt(const String& path)
 	{
 
 	}
 
-	bool File::Exists(String path)
+	bool File::Exists(const String& path)
 	{
 		const DWORD file_attr = ::GetFileAttributes(path.data());
 		if (file_attr != INVALID_FILE_ATTRIBUTES)
@@ -238,7 +189,7 @@ namespace Alime::base::System::IO
 		return false;
 	}
 
-	void File::SetAttributes(String path, FileAttributes fileAttributes)
+	void File::SetAttributes(const String& path, FileAttributes fileAttributes)
 	{
 		DWORD file_attr = ::GetFileAttributes(path.data());
 		if (file_attr != INVALID_FILE_ATTRIBUTES)
@@ -252,7 +203,7 @@ namespace Alime::base::System::IO
 		}
 	}
 
-	FileAttributes File::GetAttributes(String path)
+	FileAttributes File::GetAttributes(const String& path)
 	{
 		const DWORD file_attr = ::GetFileAttributes(path.data());
 		if (file_attr != INVALID_FILE_ATTRIBUTES)
@@ -263,7 +214,7 @@ namespace Alime::base::System::IO
 	}
 
 	//fix me, check here
-	FileStream File::Open(String path, FileMode mode)
+	FileStream File::Open(const String& path, FileMode mode)
 	{
 		FileStream fs(path, mode, FileAccess::ReadWrite, FileShare::ReadWrite);
 		if (!fs.IsAvailable())
@@ -273,7 +224,7 @@ namespace Alime::base::System::IO
 	}
 
 	//fix me, check here
-	FileStream File::Open(String path, FileMode mode, FileAccess access)
+	FileStream File::Open(const String& path, FileMode mode, FileAccess access)
 	{
 		FileStream fs(path, mode, access, FileShare::ReadWrite);
 		if (!fs.IsAvailable())
@@ -282,7 +233,7 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	FileStream File::Open(String path, FileMode mode, FileAccess access, FileShare share)
+	FileStream File::Open(const String& path, FileMode mode, FileAccess access, FileShare share)
 	{
 		FileStream fs(path, mode, access, share);
 		if (!fs.IsAvailable())
@@ -291,7 +242,7 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	FileStream File::OpenRead(String path)
+	FileStream File::OpenRead(const String& path)
 	{
 		FileStream fs(path, FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
 		if (!fs.IsAvailable())
@@ -300,7 +251,7 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 	//static StreamReader OpenText(String path);
-	FileStream File::OpenWrite(String path)
+	FileStream File::OpenWrite(const String& path)
 	{
 		FileStream fs(path, FileMode::Open, FileAccess::Write, FileShare::Read);
 		if (!fs.IsAvailable())
@@ -309,7 +260,7 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	std::vector<abyte> File::ReadAllBytes(String path)
+	std::vector<abyte> File::ReadAllBytes(const String& path)
 	{
 		FileStream fs(path, FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
 		if (fs.CanRead())
@@ -323,32 +274,32 @@ namespace Alime::base::System::IO
 		else
 			throw "fuck";
 	}
-	std::vector<String> File::ReadAllLines(String path)
+	std::vector<String> File::ReadAllLines(const String& path)
 	{
 		//fix me, we will do this in StreamReader
 		return {};
 	}
 
-	std::vector<String> File::ReadAllLines(String path, Encoding encoding)
+	std::vector<String> File::ReadAllLines(const String& path, Encoding encoding)
 	{
 		//fix me, we will do this in StreamReader
 		return {};
 	}
 
-	String File::ReadAllText(String path)
+	String File::ReadAllText(const String& path)
 	{
 		//fix me, we will do this in StreamReader
 		return {};
 	}
 
-	String File::ReadAllText(String path, Encoding encoding)
+	String File::ReadAllText(const String& path, Encoding encoding)
 	{
 		//fix me, we will implement this in StreamReader
 		return {};
 	}
 
 	//The name of a file that replaces the file specified by destinationFileName.
-	void File::Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName)
+	void File::Replace(const String& sourceFileName, const String& destinationFileName, const String& destinationBackupFileName)
 	{
 		//fix me check destinationFileName
 		File::Copy(destinationFileName, destinationBackupFileName, true);
@@ -357,28 +308,28 @@ namespace Alime::base::System::IO
 		File::Copy(sourceFileName, destinationFileName);
 	}
 
-	void File::Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName, bool ignoreMetadataErrors)
+	void File::Replace(const String& sourceFileName, const String& destinationFileName, const String& destinationBackupFileName, bool ignoreMetadataErrors)
 	{
 		//win32 seem not to support ignore fileshare access
 	}
 
-	void File::WriteAllBytes(String path, std::vector<abyte> bytes)
+	void File::WriteAllBytes(const String& path, std::vector<abyte> bytes)
 	{
 
 	}
-	void File::WriteAllLines(String path, std::vector<String> contents)
+	void File::WriteAllLines(const String& path, std::vector<String> contents)
 	{
 
 	}
-	void File::WriteAllLines(String path, std::vector<String> contents, Encoding encoding)
+	void File::WriteAllLines(const String& path, std::vector<String> contents, Encoding encoding)
 	{
 
 	}
-	void File::WriteAllText(String path, String contents)
+	void File::WriteAllText(const String& path, const String& contents)
 	{
 
 	}
-	void File::WriteAllText(String path, String contents, Encoding encoding)
+	void File::WriteAllText(const String& path, const String& contents, Encoding encoding)
 	{
 
 	}

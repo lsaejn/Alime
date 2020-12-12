@@ -51,6 +51,7 @@ namespace Alime::base
 		Utf16,
 		Utf16BE,
 		Utf32,
+		Unknown
 	};
 
 	enum class FileAttributes

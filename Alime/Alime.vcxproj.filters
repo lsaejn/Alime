@@ -87,9 +87,6 @@
     <ClCompile Include="Alime\base\fileSystem\StreamWriter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\details\CharFormat.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Alime\base\time\Locale.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\details\CharEncode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -266,9 +266,6 @@
     <ClInclude Include="Alime\base\details\Interfaces.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Alime\base\details\CharFormat.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Alime\base\fileSystem\FileSystemInfo.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -279,6 +276,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\time\Locale.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\CharEncode.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

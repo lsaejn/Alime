@@ -1,5 +1,11 @@
 #pragma once
-class StreamWriter
+
+namespace Alime::base::System::IO
 {
+	class StreamWriter
+	{
+	};
 };
+
+
 

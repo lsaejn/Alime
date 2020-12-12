@@ -7,7 +7,7 @@
 class IStream;
 
 namespace Alime::base::System::IO
-{ 
+{
 	class TextReader
 	{
 	public:
@@ -42,7 +42,6 @@ namespace Alime::base::System::IO
 		virtual int Read(std::vector<Char>& buffer, int index, int count) override;
 		virtual wchar_t Peek() override;
 	};
-
 
 }
 

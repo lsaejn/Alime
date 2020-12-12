@@ -7,8 +7,9 @@
 #include <Alime/base/fileSystem/filePath.h>
 #include <Alime/base/fileSystem/IStream.h>
 #include <Alime/base/time/DateTime.h>
+#include <Alime/base/fileSystem/StreamWriter.h>
+#include <Alime/base/fileSystem/StreamReader.h>
 
-//fix me, String-> const String&
 namespace Alime::base::System::IO
 {
 	class FileStream;
@@ -18,55 +19,55 @@ namespace Alime::base::System::IO
 		File()=delete;
 		~File() = delete;
 	public:
-		static void AppendAllLines(String path, std::vector<String> contents);
-		static void AppendAllLines(String path, std::vector<String> contents, Encoding encoding);
-		static void AppendAllText(String path, String contents);
-		static void AppendAllText(String path, String contents, Encoding encoding);
-		//static StreamWriter AppendText(String path);
-		static void Copy(String sourceFileName, String destFileName);
-		static void Copy(String sourceFileName, String destFileName, bool overwrite);
-		static FileStream Create(String path);
-		static FileStream Create(String path, int bufferSize);
-		//static FileStream Create(String path, int bufferSize, FileOptions options);
-		//static StreamWriter CreateText(String path);
-		static void Decrypt(String path);
-		static bool Delete(String path);
-		static void Encrypt(String path);
-		static bool Exists(String path);
-		static FileAttributes GetAttributes(String path);
-		static DateTime GetCreationTime(String path);
-		static DateTime GetCreationTimeUtc(String path);
-		static DateTime GetLastAccessTime(String path);
-		static DateTime GetLastAccessTimeUtc(String path);
-		static DateTime GetLastWriteTime(String path);
-		static DateTime GetLastWriteTimeUtc(String path);
-		static void Move(String sourceFileName, String destFileName);
-		static void Move(String sourceFileName, String destFileName, bool overwrite);
-		static FileStream Open(String path, FileMode mode);
-		static FileStream Open(String path, FileMode mode, FileAccess access);
-		static FileStream Open(String path, FileMode mode, FileAccess access, FileShare share);
-		static FileStream OpenRead(String path);
-		//static StreamReader OpenText(String path);
-		static FileStream OpenWrite(String path);
-		static std::vector<abyte> ReadAllBytes(String path);
-		static std::vector<String> ReadAllLines(String path);
-		static std::vector<String> ReadAllLines(String path, Encoding encoding);
-		static String ReadAllText(String path);
-		static String ReadAllText(String path, Encoding encoding);
-		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName);
-		static void Replace(String sourceFileName, String destinationFileName, String destinationBackupFileName, bool ignoreMetadataErrors);
-		static void SetAttributes(String path, FileAttributes fileAttributes);
-		static void SetCreationTime(String path, DateTime creationTime);
-		static void SetCreationTimeUtc(String path, DateTime creationTimeUtc);
-		static void SetLastAccessTime(String path, DateTime lastAccessTime);
-		static void SetLastAccessTimeUtc(String path, DateTime lastAccessTimeUtc);
-		static void SetLastWriteTime(String path, DateTime lastWriteTime);
-		static void SetLastWriteTimeUtc(String path, DateTime lastWriteTimeUtc);
-		static void WriteAllBytes(String path, std::vector<abyte> bytes);
-		static void WriteAllLines(String path, std::vector<String> contents);
-		static void WriteAllLines(String path, std::vector<String> contents, Encoding encoding);
-		static void WriteAllText(String path, String contents);
-		static void WriteAllText(String path, String contents, Encoding encoding);
+		static void AppendAllLines(const String& path, std::vector<String> contents);
+		static void AppendAllLines(const String& path, std::vector<String> contents, Encoding encoding);
+		static void AppendAllText(const String& path, const String& contents);
+		static void AppendAllText(const String& path, const String& contents, Encoding encoding);
+		static StreamWriter AppendText(const String& path);
+		static void Copy(const String& sourceFileName, const String& destFileName);
+		static void Copy(const String& sourceFileName, const String& destFileName, bool overwrite);
+		static FileStream Create(const String& path);
+		static FileStream Create(const String& path, int bufferSize);
+		//static FileStream Create(const String& path, int bufferSize, FileOptions options);
+		static StreamWriter CreateText(const String& path);
+		static void Decrypt(const String& path);
+		static bool Delete(const String& path);
+		static void Encrypt(const String& path);
+		static bool Exists(const String& path);
+		static FileAttributes GetAttributes(const String& path);
+		static DateTime GetCreationTime(const String& path);
+		static DateTime GetCreationTimeUtc(const String& path);
+		static DateTime GetLastAccessTime(const String& path);
+		static DateTime GetLastAccessTimeUtc(const String& path);
+		static DateTime GetLastWriteTime(const String& path);
+		static DateTime GetLastWriteTimeUtc(const String& path);
+		static void Move(const String& sourceFileName, const String& destFileName);
+		static void Move(const String& sourceFileName, const String& destFileName, bool overwrite);
+		static FileStream Open(const String& path, FileMode mode);
+		static FileStream Open(const String& path, FileMode mode, FileAccess access);
+		static FileStream Open(const String& path, FileMode mode, FileAccess access, FileShare share);
+		static FileStream OpenRead(const String& path);
+		static StreamReader OpenText(const String& path);
+		static FileStream OpenWrite(const String& path);
+		static std::vector<abyte> ReadAllBytes(const String& path);
+		static std::vector<String> ReadAllLines(const String& path);
+		static std::vector<String> ReadAllLines(const String& path, Encoding encoding);
+		static String ReadAllText(const String& path);
+		static String ReadAllText(const String& path, Encoding encoding);
+		static void Replace(const String& sourceFileName, const String& destinationFileName, const String& destinationBackupFileName);
+		static void Replace(const String& sourceFileName, const String& destinationFileName, const String& destinationBackupFileName, bool ignoreMetadataErrors);
+		static void SetAttributes(const String& path, FileAttributes fileAttributes);
+		static void SetCreationTime(const String& path, DateTime creationTime);
+		static void SetCreationTimeUtc(const String& path, DateTime creationTimeUtc);
+		static void SetLastAccessTime(const String& path, DateTime lastAccessTime);
+		static void SetLastAccessTimeUtc(const String& path, DateTime lastAccessTimeUtc);
+		static void SetLastWriteTime(const String& path, DateTime lastWriteTime);
+		static void SetLastWriteTimeUtc(const String& path, DateTime lastWriteTimeUtc);
+		static void WriteAllBytes(const String& path, std::vector<abyte> bytes);
+		static void WriteAllLines(const String& path, std::vector<String> contents);
+		static void WriteAllLines(const String& path, std::vector<String> contents, Encoding encoding);
+		static void WriteAllText(const String& path, const String& contents);
+		static void WriteAllText(const String& path, const String& contents, Encoding encoding);
 	};
 }
 

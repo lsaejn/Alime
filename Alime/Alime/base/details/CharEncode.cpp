@@ -1,4 +1,4 @@
-#include "CharFormat.h"
+#include "CharEncode.h"
 #include <windows.h>
 
 namespace Alime::base::Sysytem::IO
