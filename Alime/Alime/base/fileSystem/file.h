@@ -19,8 +19,8 @@ namespace Alime::base::System::IO
 		File()=delete;
 		~File() = delete;
 	public:
-		static void AppendAllLines(const String& path, std::vector<String> contents);
-		static void AppendAllLines(const String& path, std::vector<String> contents, Encoding encoding);
+		static void AppendAllLines(const String& path, std::vector<String>& contents);
+		static void AppendAllLines(const String& path, std::vector<String>& contents, Encoding encoding);
 		static void AppendAllText(const String& path, const String& contents);
 		static void AppendAllText(const String& path, const String& contents, Encoding encoding);
 		static StreamWriter AppendText(const String& path);
@@ -63,9 +63,9 @@ namespace Alime::base::System::IO
 		static void SetLastAccessTimeUtc(const String& path, DateTime lastAccessTimeUtc);
 		static void SetLastWriteTime(const String& path, DateTime lastWriteTime);
 		static void SetLastWriteTimeUtc(const String& path, DateTime lastWriteTimeUtc);
-		static void WriteAllBytes(const String& path, std::vector<abyte> bytes);
-		static void WriteAllLines(const String& path, std::vector<String> contents);
-		static void WriteAllLines(const String& path, std::vector<String> contents, Encoding encoding);
+		static void WriteAllBytes(const String& path, std::vector<abyte>& bytes);
+		static void WriteAllLines(const String& path, std::vector<String>& contents);
+		static void WriteAllLines(const String& path, std::vector<String>& contents, Encoding encoding);
 		static void WriteAllText(const String& path, const String& contents);
 		static void WriteAllText(const String& path, const String& contents, Encoding encoding);
 	};

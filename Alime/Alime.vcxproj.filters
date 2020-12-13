@@ -66,9 +66,6 @@
     <ClCompile Include="Alime\base\fileSystem\filePath.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\fileSystem\file.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Alime\base\details\CharEncode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\fileSystem\file.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

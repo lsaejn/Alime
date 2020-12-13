@@ -65,7 +65,7 @@ namespace
 namespace Alime::base::System::IO
 {
 	//u8÷±Ω”–¥»Î
-	void File::AppendAllLines(const String& path, std::vector<String> contents)
+	void File::AppendAllLines(const String& path, std::vector<String>& contents)
 	{
 		FileStream fs(path, FileMode::OpenOrCreate);
 		for (auto& line : contents)
@@ -75,7 +75,7 @@ namespace Alime::base::System::IO
 		}	
 	}
 
-	void File::AppendAllLines(const String& path, std::vector<String> contents, Encoding encoding)
+	void File::AppendAllLines(const String& path, std::vector<String>& contents, Encoding encoding)
 	{
 		FileStream fs(path, FileMode::OpenOrCreate);
 		for (auto& line : contents)
@@ -90,13 +90,17 @@ namespace Alime::base::System::IO
 			else if (encoding == Encoding::Unicode)
 			{
 				fs.Write((void*)line.c_str(), line.length()*2);
-				fs.Write(L"\r\n", 4);
+				fs.Write(L"\r\n", (sizeof(L"\r\n")-1)* sizeof (wchar_t));
 			}
 			else if (encoding == Encoding::Mbcs)
 			{
 				auto defaultStr = SysWideToNativeMB(line);
 				fs.Write((void*)defaultStr.c_str(), defaultStr.length());
 				fs.Write("\r\n", 2);
+			}
+			else
+			{
+				throw "encode is not supported now";
 			}
 		}
 	}
@@ -108,9 +112,27 @@ namespace Alime::base::System::IO
 		fs.Write((void*)u8Str.c_str(), u8Str.length());
 	}
 
-	void File::AppendAllText(const String& path, const String& contents, Encoding encoding)
+	void File::AppendAllText(const String& path, const String& content, Encoding encoding)
 	{
-
+		FileStream fs(path, FileMode::OpenOrCreate);
+		if (encoding == Encoding::Utf8)
+		{
+			auto u8Str = UTF16ToUTF8(content);
+			fs.Write((void*)u8Str.c_str(), u8Str.length());
+		}
+		else if (encoding == Encoding::Unicode)
+		{
+			fs.Write((void*)content.c_str(), content.length() * 2);
+		}
+		else if(encoding == Encoding::Mbcs)
+		{
+			auto ansiStr = SysWideToNativeMB(content);
+			fs.Write((void*)ansiStr.c_str(), ansiStr.length());
+		}
+		else
+		{
+		throw "encode is not supported now";
+		}
 	}
 
 	void File::Copy(const String& sourceFileName, const String& destFileName)
@@ -313,15 +335,15 @@ namespace Alime::base::System::IO
 		//win32 seem not to support ignore fileshare access
 	}
 
-	void File::WriteAllBytes(const String& path, std::vector<abyte> bytes)
+	void File::WriteAllBytes(const String& path, std::vector<abyte>& bytes)
 	{
 
 	}
-	void File::WriteAllLines(const String& path, std::vector<String> contents)
+	void File::WriteAllLines(const String& path, std::vector<String>& contents)
 	{
 
 	}
-	void File::WriteAllLines(const String& path, std::vector<String> contents, Encoding encoding)
+	void File::WriteAllLines(const String& path, std::vector<String>& contents, Encoding encoding)
 	{
 
 	}

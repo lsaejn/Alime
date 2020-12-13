@@ -4,7 +4,7 @@
 #include "Alime/base/fileSystem/file_define.h"
 
 #include <vector>
-class IStream;
+struct IStream;
 
 namespace Alime::base::System::IO
 {

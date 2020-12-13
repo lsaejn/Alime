@@ -43,6 +43,8 @@ namespace Alime::base
 		Inheritable,//win32不支持
 	};
 
+	//unix系统以U32为主，但各个库使用U16,
+	//所以我们只支持u8+u16
 	enum class Encoding
 	{
 		Mbcs,
@@ -87,10 +89,11 @@ namespace Alime::base
 	// The character used to identify a file extension.
 	extern const Char kFilePathExtensionSeparator;
 	*/
-
+	//我们不使用extern, 因为file_define只被极少数类包含
 #if defined(OS_POSIX)
 	const Char kEndChar = '\0';
 #define kDelimiter = L'/';
+#define kLineBreak L"\n"
 	const Char kFilePathSeparators[] = "/";
 	const Char kFilePathCurrentDirectory[] = ".";
 	const Char kFilePathParentDirectory[] = "..";
@@ -98,6 +101,7 @@ namespace Alime::base
 #elif defined(OS_WIN)
 	const Char kEndChar = L'\0';
 #define kDelimiter L'\\';
+#define kLineBreak L"\r\n"
 	const Char kFilePathSeparators[] = L"\\/";
 	const Char kFilePathCurrentDirectory[] = L".";
 	const Char kFilePathParentDirectory[] = L"..";
