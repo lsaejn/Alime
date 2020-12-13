@@ -47,7 +47,7 @@ namespace Alime::base::System::IO
 		static FileStream Open(const String& path, FileMode mode, FileAccess access);
 		static FileStream Open(const String& path, FileMode mode, FileAccess access, FileShare share);
 		static FileStream OpenRead(const String& path);
-		static StreamReader OpenText(const String& path);
+		//static StreamReader OpenText(const String& path);
 		static FileStream OpenWrite(const String& path);
 		static std::vector<abyte> ReadAllBytes(const String& path);
 		static std::vector<String> ReadAllLines(const String& path);

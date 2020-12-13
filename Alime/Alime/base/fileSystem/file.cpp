@@ -4,6 +4,18 @@
 #include <Alime/base/fileSystem/FileStream.h>
 #include <Alime/base/strings/string_conversions.h>
 
+
+/*
+* windows 时间相关
+GetSystemTime(&st);
+GetSystemTimeAsFileTime
+SystemTimeToFileTime(&st, &ft)
+FileTimeToSystemTime(&ft,&st)
+GetLocalTime;
+GetSystemTime
+SystemTimeToTzSpecificLocalTime
+*/
+
 namespace
 {
 	using namespace Alime::base;
@@ -306,9 +318,12 @@ namespace Alime::base::System::IO
 
 		if (creationTime)
 		{
+			//fix me
+			ULARGE_INTEGER largeInteger;
+			largeInteger.QuadPart = creationTime->ToFileTimeUtc();
 			auto ticks = creationTime->ToFileTimeUtc();
-			ft1.dwHighDateTime = ticks >> 32;
-			ft1.dwLowDateTime = static_cast<int>(ticks);
+			ft1.dwHighDateTime = largeInteger.HighPart;
+			ft1.dwLowDateTime = largeInteger.LowPart;
 		}
 		if (lastAccessTime)
 		{
@@ -397,10 +412,10 @@ namespace Alime::base::System::IO
 		return std::move(fs);
 	}
 
-	StreamReader File::OpenText(const String& path)
-	{
-		return { path };
-	}
+	//StreamReader File::OpenText(const String& path)
+	//{
+	//	return { path };
+	//}
 
 	//static StreamReader OpenText(String path);
 	FileStream File::OpenWrite(const String& path)
