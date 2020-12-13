@@ -7,16 +7,16 @@ namespace Alime::base
 	class IStream
 	{
 	public:
-		virtual bool CanRead()const = 0;
-		virtual bool CanWrite()const = 0;
-		virtual bool CanSeek()const = 0;
-		virtual bool CanPeek()const = 0;
-		virtual bool IsLimited()const = 0;
-		virtual bool IsAvailable()const = 0;
+		virtual bool CanRead() const = 0;
+		virtual bool CanWrite() const = 0;
+		virtual bool CanSeek() const = 0;
+		virtual bool CanPeek() const = 0;
+		virtual bool IsLimited() const = 0;
+		virtual bool IsAvailable() const = 0;
 		virtual void Close() = 0;
 
-		virtual pos_t Position()const = 0;
-		virtual pos_t Size()const = 0;
+		virtual pos_t Position() const = 0;
+		virtual pos_t Size() const = 0;
 
 		virtual void Seek(pos_t _size) = 0;
 		virtual void SeekFromEnd(pos_t _size) = 0;

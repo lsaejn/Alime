@@ -64,6 +64,8 @@ namespace
 
 namespace Alime::base::System::IO
 {
+	extern DateTime FTIMEToDateTime(FILETIME ft);
+
 	//u8÷±Ω”–¥»Î
 	void File::AppendAllLines(const String& path, std::vector<String>& contents)
 	{
@@ -135,6 +137,12 @@ namespace Alime::base::System::IO
 		}
 	}
 
+	StreamWriter File::AppendText(const String& path)
+	{
+		//fix me
+		return {};
+	}
+
 	void File::Copy(const String& sourceFileName, const String& destFileName)
 	{
 		File::Copy(sourceFileName.c_str(), destFileName.c_str(), false);
@@ -182,6 +190,11 @@ namespace Alime::base::System::IO
 			throw "failed to open";
 		//fix me, set bufferSize here
 		return std::move(fs);
+	}
+
+	StreamWriter File::CreateText(const String& path)
+	{
+		return {};
 	}
 
 	void File::Decrypt(const String& path)
@@ -235,6 +248,117 @@ namespace Alime::base::System::IO
 		return (FileAttributes)file_attr;
 	}
 
+	DateTime File::GetCreationTime(const String& path)
+	{
+		return GetCreationTimeUtc(path).ToLocalTime();
+	}
+
+	DateTime File::GetCreationTimeUtc(const String& path)
+	{
+		WIN32_FILE_ATTRIBUTE_DATA info;
+		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
+		FILETIME createFileTime = info.ftCreationTime;
+		return FTIMEToDateTime(createFileTime);
+	}
+
+	DateTime File::GetLastAccessTime(const String& path)
+	{
+		return GetLastAccessTimeUtc(path).ToLocalTime();
+	}
+
+	DateTime File::GetLastAccessTimeUtc(const String& path)
+	{
+		WIN32_FILE_ATTRIBUTE_DATA info;
+		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
+		FILETIME createFileTime = info.ftCreationTime;
+		return FTIMEToDateTime(createFileTime);
+	}
+
+	DateTime File::GetLastWriteTime(const String& path)
+	{
+		return GetLastWriteTimeUtc(path).ToLocalTime();
+	}
+
+	DateTime File::GetLastWriteTimeUtc(const String& path)
+	{
+		WIN32_FILE_ATTRIBUTE_DATA info;
+		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
+		FILETIME createFileTime = info.ftLastWriteTime;
+		return FTIMEToDateTime(createFileTime);
+	}
+
+	void SetFileTimeImpl(const String& path,
+		const DateTime* creationTime,
+		const DateTime* lastAccessTime,
+		const DateTime* lastWriteTime
+		)
+	{
+		HANDLE hFile = CreateFile(path.c_str(),
+			GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE,
+			NULL,
+			OPEN_EXISTING,
+			0,
+			NULL);
+		FILETIME ft1;
+		FILETIME ft2;
+		FILETIME ft3;
+
+		if (creationTime)
+		{
+			auto ticks = creationTime->ToFileTimeUtc();
+			ft1.dwHighDateTime = ticks >> 32;
+			ft1.dwLowDateTime = static_cast<int>(ticks);
+		}
+		if (lastAccessTime)
+		{
+			auto ticks = lastAccessTime->ToFileTimeUtc();
+			ft2.dwHighDateTime = ticks >> 32;
+			ft2.dwLowDateTime = static_cast<int>(ticks);
+		}
+		if (lastWriteTime)
+		{
+			auto ticks = lastWriteTime->ToFileTimeUtc();
+			ft3.dwHighDateTime = ticks >> 32;
+			ft3.dwLowDateTime = static_cast<int>(ticks);
+		}
+		SetFileTime(hFile, creationTime? &ft1 : nullptr, lastAccessTime? &ft2 : nullptr, lastWriteTime ? &ft3: nullptr);
+	}
+
+
+	void File::SetCreationTime(const String& path, DateTime creationTime)
+	{
+		creationTime = creationTime.ToUniversalTime();
+		SetFileTimeImpl(path, &creationTime, nullptr, nullptr);
+	}
+
+	void File::SetCreationTimeUtc(const String& path, DateTime creationTimeUtc)
+	{
+		SetFileTimeImpl(path, &creationTimeUtc, nullptr, nullptr);
+	}
+
+	void File::SetLastAccessTime(const String& path, DateTime lastAccessTime)
+	{
+		lastAccessTime = lastAccessTime.ToUniversalTime();
+		SetFileTimeImpl(path, nullptr, &lastAccessTime, nullptr);
+	}
+
+	void File::SetLastAccessTimeUtc(const String& path, DateTime lastAccessTimeUtc)
+	{
+		SetFileTimeImpl(path, nullptr, &lastAccessTimeUtc, nullptr);
+	}
+
+	void File::SetLastWriteTime(const String& path, DateTime lastWriteTime)
+	{
+		lastWriteTime = lastWriteTime.ToUniversalTime();
+		SetFileTimeImpl(path, nullptr, nullptr, &lastWriteTime);
+	}
+
+	void File::SetLastWriteTimeUtc(const String& path, DateTime lastWriteTimeUtc)
+	{
+		SetFileTimeImpl(path, nullptr, nullptr, &lastWriteTimeUtc);
+	}
+
 	//fix me, check here
 	FileStream File::Open(const String& path, FileMode mode)
 	{
@@ -272,6 +396,12 @@ namespace Alime::base::System::IO
 		//fix me, set bufferSize here
 		return std::move(fs);
 	}
+
+	StreamReader File::OpenText(const String& path)
+	{
+		return { path };
+	}
+
 	//static StreamReader OpenText(String path);
 	FileStream File::OpenWrite(const String& path)
 	{

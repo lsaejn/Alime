@@ -496,6 +496,16 @@ namespace Alime::base::System
 		return TimeSpan(Ticks() - value.Ticks());
 	}
 
+	aint64 DateTime::ToFileTime() const
+	{
+		return Ticks()+TicksLocalTimeAhead();
+	}
+
+	aint64 DateTime::ToFileTimeUtc() const
+	{
+		return Ticks();
+	}
+
 	String DateTime::ToLongDateString()
 	{
 		auto ymd=getYearMonthDayFromTicks(Ticks());
@@ -566,7 +576,7 @@ namespace Alime::base::System
 		return DateTime(Ticks() - TicksLocalTimeAhead());
 	}
 
-	aint64 DateTime::TicksLocalTimeAhead()
+	aint64 DateTime::TicksLocalTimeAhead() const
 	{
 		static bool cached = false;
 		static aint64 secondsAhead = 0;

@@ -4,8 +4,7 @@
 
 namespace Alime::base::System::IO
 {
-	namespace
-	{
+
 		constexpr int sz = sizeof(FILETIME);
 		static_assert(sizeof(FILETIME) == 8, "filetime could be optimized");
 
@@ -33,15 +32,15 @@ namespace Alime::base::System::IO
 
 
 
-		WINBASEAPI
-			BOOL
-			WINAPI
-			FileTimeToSystemTime(
-				__in  CONST FILETIME* lpFileTime,
-				__out LPSYSTEMTIME lpSystemTime
-			);
+		//WINBASEAPI
+		//	BOOL
+		//	WINAPI
+		//	FileTimeToSystemTime(
+		//		__in  CONST FILETIME* lpFileTime,
+		//		__out LPSYSTEMTIME lpSystemTime
+		//	);
 
-	}
+
 
 
 

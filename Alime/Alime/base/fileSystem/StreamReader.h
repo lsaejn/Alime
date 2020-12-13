@@ -11,14 +11,14 @@ namespace Alime::base::System::IO
 	class TextReader
 	{
 	public:
-		virtual String	 ReadString(aint length);
-		virtual String	 ReadLine();
-		virtual String	 ReadToEnd();
+		virtual String	 ReadString(aint length)=0;
+		virtual String	 ReadLine() = 0;
+		virtual String	 ReadToEnd() = 0;
 		virtual Char Read() = 0;
 		// index: The position in buffer at which to begin writing.
-		virtual int Read(std::vector<Char>& buffer, int index, int count);
-		virtual wchar_t Peek();
-		virtual void Close();
+		virtual int Read(std::vector<Char>& buffer, int index, int count) = 0;
+		virtual wchar_t Peek() = 0;
+		virtual void Close() = 0;
 	};
 
 	class StreamReader : public TextReader

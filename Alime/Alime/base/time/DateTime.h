@@ -132,8 +132,8 @@ namespace Alime::base::System
 		bool Equals(DateTime value);
 		DateTime Subtract(TimeSpan value);
 		TimeSpan Subtract(DateTime value);
-		//long ToFileTime();
-		//long ToFileTimeUtc();
+		aint64 ToFileTime() const;
+		aint64 ToFileTimeUtc() const;
 		DateTime ToUniversalTime();//仅当dateTime表示localtime时调用
 		DateTime ToLocalTime();
 
@@ -159,7 +159,7 @@ namespace Alime::base::System
 		static DateTime invalid();
 		
 	private:
-		aint64 TicksLocalTimeAhead();
+		aint64 TicksLocalTimeAhead() const;
 		tm GetTmFromTick() const;
 		String toFormattedString(bool showMicroseconds = true) const;
 		void CheckDate();
