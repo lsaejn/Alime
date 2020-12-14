@@ -299,8 +299,8 @@ namespace Alime::base::System
 	{
 		auto year = Year();
 		int firstDay=getJulianDayNumber(year, 1, 1);
-		int day = getJulianDayNumber(year, 1, 1);
-		return firstDay-day;
+		int today = getJulianDayNumber(Year(), Month(), Day());
+		return today- firstDay+1;
 	}
 
 	DayOfWeek DateTime::DayInWeek()
@@ -590,7 +590,7 @@ namespace Alime::base::System
 			time_t tik = mktime(&pTm2);
 			secondsAhead = t - tik;
 		}
-		return secondsAhead;
+		return secondsAhead* TimeSpan::kSecond;
 	}
 
 	DateTime DateTime::ToLocalTime()

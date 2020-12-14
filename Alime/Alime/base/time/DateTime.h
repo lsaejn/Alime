@@ -175,6 +175,7 @@ namespace Alime::base::System
 		aint millisecond_;
 		aint microsecond_;
 		aint nanosecond_;
+		DateTimeKind kind_;
 	};
 
 	static DateTime operator +(DateTime d, TimeSpan t);

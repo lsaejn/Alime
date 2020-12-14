@@ -262,41 +262,42 @@ namespace Alime::base::System::IO
 
 	DateTime File::GetCreationTime(const String& path)
 	{
-		return GetCreationTimeUtc(path).ToLocalTime();
+		WIN32_FILE_ATTRIBUTE_DATA info;
+		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
+		FILETIME createFileTime = info.ftCreationTime;
+		return FTIMEToDateTime(createFileTime);
+		
 	}
 
 	DateTime File::GetCreationTimeUtc(const String& path)
 	{
-		WIN32_FILE_ATTRIBUTE_DATA info;
-		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
-		FILETIME createFileTime = info.ftCreationTime;
-		return FTIMEToDateTime(createFileTime);
+		return GetCreationTime(path).ToUniversalTime();
 	}
 
 	DateTime File::GetLastAccessTime(const String& path)
 	{
-		return GetLastAccessTimeUtc(path).ToLocalTime();
-	}
-
-	DateTime File::GetLastAccessTimeUtc(const String& path)
-	{
 		WIN32_FILE_ATTRIBUTE_DATA info;
 		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
 		FILETIME createFileTime = info.ftCreationTime;
 		return FTIMEToDateTime(createFileTime);
 	}
 
-	DateTime File::GetLastWriteTime(const String& path)
+	DateTime File::GetLastAccessTimeUtc(const String& path)
 	{
-		return GetLastWriteTimeUtc(path).ToLocalTime();
+		return GetLastAccessTimeUtc(path).ToUniversalTime();
 	}
 
-	DateTime File::GetLastWriteTimeUtc(const String& path)
+	DateTime File::GetLastWriteTime(const String& path)
 	{
 		WIN32_FILE_ATTRIBUTE_DATA info;
 		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
 		FILETIME createFileTime = info.ftLastWriteTime;
 		return FTIMEToDateTime(createFileTime);
+	}
+
+	DateTime File::GetLastWriteTimeUtc(const String& path)
+	{
+		return GetLastWriteTimeUtc(path).ToUniversalTime();
 	}
 
 	void SetFileTimeImpl(const String& path,

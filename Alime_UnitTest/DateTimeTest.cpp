@@ -2,8 +2,27 @@
 #include <Alime/base/time/DateTime.h>
 #include <Alime/base/time/TimeSpan.h>
 #include <Alime/base/time/DateTime.cpp>
+#include <Alime/base/fileSystem/file.h>
 
 using namespace Alime::base::System;
+
+TEST_UNIT(DateTime_FileTime)
+{
+	DateTime dt(2020, 1, 1);
+	auto dow = dt.DayOfYear();
+
+	auto filename = L"C:\\Work\\StudyCSharp\\LoveCSharp\\20DateTime\\testFile.txt";
+	auto ct = IO::File::GetCreationTime(filename);
+	auto tt = IO::File::GetCreationTimeUtc(filename);
+	auto datoftheyear = tt.DayOfYear();
+	auto datoftheweek = tt.DayInWeek();
+	auto cut = IO::File::GetLastWriteTime(filename);
+	auto cut2 = IO::File::GetLastWriteTimeUtc(filename);
+	auto c3 = IO::File::GetLastAccessTime(filename);
+	auto c4 = IO::File::GetLastAccessTimeUtc(filename);
+	int x3 = 3;
+}
+
 TEST_UNIT(DateTime_TEST_ToString)
 {
 	//test toString series
