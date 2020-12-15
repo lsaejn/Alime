@@ -23,7 +23,7 @@ TEST_UNIT(DateTime_FileTime)
 	DateTime dt(2020, 1, 1);
 	auto dow = dt.DayOfYear();
 
-	auto filename = L"DateTimeTest.cpp";
+	auto filename = L"D:\\MyProject\\ConsoleApp\\ConsoleApp1\\Program.cs";
 	auto ct = IO::File::GetCreationTime(filename);
 	auto tt = IO::File::GetCreationTimeUtc(filename);
 	auto datoftheyear = tt.DayOfYear();

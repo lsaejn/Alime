@@ -11,14 +11,17 @@ namespace Alime::base::System::IO
 		/// <summary>
 		/// 辅助函数，转换一个FILETIME到DateTime。
 		/// </summary>
-		/// <param name="ft">elapsed since 1601year 1month 1day in the Gregorian calendar.</param>
+		/// <param name="ft">elapsed since 1601year 1month 1day 12in the Gregorian calendar.</param>
 		/// <returns></returns>
 		DateTime FTIMEToDateTime(FILETIME ft)
 		{
 			auto ticks = ((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-			//elapsed since January 1, 0001 at 00:00 : 00.000 in the Gregorian calendar.
-			ticks += 504911520000000000;//
-			return DateTime(static_cast<aint64>(ticks));
+			SYSTEMTIME st;
+			FileTimeToSystemTime(&ft, &st);
+			ticks += 504911232000000000;//
+			DateTime t1 = DateTime(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+			DateTime t2(ticks);
+			return DateTime(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 		}
 
 		DateTime LocalFtimeToUTCDateTime(FILETIME localtime)
