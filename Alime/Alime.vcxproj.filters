@@ -87,9 +87,6 @@
     <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\time\DateTime.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\time\TimeSpan.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\file.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Alime\base\time\DateTime.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

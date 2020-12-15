@@ -6,12 +6,24 @@
 
 using namespace Alime::base::System;
 
+TEST_UNIT(DateTime_Kind)
+{
+	DateTime t = DateTime::Now();
+	aint64 tick = t.Ticks();
+	DateTime t2 = DateTime::UtcNow();
+	aint64 tick2= t2.Ticks();
+	DateTime t3(t.Ticks());
+	aint64 tick3 = t3.Ticks();
+	DateTime t4(t.Ticks());
+	aint64 tick4 = t4.Ticks();
+}
+
 TEST_UNIT(DateTime_FileTime)
 {
 	DateTime dt(2020, 1, 1);
 	auto dow = dt.DayOfYear();
 
-	auto filename = L"C:\\Work\\StudyCSharp\\LoveCSharp\\20DateTime\\testFile.txt";
+	auto filename = L"DateTimeTest.cpp";
 	auto ct = IO::File::GetCreationTime(filename);
 	auto tt = IO::File::GetCreationTimeUtc(filename);
 	auto datoftheyear = tt.DayOfYear();

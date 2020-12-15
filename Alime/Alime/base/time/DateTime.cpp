@@ -595,6 +595,6 @@ namespace Alime::base::System
 
 	DateTime DateTime::ToLocalTime()
 	{
-		return DateTime(Ticks() + TicksLocalTimeAhead()*TimeSpan::kSecond);
+		return DateTime(Ticks() + TicksLocalTimeAhead());
 	}
 }
