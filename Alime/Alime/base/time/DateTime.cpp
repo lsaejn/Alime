@@ -145,11 +145,13 @@ namespace Alime::base::System
 		second_(0),
 		millisecond_(0),
 		microsecond_(0),
-		nanosecond_(0)
+		nanosecond_(0),
+		kind_(DateTimeKind::Unspecified)
 	{
 	}
 
 	DateTime::DateTime(int64_t ticks)
+		:DateTime()
 	{
 		InitFromTicks(ticks);
 	}
@@ -160,9 +162,27 @@ namespace Alime::base::System
 			second_, millisecond_, microsecond_, nanosecond_)== 0;
 	}
 
-	DateTime::DateTime(const struct timeval& t)
+	DateTime::DateTime(const timeval& t)
 		:DateTime((t.tv_sec* TimeSpan::kSecond + t.tv_usec * TimeSpan::kMicrosecond) + kTickOf1970_01_01)
 	{
+	}
+
+	DateTime::DateTime(int64_t ticks, DateTimeKind kind)
+		:DateTime(ticks)
+	{
+		kind_ = kind;
+	}
+
+	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, DateTimeKind kind)
+		: DateTime(year, month, day, hour, minute, second)
+	{
+		kind_ = kind;
+	}
+
+	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeKind kind)
+		: DateTime(year, month, day, hour, minute, second, millisecond)
+	{
+		kind_ = kind;
 	}
 
 	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
@@ -174,7 +194,8 @@ namespace Alime::base::System
 		second_(second),
 		millisecond_(millisecond),
 		microsecond_(0),
-		nanosecond_(0)
+		nanosecond_(0),
+		kind_(DateTimeKind::Unspecified)
 	{
 		CheckDate();
 		if (day>kDaysInMonth[IsLeapYear(year)][month-1])
@@ -273,6 +294,11 @@ namespace Alime::base::System
 	DateTime DateTime::Date()
 	{
 		return DateTime(year_, month_, day_);
+	}
+
+	DateTimeKind DateTime::Kind()
+	{
+		return kind_;
 	}
 
 	aint DateTime::Month()
@@ -573,7 +599,10 @@ namespace Alime::base::System
 
 	DateTime DateTime::ToUniversalTime()
 	{
-		return DateTime(Ticks() - TicksLocalTimeAhead());
+		if (kind_ == DateTimeKind::Local)
+			return DateTime(Ticks() - TicksLocalTimeAhead(), DateTimeKind::Utc);
+		else
+			return *this;
 	}
 
 	aint64 DateTime::TicksLocalTimeAhead() const
@@ -595,6 +624,12 @@ namespace Alime::base::System
 
 	DateTime DateTime::ToLocalTime()
 	{
-		return DateTime(Ticks() + TicksLocalTimeAhead());
+		if (kind_ == DateTimeKind::Local)
+			return *this;
+		else
+			return DateTime(Ticks() + TicksLocalTimeAhead(), DateTimeKind::Local);
 	}
+
+
+
 }

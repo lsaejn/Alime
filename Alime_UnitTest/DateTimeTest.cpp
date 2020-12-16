@@ -20,10 +20,29 @@ TEST_UNIT(DateTime_Kind)
 
 TEST_UNIT(DateTime_FileTime)
 {
+	SYSTEMTIME syt_local;
+	SYSTEMTIME syt_s;
+	GetLocalTime(&syt_local) ;
+	GetSystemTime(&syt_s);
+
+	FILETIME ft1;
+	SystemTimeToFileTime(&syt_local, &ft1);
+	FILETIME ft2;
+	SystemTimeToFileTime(&syt_s, &ft2);
+
+	SYSTEMTIME syt_re;
+	FileTimeToSystemTime(&ft1, &syt_re);
+
+
+
+	FILETIME ft;
+	GetSystemTimeAsFileTime(&ft);
+
+
 	DateTime dt(2020, 1, 1);
 	auto dow = dt.DayOfYear();
 
-	auto filename = L"D:\\MyProject\\ConsoleApp\\ConsoleApp1\\Program.cs";
+	auto filename = L"DateTimeTest.cpp";
 	auto ct = IO::File::GetCreationTime(filename);
 	auto tt = IO::File::GetCreationTimeUtc(filename);
 	auto datoftheyear = tt.DayOfYear();

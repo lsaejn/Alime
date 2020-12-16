@@ -7,6 +7,9 @@
 
 /*
 * windows 时间相关
+* 
+* FILETIME是基于UTC的结构体，严格说，不一定和时区相关
+* 
 GetSystemTime(&st);
 GetSystemTimeAsFileTime
 SystemTimeToFileTime(&st, &ft)
@@ -14,6 +17,7 @@ FileTimeToSystemTime(&ft,&st)
 GetLocalTime;
 GetSystemTime
 SystemTimeToTzSpecificLocalTime
+LocalFileTimeToFileTime
 */
 
 namespace
@@ -278,13 +282,13 @@ namespace Alime::base::System::IO
 	{
 		WIN32_FILE_ATTRIBUTE_DATA info;
 		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
-		FILETIME createFileTime = info.ftCreationTime;
+		FILETIME createFileTime = info.ftLastAccessTime;
 		return FTIMEToDateTime(createFileTime);
 	}
 
 	DateTime File::GetLastAccessTimeUtc(const String& path)
 	{
-		return GetLastAccessTimeUtc(path).ToUniversalTime();
+		return GetLastAccessTime(path).ToUniversalTime();
 	}
 
 	DateTime File::GetLastWriteTime(const String& path)
@@ -297,7 +301,7 @@ namespace Alime::base::System::IO
 
 	DateTime File::GetLastWriteTimeUtc(const String& path)
 	{
-		return GetLastWriteTimeUtc(path).ToUniversalTime();
+		return GetLastWriteTime(path).ToUniversalTime();
 	}
 
 	void SetFileTimeImpl(const String& path,

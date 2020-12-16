@@ -13,39 +13,21 @@ namespace Alime::base::System::IO
 		/// </summary>
 		/// <param name="ft">elapsed since 1601year 1month 1day 12in the Gregorian calendar.</param>
 		/// <returns></returns>
-		DateTime FTIMEToDateTime(FILETIME ft)
+
+		DateTime LocalFtimeToUTCDateTime(FILETIME ft)
 		{
 			auto ticks = ((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-			SYSTEMTIME st;
-			FileTimeToSystemTime(&ft, &st);
+			//SYSTEMTIME st;
+			//FileTimeToSystemTime(&ft, &st);
+			//return DateTime(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 			ticks += 504911232000000000;//
-			DateTime t1 = DateTime(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-			DateTime t2(ticks);
-			return DateTime(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+			return DateTime(ticks, DateTimeKind::Utc);
 		}
 
-		DateTime LocalFtimeToUTCDateTime(FILETIME localtime)
+		DateTime FTIMEToDateTime(FILETIME ft)
 		{
-			FILETIME utcTime = { 0 };
-			BOOL ret = LocalFileTimeToFileTime(&localtime, &utcTime);
-			if (!ret)
-				throw "failed to switch";
-			return FTIMEToDateTime(utcTime);
+			return LocalFtimeToUTCDateTime(ft).ToLocalTime();
 		}
-
-
-
-		//WINBASEAPI
-		//	BOOL
-		//	WINAPI
-		//	FileTimeToSystemTime(
-		//		__in  CONST FILETIME* lpFileTime,
-		//		__out LPSYSTEMTIME lpSystemTime
-		//	);
-
-
-
-
 
 	FileSystemInfo::FileSystemInfo()
 		:base_(new FileSystemInfoBase())

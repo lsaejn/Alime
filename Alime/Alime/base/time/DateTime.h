@@ -77,8 +77,10 @@ namespace Alime::base::System
 		DateTime();
 		explicit DateTime(int64_t ticks); //DateTimeKind
 		explicit DateTime(const struct timeval& t);
-		//DateTime(int64_t ticks, DateTimeKind kind);
+		DateTime(int64_t ticks, DateTimeKind kind);
 		DateTime(int year, int month, int day, int hour=0, int minute=0, int second=0, int millisecond=0);
+		DateTime(int year, int month, int day, int hour, int minute, int second, DateTimeKind kind);
+		DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeKind kind);
 
 		static DateTime Now(); // returns the current local time.
 		static DateTime Today();
@@ -95,7 +97,7 @@ namespace Alime::base::System
 		aint Day();
 		aint Year();
 		DateTime Date();
-		//DateTimeKind Kind();
+		DateTimeKind Kind();
 
 		struct timeval TimeVal() const;
 		void To(struct timeval* t) const;
