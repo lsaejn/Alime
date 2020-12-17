@@ -12,10 +12,20 @@ TEST_UNIT(DateTime_Kind)
 	aint64 tick = t.Ticks();
 	DateTime t2 = DateTime::UtcNow();
 	aint64 tick2= t2.Ticks();
+
 	DateTime t3(t.Ticks());
+	ASSERT_TRUE(t3.Ticks() == t.Ticks());
 	aint64 tick3 = t3.Ticks();
+
 	DateTime t4(t.Ticks());
-	aint64 tick4 = t4.Ticks();
+	ASSERT_TRUE(t3.Ticks() == t4.Ticks());
+
+
+	DateTime local(1601, 1, 8, 12, 4, 3);
+	DateTime utc(1601, 1, 8, 12, 4, 3);
+	auto tick11 = local.Ticks();
+	auto tick22 = local.Ticks();
+	bool ret = tick11 == tick22;
 }
 
 TEST_UNIT(DateTime_FileTime)

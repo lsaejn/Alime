@@ -65,7 +65,7 @@ namespace Alime::base::System
 	};
 
 	/// <summary>
-	/// DateTime 维护一个自0000-01-01(UTC)以来的ticks
+	/// DateTime 维护一个自0001-01-01(UTC)以来的ticks
 	/// 只为计算方便, 并不注重效率, 不要用于定时任务
 	/// </summary>
 	class DateTime

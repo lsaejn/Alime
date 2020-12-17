@@ -9,12 +9,11 @@ namespace Alime::base::System::IO
 		static_assert(sizeof(FILETIME) == 8, "filetime could be optimized");
 
 		/// <summary>
-		/// 辅助函数，转换一个FILETIME到DateTime。
+		/// caculate a FileTime to DateTime
 		/// </summary>
-		/// <param name="ft">elapsed since 1601year 1month 1day 12in the Gregorian calendar.</param>
-		/// <returns></returns>
-
-		DateTime LocalFtimeToUTCDateTime(FILETIME ft)
+		/// <param name="ft"> FILETIME struct</param>
+		/// <returns>an utc datetime</returns>
+		DateTime FileTimeToUtcDateTime(FILETIME ft)
 		{
 			auto ticks = ((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
 			//SYSTEMTIME st;
@@ -26,7 +25,7 @@ namespace Alime::base::System::IO
 
 		DateTime FTIMEToDateTime(FILETIME ft)
 		{
-			return LocalFtimeToUTCDateTime(ft).ToLocalTime();
+			return FileTimeToUtcDateTime(ft).ToLocalTime();
 		}
 
 	FileSystemInfo::FileSystemInfo()
@@ -83,11 +82,11 @@ namespace Alime::base::System::IO
 		auto _data = &base_->fileAddtribute_;
 		GetFileAttributesEx(FullName().c_str(), GetFileExInfoStandard, _data);
 		CreationTime = FTIMEToDateTime(_data->ftCreationTime);
-		CreationTimeUtc= LocalFtimeToUTCDateTime(_data->ftCreationTime);
+		CreationTimeUtc= FileTimeToUtcDateTime(_data->ftCreationTime);
 		LastWriteTime= FTIMEToDateTime(_data->ftLastWriteTime);
-		LastWriteTimeUtc= LocalFtimeToUTCDateTime(_data->ftLastWriteTime);
+		LastWriteTimeUtc= FileTimeToUtcDateTime(_data->ftLastWriteTime);
 		LastAccessTime = FTIMEToDateTime(_data->ftLastAccessTime);
-		LastAccessTimeUtc= LocalFtimeToUTCDateTime(_data->ftLastAccessTime);
+		LastAccessTimeUtc= FileTimeToUtcDateTime(_data->ftLastAccessTime);
 		Attributes=(FileAttributes)_data->dwFileAttributes;
 		//我们不取文件大小，是因为文件夹可能很大...
 		//return ((long)_data.nFileSizeHigh) << 32 | _data.nFileSizeLow & 0xFFFFFFFFL;
