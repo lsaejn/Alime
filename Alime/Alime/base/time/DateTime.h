@@ -86,18 +86,18 @@ namespace Alime::base::System
 		static DateTime Today();
 		static DateTime UtcNow();
 		aint64 Ticks() const;
-		aint Second();
+		aint Second() const;
 		
-		aint Month();
-		aint Minute();
-		aint Millisecond();
-		aint Hour();
-		aint DayOfYear(); //from 0
-		DayOfWeek DayInWeek();
-		aint Day();
-		aint Year();
-		DateTime Date();
-		DateTimeKind Kind();
+		aint Month() const;
+		aint Minute() const;
+		aint Millisecond() const;
+		aint Hour() const;
+		aint DayOfYear() const; //from 0
+		DayOfWeek DayInWeek() const;
+		aint Day() const;
+		aint Year() const;
+		DateTime Date() const;
+		DateTimeKind Kind() const;
 
 		struct timeval TimeVal() const;
 		void To(struct timeval* t) const;
@@ -112,38 +112,37 @@ namespace Alime::base::System
 
 		bool IsEpoch() const;
 
-		static int Compare(DateTime t1, DateTime t2);
+		static int Compare(const DateTime &t1, const DateTime &t2);
 		static int DaysInMonth(int year, int month);
-		static bool Equals(DateTime t1, DateTime t2);
+		static bool Equals(const DateTime& t1, const DateTime& t2);
 		//static DateTime FromFileTime(long fileTime);
 		//static DateTime FromFileTimeUtc(long fileTime);
 		static bool IsLeapYear(int year);
-		static DateTime Parse(String s);
+		static DateTime Parse(const String& s);
 
-		void Add(TimeSpan d);
 		DateTime Add(TimeSpan value) const;
 		DateTime AddDays(double value) const;
-		DateTime AddHours(double value);
-		DateTime AddMilliseconds(double value);
-		DateTime AddMinutes(double value);
-		DateTime AddMonths(int months);
-		DateTime AddSeconds(double value);
-		DateTime AddTicks(long value);
-		DateTime AddYears(int value);
-		int CompareTo(DateTime value);
-		bool Equals(DateTime value);
-		DateTime Subtract(TimeSpan value);
-		TimeSpan Subtract(DateTime value);
+		DateTime AddHours(double value) const;
+		DateTime AddMilliseconds(double value) const;
+		DateTime AddMinutes(double value) const;
+		DateTime AddMonths(int months) const;
+		DateTime AddSeconds(double value) const;
+		DateTime AddTicks(long value) const;
+		DateTime AddYears(int value) const;
+		int CompareTo(DateTime value) const;
+		bool Equals(DateTime value) const;
+		DateTime Subtract(TimeSpan value) const;
+		TimeSpan Subtract(const DateTime& value) const;
 		aint64 ToFileTime() const;
 		aint64 ToFileTimeUtc() const;
-		DateTime ToUniversalTime();//仅当dateTime表示localtime时调用
-		DateTime ToLocalTime();
+		DateTime ToUniversalTime() const;//仅当dateTime表示localtime时调用
+		DateTime ToLocalTime() const;
 
-		String ToLongDateString();
-		String ToLongTimeString();
+		String ToLongDateString() const;
+		String ToLongTimeString() const;
 
-		String ToShortDateString();
-		String ToShortTimeString();
+		String ToShortDateString() const;
+		String ToShortTimeString() const;
 
 		//String ToString(String format, IFormatProvider provider);
 		//String ToString(IFormatProvider provider);
@@ -151,10 +150,10 @@ namespace Alime::base::System
 
 		bool operator< (const DateTime& rhs) const;
 		bool operator==(const DateTime& rhs) const;
-		DateTime operator+=(const TimeSpan& rhs);
-		DateTime operator+ (const TimeSpan& rhs) const;
-		DateTime operator-=(const TimeSpan& rhs);
-		DateTime operator- (const TimeSpan& rhs) const;
+		DateTime operator+=(TimeSpan rhs);
+		DateTime operator+ (TimeSpan rhs) const;
+		DateTime operator-=(TimeSpan rhs);
+		DateTime operator- (TimeSpan rhs) const;
 		TimeSpan  operator- (const DateTime& rhs) const;
 
 		bool valid() const;
@@ -164,7 +163,7 @@ namespace Alime::base::System
 		aint64 TicksLocalTimeAhead() const;
 		tm GetTmFromTick() const;
 		String toFormattedString(bool showMicroseconds = true) const;
-		void CheckDate();
+		void CheckDate() const;
 		void InitFromTicks(aint64 ticks);
 		//the number of ticks that represent the dateand time of this instance.
 		//int64_t ticks_;
@@ -180,13 +179,13 @@ namespace Alime::base::System
 		DateTimeKind kind_;
 	};
 
-	static DateTime operator +(DateTime d, TimeSpan t);
-	static TimeSpan operator -(DateTime d1, DateTime d2);
-	static DateTime operator -(DateTime d, TimeSpan t);
-	static bool operator ==(DateTime d1, DateTime d2);
-	static bool operator !=(DateTime d1, DateTime d2);
-	static bool operator <(DateTime t1, DateTime t2);
-	static bool operator >(DateTime t1, DateTime t2);
-	static bool operator <=(DateTime t1, DateTime t2);
-	static bool operator >=(DateTime t1, DateTime t2);
+	static DateTime operator +(const DateTime& d, TimeSpan t);
+	static TimeSpan operator -(const DateTime& d1, const DateTime& d2);
+	static DateTime operator -(const DateTime& d, TimeSpan t);
+	static bool operator ==(const DateTime& d1, const DateTime& d2);
+	static bool operator !=(const DateTime& d1, const DateTime& d2);
+	static bool operator <(const DateTime& t1, const DateTime& t2);
+	static bool operator >(const DateTime& t1, const DateTime& t2);
+	static bool operator <=(const DateTime& t1, const DateTime& t2);
+	static bool operator >=(const DateTime& t1, const DateTime& t2);
 }

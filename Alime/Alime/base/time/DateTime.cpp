@@ -204,7 +204,7 @@ namespace Alime::base::System
 		}
 	}
 
-	void DateTime::CheckDate()
+	void DateTime::CheckDate() const
 	{
 		CheckDateInfo(year_, month_, day_, hour_, minute_, second_, 
 			millisecond_, microsecond_, nanosecond_);
@@ -252,12 +252,6 @@ namespace Alime::base::System
 		nanosecond_ = t_info.nanosecond;
 	}
 
-	void DateTime::Add(TimeSpan d)
-	{
-		auto ticks = Ticks() + d.Ticks();
-		InitFromTicks(ticks);
-	}
-
 	void DateTime::To(struct timeval* t) const
 	{
 		t->tv_sec = static_cast<long>(Ticks() - kTickOf1970_01_01 / TimeSpan::kSecond) ;
@@ -276,52 +270,52 @@ namespace Alime::base::System
 		return GetTicksFromDateInfo(year_, month_, day_, hour_, minute_, second_, millisecond_, microsecond_, nanosecond_);
 	}
 
-	aint DateTime::Second()
+	aint DateTime::Second() const
 	{
 		return second_;
 	}
 
-	aint DateTime::Day()
+	aint DateTime::Day() const
 	{
 		return day_;
 	}
 
-	aint DateTime::Year()
+	aint DateTime::Year() const
 	{
 		return year_;
 	}
 
-	DateTime DateTime::Date()
+	DateTime DateTime::Date() const
 	{
 		return DateTime(year_, month_, day_);
 	}
 
-	DateTimeKind DateTime::Kind()
+	DateTimeKind DateTime::Kind() const
 	{
 		return kind_;
 	}
 
-	aint DateTime::Month()
+	aint DateTime::Month() const
 	{
 		 return month_;
 	}
 
-	aint DateTime::Minute()
+	aint DateTime::Minute() const
 	{
 		return minute_;
 	}
 
-	aint DateTime::Millisecond()
+	aint DateTime::Millisecond() const
 	{
 		return millisecond_;
 	}
 
-	aint DateTime::Hour()
+	aint DateTime::Hour() const
 	{
 		return hour_;
 	}
 
-	aint DateTime::DayOfYear()
+	aint DateTime::DayOfYear() const
 	{
 		auto year = Year();
 		int firstDay=getJulianDayNumber(year, 1, 1);
@@ -329,7 +323,7 @@ namespace Alime::base::System
 		return today- firstDay+1;
 	}
 
-	DayOfWeek DateTime::DayInWeek()
+	DayOfWeek DateTime::DayInWeek() const
 	{
 		return DayOfWeek((getJulianDayNumber(Year(), Month(), Day()) + 1) % kDaysPerWeek);
 	}
@@ -344,28 +338,28 @@ namespace Alime::base::System
 		return Ticks() == rhs.Ticks();
 	}
 
-	DateTime DateTime::operator+=(const TimeSpan& rhs)
+	DateTime DateTime::operator+=(TimeSpan rhs)
 	{
 		auto total=Ticks()+ rhs.Ticks();
 		InitFromTicks(total);
 		return *this;
 	}
 
-	DateTime DateTime::operator+(const TimeSpan& rhs) const
+	DateTime DateTime::operator+(TimeSpan rhs) const
 	{
 		DateTime temp(*this);
 		temp += rhs;
 		return temp;
 	}
 
-	DateTime DateTime::operator-=(const TimeSpan& rhs)
+	DateTime DateTime::operator-=(TimeSpan rhs)
 	{
 		auto total = Ticks() - rhs.Ticks();
 		InitFromTicks(total);
 		return *this;
 	}
 
-	DateTime DateTime::operator-(const TimeSpan& rhs) const
+	DateTime DateTime::operator-(TimeSpan rhs) const
 	{
 		DateTime temp(*this);
 		temp -= rhs;
@@ -447,22 +441,22 @@ namespace Alime::base::System
 		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kDay)));
 	}
 
-	DateTime DateTime::AddHours(double value)
+	DateTime DateTime::AddHours(double value) const
 	{
 		return DateTime((Ticks() + static_cast<int64_t>( value * TimeSpan::kHour)));
 	}
 
-	DateTime DateTime::AddMilliseconds(double value)
+	DateTime DateTime::AddMilliseconds(double value) const
 	{
 		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kMillisecond)));
 	}
 
-	DateTime DateTime::AddMinutes(double value)
+	DateTime DateTime::AddMinutes(double value) const
 	{
 		return DateTime((Ticks() + static_cast<int64_t>(value * TimeSpan::kMinute)));
 	}
 
-	DateTime DateTime::AddMonths(int months)
+	DateTime DateTime::AddMonths(int months) const
 	{
 		//整个人都虚脱了.....
 		auto ymd=getYearMonthDayFromTicks(Ticks());
@@ -485,38 +479,38 @@ namespace Alime::base::System
 			, ymd.day, Hour(), Minute(),Second()).Ticks()+ Ticks() %TimeSpan::kSecond);
 	}
 
-	DateTime DateTime::AddSeconds(double value)
+	DateTime DateTime::AddSeconds(double value) const
 	{
 		return DateTime(Ticks() + static_cast<int64_t>(value * TimeSpan::kSecond));
 	}
 
-	DateTime DateTime::AddTicks(long value)
+	DateTime DateTime::AddTicks(long value) const
 	{
 		return DateTime(Ticks() + value);
 	}
 
-	DateTime DateTime::AddYears(int value)
+	DateTime DateTime::AddYears(int value) const
 	{
 		return AddMonths(12*value);
 	}
 
-	int DateTime::CompareTo(DateTime value)
+	int DateTime::CompareTo(DateTime value) const
 	{
 		return DateTime::Compare(*this, value);
 	}
 
-	bool DateTime::Equals(DateTime value)
+	bool DateTime::Equals(DateTime value) const
 	{
 		return Ticks() == value.Ticks();
 	}
 
-	DateTime DateTime::Subtract(TimeSpan value)
+	DateTime DateTime::Subtract(TimeSpan value) const
 	{
 		//fix me
 		return DateTime(Ticks() - value.Ticks());
 	}
 
-	TimeSpan DateTime::Subtract(DateTime value)
+	TimeSpan DateTime::Subtract(const DateTime& value) const
 	{
 		//fix me
 		return TimeSpan(Ticks() - value.Ticks());
@@ -532,7 +526,7 @@ namespace Alime::base::System
 		return Ticks();
 	}
 
-	String DateTime::ToLongDateString()
+	String DateTime::ToLongDateString() const
 	{
 		auto ymd=getYearMonthDayFromTicks(Ticks());
 		//gmtime_s(&tm_time, &seconds);
@@ -545,7 +539,7 @@ namespace Alime::base::System
 		return buf;
 	}
 
-	String DateTime::ToLongTimeString()
+	String DateTime::ToLongTimeString() const
 	{
 		Char buf[64] = { 0 };
 		auto tm_time = GetTmFromTick();
@@ -555,12 +549,12 @@ namespace Alime::base::System
 		return buf;
 	}
 
-	String DateTime::ToShortDateString()
+	String DateTime::ToShortDateString() const
 	{
 		return ToLongDateString();
 	}
 
-	String DateTime::ToShortTimeString()
+	String DateTime::ToShortTimeString() const
 	{
 		Char buf[64] = { 0 };
 		auto tm_time = GetTmFromTick();
@@ -569,7 +563,7 @@ namespace Alime::base::System
 		return buf;
 	}
 
-	int DateTime::Compare(DateTime t1, DateTime t2)
+	int DateTime::Compare(const DateTime &t1, const DateTime &t2)
 	{
 		auto ret = t1.Ticks() - t2.Ticks();
 		return ret==0 ? 0: ret>0 ? 1: -1;
@@ -587,17 +581,17 @@ namespace Alime::base::System
 		return getJulianDayNumber(year, 2, 29) != getJulianDayNumber(year, 3, 1);
 	}
 
-	bool DateTime::Equals(DateTime t1, DateTime t2)
+	bool DateTime::Equals(const DateTime& t1, const DateTime& t2)
 	{
 		return t1.Ticks() == t2.Ticks();
 	}
 	
-	DateTime DateTime::Parse(String s)
+	DateTime DateTime::Parse(const String& s)
 	{
 		return {};
 	}
 
-	DateTime DateTime::ToUniversalTime()
+	DateTime DateTime::ToUniversalTime() const
 	{
 		if (kind_ == DateTimeKind::Local)
 			return DateTime(Ticks() - TicksLocalTimeAhead(), DateTimeKind::Utc);
@@ -622,7 +616,7 @@ namespace Alime::base::System
 		return secondsAhead* TimeSpan::kSecond;
 	}
 
-	DateTime DateTime::ToLocalTime()
+	DateTime DateTime::ToLocalTime() const
 	{
 		if (kind_ == DateTimeKind::Local)
 			return *this;
