@@ -24,31 +24,27 @@ namespace Alime::base::System::IO
 		FileSystemInfo(String filename);
 		virtual ~FileSystemInfo();
 		//FileSystemInfo(SerializationInfo info, StreamingContext context);
-	public:
-		DateTime LastWriteTime;
-		DateTime LastAccessTimeUtc;
-		DateTime LastAccessTime;
-		virtual String FullName();
-		String Extension;
-		bool Exists() const;
-		DateTime CreationTime;
-		DateTime LastWriteTimeUtc;
-		FileAttributes Attributes;
-		DateTime CreationTimeUtc;
-		String Name;
-
-		virtual void Delete() const;
-		//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
+		void Init();
 		void Refresh();
 		String ToString();
-
+		bool Exists() const;
+		virtual String FullName();
+		virtual void Delete() const;
+		//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
+		
 	protected:
-		//String fullPath_;
-		String originalPath_;
+		String name_;
+		String extension_;
 		FilePath filePath_;
-	protected:
+		String originalPath_;
+		FileAttributes attributes_;
 		FileSystemInfoBase* base_;
 		
-		void Init();
+		DateTime lastWriteTime_;
+		DateTime lastAccessTime_;
+		DateTime lastAccessTimeUtc_;
+		DateTime creationTime_;
+		DateTime creationTimeUtc_;
+		DateTime lastWriteTimeUtc_;
 	};
 }
