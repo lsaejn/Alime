@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Alime\base\json\ajson.cpp" />
     <ClCompile Include="Alime.cpp" />
     <ClCompile Include="Alime\base\details\string_constants.h" />
     <ClCompile Include="Alime\base\fileSystem\file.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Alime\base\time\Locale.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alime\base\json\ajson.h" />
     <ClInclude Include="Alime\base\base_define.h" />
     <ClInclude Include="Alime\base\base_export.h" />
     <ClInclude Include="Alime\base\base_types.h" />

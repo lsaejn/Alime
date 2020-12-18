@@ -102,6 +102,9 @@
     <ClCompile Include="Alime\base\time\DateTime.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Alime\base\json\ajson.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\strings\string_util.h">
@@ -279,6 +282,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\details\CharEncode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\json\ajson.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
