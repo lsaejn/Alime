@@ -49,6 +49,15 @@ namespace Alime::base::System::IO
 		DeleteFile(filePath_.GetFullPath().c_str());
 	}
 
+	bool FileInfo::IsReadOnly()
+	{
+		DWORD attr = GetFileAttributes(FullName().c_str());
+		if (attr == -1)
+			throw "can not open file";
+		attr &= FILE_ATTRIBUTE_READONLY;
+		return attr== FILE_ATTRIBUTE_READONLY;
+	}
+
 	String FileInfo::DirectoryName()
 	{
 		return filePath_.GetFolder().GetFullPath().c_str();

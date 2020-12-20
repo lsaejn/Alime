@@ -3,7 +3,7 @@
 namespace Alime::base::System::IO
 {
 
-	class DirectoryInfo
+	class DirectoryInfo : public FileSystemInfo
 	{
 	public:
 

@@ -24,7 +24,7 @@ namespace Alime::base::System::IO
 		void Delete() const;
 		bool Rename(const String& newName) const;//·ÇC#½Ó¿Ú
 
-		//bool IsReadOnly{ get; set; }
+		bool IsReadOnly();
 		String DirectoryName();
 		DirectoryInfo Directory();
 		aint64 Length();

@@ -403,7 +403,7 @@ namespace Alime::base::System
 		}
 		else
 		{
-			_snwprintf(buf, sizeof(buf), L"%4d/%02d/%02d %02d:%02d:%02d",
+			VsnprintfT(buf, sizeof(buf), L"%4d/%02d/%02d %02d:%02d:%02d",
 				tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
 				tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
 		}
@@ -533,7 +533,7 @@ namespace Alime::base::System
 		Char buf[64];
 		{
 			int microseconds = static_cast<int>((Ticks() % TimeSpan::kSecond) / 1000);
-			_snwprintf(buf, sizeof(buf), L"%4d/%02d/%02d",
+			VsnprintfT(buf, sizeof(buf), L"%4d/%02d/%02d",
 				ymd.year, ymd.month, ymd.day);
 		}
 		return buf;
@@ -558,7 +558,7 @@ namespace Alime::base::System
 	{
 		Char buf[64] = { 0 };
 		auto tm_time = GetTmFromTick();
-		_snwprintf(buf, sizeof(buf), L"%02d:%02d",
+		VsnprintfT(buf, sizeof(buf), L"%02d:%02d",
 			tm_time.tm_hour, tm_time.tm_min);
 		return buf;
 	}
