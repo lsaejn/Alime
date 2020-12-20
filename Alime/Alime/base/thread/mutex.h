@@ -5,6 +5,9 @@
 #include <exception>
 #include  "Alime/base/thread/thread.h"
 
+/*
+you should not use these, unless you has an evn of winxp
+*/
 namespace Alime
 {
 	class FastMutex

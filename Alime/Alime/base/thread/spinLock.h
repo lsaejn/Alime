@@ -31,11 +31,19 @@ public:
 	{
 		//已锁则等待锁释放，再尝试加锁
 		size_t timeTried = 0;
-		while (timeTried<3000 && _InterlockedCompareExchange(&token_, 1, 0) != 0)
+		while (_InterlockedCompareExchange(&token_, 1, 0) != 0)
 		{
 			timeTried++;
 			while (token_ != 0)
+			{
 				_mm_pause();
+				if (timeTried == 3000)
+				{
+					Sleep(100);//un...我不确定这么做是不是合适
+					timeTried = 0;
+				}
+			}
+				
 		}
 	}
 
