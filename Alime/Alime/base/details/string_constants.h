@@ -70,7 +70,7 @@ namespace Alime
             static bool IsWhitespace(char c)
             {
                 static const char kWhitespaceASCII[] = { WHITESPACE_ASCII, 0 };
-                for (int i = 0; i != ARRAYSIZE(kWhitespaceASCII); ++i)
+                for (int i = 0; i != ArraySize(kWhitespaceASCII); ++i)
                 {
                     if (c == kWhitespaceASCII[i])
                         return true;
@@ -81,7 +81,7 @@ namespace Alime
             static bool IsWhitespace(wchar_t c)
             {
                 static const wchar_t kWhitespaceASCII[] = { WHITESPACE_UNICODE, 0 };
-                for (int i = 0; i != ARRAYSIZE(kWhitespaceASCII); ++i)
+                for (int i = 0; i != ArraySize(kWhitespaceASCII); ++i)
                 {
                     if (c == kWhitespaceASCII[i])
                         return true;

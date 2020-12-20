@@ -23,7 +23,7 @@
     <ProjectGuid>{6685199B-DD12-4B6B-BB8F-7EDCD6A594FB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Alime</RootNamespace>
-    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

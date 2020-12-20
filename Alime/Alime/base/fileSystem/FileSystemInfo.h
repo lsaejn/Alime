@@ -32,7 +32,7 @@ namespace Alime::base::System::IO
 		virtual void Delete() const;
 		//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
 		
-	protected:
+	public:
 		String name_;
 		String extension_;
 		FilePath filePath_;

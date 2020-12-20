@@ -5,8 +5,8 @@
 
 TEST_UNIT(JsonTest)
 {
-	Ajson value;
-	const char* info = { "\"key\":\"null\"" };
-	value =Ajson::Parse(info);
+	AlimeJson value;
+	const char* info = { "{\"key\":  null  }" };
+	value = AlimeJson::Parse(info);
 	ASSERT_TRUE(value.type_ == JSON_NULL);
 }

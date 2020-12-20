@@ -37,9 +37,9 @@ TEST_UNIT(FileInfo)
 {
 	auto filename = L"D:\\wpfAutoUpdate\\LoveCSharp\\bin\\Debug\\netcoreapp3.1\\2.txt";
 	Alime::base::System::IO::FileInfo fi(filename);
-	auto fc=fi.CreationTime;
+	auto fc=fi.creationTime_;
 	fc.Ticks();
-	fi.CreationTimeUtc;
+	fi.creationTimeUtc_;
 	auto len=fi.Length();
 
 

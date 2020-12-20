@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <Alime/base/details/string_constants.h>
 
 enum JsonType
 {
@@ -13,41 +14,102 @@ enum JsonType
 	JSON_UNKNOW
 };
 
-struct AjsonContext
+struct JsonContext
 {
 	const char* content_;
-
+	const char* cur;
 };
 
-class Ajson
+class AlimeJson
 {
 public:
-	static Ajson Parse(const  char* info)
+	static AlimeJson Parse(const  char* info)
 	{
-		AjsonContext ac;
+		JsonContext ac;
 		ac.content_ = info;
+		ac.cur = info;
 
-		Ajson av;
+		AlimeJson av;
 		av.context_ = ac;
 		av.type_ = JSON_UNKNOW;
 
-		av.type_ = JSON_NULL;
-		av.SkipWhiteSpace();
+		
+		av.Expect('{');
+		av.ReadKeyString();
 		av.ParseValue();
+		av.Expect('}');
 		return av;
 	}
 public:
 	JsonType type_;
-	AjsonContext context_;
+	JsonContext context_;
+	std::string key_;
 private:
+	bool IsWhiteSpace(char ch)
+	{
+		return Alime::base::details::IsWhitespace(ch);
+	}
+
+	std::string ReadUntil(char c)
+	{
+		const char* begin = context_.cur;
+		while (context_.cur && *context_.cur++ != c)
+		{
+		}
+		return std::string(begin, context_.cur-1);
+	}
+
+	void Expect(char c)
+	{
+		do
+		{
+			if (!context_.cur || *context_.cur != c)
+				throw "fuck";
+		} while (0);
+		context_.cur++;
+	}
+
+	void ReadKeyString()
+	{
+		SkipWhiteSpace();
+		//
+		Expect('\"');
+		key_=ReadUntil('\"');
+		SkipWhiteSpace();
+		Expect(':');
+		SkipWhiteSpace();
+	}
+
 	void SkipWhiteSpace()
 	{
+		while (context_.cur)
+		{
+			char ch = *context_.cur;
+			
+			if (IsWhiteSpace(ch))
+			{
+				context_.cur++;
+			}
+			else break;
+		}
+	}
 
+	static bool StringCompare(const char* src, const char* target)
+	{
+		while (target && src && *target!=0)
+		{
+			if (*target++ != *src++)
+				return false;
+		}
+		return true;
 	}
 
 	void ParseNullValue()
 	{
-		GetTickCount64()
+		//expect("null")
+		if (!StringCompare(context_.cur, "null"))
+			throw "fuck";
+		context_.cur += 4;
 	}
 	/*
 	then we expect :
@@ -58,7 +120,38 @@ private:
 	*/
 	void ParseValue()
 	{
-
+		SkipWhiteSpace();
+		if (*context_.cur == 'n')
+		{
+			ParseNullValue();
+			type_ = JSON_NULL;
+		}
+		else if (*context_.cur == 't')
+		{
+			//ParseTrueValue();
+		}
+		else if (*context_.cur == 'f')
+		{
+			//ParseFalseValue();
+		}
+		else if (*context_.cur == '"')
+		{
+			//ParseStringValue();
+		}
+		else if (*context_.cur == '[')
+		{
+			//ParseArrayValue();
+		}
+		else if (*context_.cur == '{')
+		{
+			//ParseObjectValue();
+		}
+		else if (*context_.cur>=0 && *context_.cur<=9)
+		{
+			//ParseIntegerValue();
+		}
+		SkipWhiteSpace();
+		//if ','
 	}
 
 };
