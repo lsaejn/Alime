@@ -88,10 +88,16 @@ namespace Alime::base::System::IO
 
 	FileInfo FileInfo::CopyTo(String destFilePath, bool overwrite)
 	{
-		auto ret = ::CopyFile(GetFullPath().c_str(), destFilePath.c_str(), false) != 0;
+		auto ret = ::CopyFile(GetFullPath().c_str(), destFilePath.c_str(), !overwrite) != 0;
 		if (!ret)
 			return FileInfo{};
 		return FileInfo{ destFilePath };
+	}
+
+	FileStream FileInfo::Create()
+	{
+		FileStream f(GetFullPath().c_str());
+		return f;
 	}
 
 	void FileInfo::Delete()
@@ -113,5 +119,10 @@ namespace Alime::base::System::IO
 		Delete();
 		//fix me, rvalue instead
 		filePath_ = newFile.filePath_;
+	}
+
+	String FileInfo::ToString()
+	{
+		return L"Class FileInfo";
 	}
 }

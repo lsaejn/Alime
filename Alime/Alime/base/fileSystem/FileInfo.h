@@ -3,6 +3,7 @@
 #include "filePath.h"
 #include "Alime/base/base_define.h"
 #include <Alime/base/fileSystem/FileSystemInfo.h>
+#include "Alime/base/fileSystem/FileStream.h"
 
 
 namespace Alime::base::System::IO
@@ -32,7 +33,7 @@ namespace Alime::base::System::IO
 		//StreamWriter AppendText();
 		FileInfo CopyTo(String destFileName);
 		FileInfo CopyTo(String destFileName, bool overwrite);
-		//FileStream Create();
+		FileStream Create();
 		//StreamWriter CreateText();
 		//void Decrypt();
 		void Delete();
@@ -47,7 +48,6 @@ namespace Alime::base::System::IO
 		//FileStream OpenWrite();
 		//FileInfo Replace(String destinationFileName, String destinationBackupFileName, bool ignoreMetadataErrors);
 		//FileInfo Replace(String destinationFileName, String destinationBackupFileName);
-		//override String ToString();
-
+		String ToString();
 	};
 }

@@ -10,7 +10,7 @@ namespace Alime::base::System::IO
 {
 	//fix me, copyable?
 	/*
-	* 没有提供bufferwww
+	* 没有提供buffer
 	*/
 	class FileStream : public virtual IStream
 	{
