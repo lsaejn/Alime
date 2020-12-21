@@ -27,8 +27,9 @@ namespace Alime::base::System::IO
 		void Init();
 		void Refresh();
 		String ToString();
-		bool Exists() const;
+		virtual bool Exists() const;
 		virtual String FullName();
+		virtual String Name();
 		virtual void Delete() const;
 		//virtual void GetObjectData(SerializationInfo info, StreamingContext context);
 		

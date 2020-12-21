@@ -66,7 +66,7 @@ namespace Alime::base::System::IO
 	DirectoryInfo FileInfo::Directory()
 	{
 		auto folder = filePath_.GetFolder();
-		return {};
+		return L"";
 	}
 
 	aint64 FileInfo::Length()
