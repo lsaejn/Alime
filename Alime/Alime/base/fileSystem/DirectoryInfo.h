@@ -1,4 +1,6 @@
 #pragma once
+#include <Alime/base/fileSystem/FileSystemInfo.h>
+#include <Alime/base/fileSystem/FileInfo.h>
 
 namespace Alime::base::System::IO
 {

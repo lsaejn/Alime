@@ -111,6 +111,32 @@ private:
 			throw "fuck";
 		context_.cur += 4;
 	}
+
+	void ParseTrueValue()
+	{
+		//expect("null")
+		if (!StringCompare(context_.cur, "true"))
+			throw "fuck";
+		context_.cur += 4;
+	}
+
+	void ParseFalseValue()
+	{
+		//expect("null")
+		if (!StringCompare(context_.cur, "false"))
+			throw "fuck";
+		context_.cur += 5;
+	}
+
+	void ParseStringValue()
+	{
+		auto value=ReadUntil('\"');
+	}
+
+	void ParseIntegerValue()
+	{
+		//[-]. 0 | [1-9][0-9]* [.][0-9]* [eE][1-9] 
+	}
 	/*
 	then we expect :
 	n, t , f , " , [0-9], [, {
@@ -128,15 +154,15 @@ private:
 		}
 		else if (*context_.cur == 't')
 		{
-			//ParseTrueValue();
+			ParseTrueValue();
 		}
 		else if (*context_.cur == 'f')
 		{
-			//ParseFalseValue();
+			ParseFalseValue();
 		}
 		else if (*context_.cur == '"')
 		{
-			//ParseStringValue();
+			ParseStringValue();
 		}
 		else if (*context_.cur == '[')
 		{
@@ -148,7 +174,7 @@ private:
 		}
 		else if (*context_.cur>=0 && *context_.cur<=9)
 		{
-			//ParseIntegerValue();
+			ParseIntegerValue();
 		}
 		SkipWhiteSpace();
 		//if ','
