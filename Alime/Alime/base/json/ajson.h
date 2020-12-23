@@ -16,8 +16,10 @@ enum JsonType
 
 struct JsonContext
 {
-	const char* content_;
+	const char* start;
 	const char* cur;
+	int row;
+	int colunmn;
 };
 
 class AlimeJson
@@ -26,18 +28,18 @@ public:
 	static AlimeJson Parse(const  char* info)
 	{
 		JsonContext ac;
-		ac.content_ = info;
+		ac.start = info;
 		ac.cur = info;
 
 		AlimeJson av;
 		av.context_ = ac;
 		av.type_ = JSON_UNKNOW;
 
-		
-		av.Expect('{');
-		av.ReadKeyString();
 		av.ParseValue();
-		av.Expect('}');
+		//av.Expect('{');
+		//av.ReadKeyString();
+		//av.ParseValue();
+		//av.Expect('}');
 		return av;
 	}
 public:
@@ -137,6 +139,10 @@ private:
 	{
 		//[-]. 0 | [1-9][0-9]* [.][0-9]* [eE][1-9] 
 	}
+
+	void ParseObjectValue()
+	{
+	}
 	/*
 	then we expect :
 	n, t , f , " , [0-9], [, {
@@ -170,7 +176,7 @@ private:
 		}
 		else if (*context_.cur == '{')
 		{
-			//ParseObjectValue();
+			ParseObjectValue();
 		}
 		else if (*context_.cur>=0 && *context_.cur<=9)
 		{
