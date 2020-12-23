@@ -6,6 +6,7 @@
 #include <Alime/base/fileSystem/file_define.h>
 
 #ifdef OS_WIN
+#include "windows.h"
 #include "Shlwapi.h"
 #pragma comment(lib, "Shlwapi.lib")
 

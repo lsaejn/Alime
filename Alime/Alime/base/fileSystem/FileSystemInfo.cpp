@@ -46,6 +46,11 @@ namespace Alime::base::System::IO
 		return filePath_.GetFullPath();
 	}
 
+	String FileSystemInfo::Name()
+	{
+		return filePath_.GetFullPath();
+	}
+
 	bool FileSystemInfo::Exists() const
 	{
 		return false;
