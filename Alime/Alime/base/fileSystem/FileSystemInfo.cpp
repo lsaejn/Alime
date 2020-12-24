@@ -29,7 +29,7 @@ namespace Alime::base::System::IO
 		Init();
 	}
 
-	FileSystemInfo::FileSystemInfo(String filename)
+	FileSystemInfo::FileSystemInfo(const String& filename)
 		:filePath_(filename),
 		base_(new FileSystemInfoBase())
 	{

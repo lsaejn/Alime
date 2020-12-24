@@ -4,22 +4,19 @@
 #include <Alime/base/base_define.h>
 #include <Alime/base/fileSystem/file_define.h>
 
-/*
-辅助类, 之前是基类
-*/
 namespace Alime::base::System::IO
 {
+	/*
+	inner class now
+	*/
 	class FilePath
 	{
-	protected:
-		String fullPath_;
-		void	Initialize();
 	public:
 		static Char Delimiter;
 		FilePath();
-		FilePath(const String& _filePath);
-		FilePath(const wchar_t* _filePath);
-		FilePath(const FilePath& _filePath);
+		FilePath(const String& filePath);
+		FilePath(const wchar_t* filePath);
+		FilePath(const FilePath& filePath);
 		FilePath	 operator/(const String& relativePath)const;
 		~FilePath();
 
@@ -40,5 +37,8 @@ namespace Alime::base::System::IO
 		String GetName() const;
 		String GetFullPath() const;
 		String GetRelativePathFor(const FilePath& _filePath);
+	protected:
+		String fullPath_;
+		void	Initialize();
 	};
 }

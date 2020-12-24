@@ -1,7 +1,8 @@
 #include "DirectoryInfo.h"
 namespace Alime::base::System::IO
 {
-	DirectoryInfo::DirectoryInfo(String path)
+	DirectoryInfo::DirectoryInfo(const String& path)
+		:FileSystemInfo(path)
 	{
 	}
 
