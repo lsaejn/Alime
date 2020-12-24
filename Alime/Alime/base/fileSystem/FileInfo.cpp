@@ -16,11 +16,16 @@ namespace Alime::base::System::IO
 
 	}
 
-	bool FileInfo::Rename(const String& newName) const
+	bool FileInfo::Rename(const String& newName)
 	{
 		String oldFileName = filePath_.GetFullPath();
 		String newFileName = (filePath_.GetFolder() / newName).GetFullPath();
-		return MoveFile(oldFileName.c_str(), newFileName.c_str()) != 0;
+		bool ret=MoveFile(oldFileName.c_str(), newFileName.c_str()) != 0;
+		if (ret)
+		{
+			filePath_ = FilePath(newFileName);
+		}
+		return ret;
 	}
 
 	bool FileInfo::Exists() const
@@ -42,11 +47,6 @@ namespace Alime::base::System::IO
 			}
 		}
 		return true;
-	}
-
-	void FileInfo::Delete() const
-	{
-		DeleteFile(filePath_.GetFullPath().c_str());
 	}
 
 	bool FileInfo::IsReadOnly()
@@ -115,6 +115,7 @@ namespace Alime::base::System::IO
 		{
 			throw "failed to delete file.";
 		}
+		filePath_ = FilePath();
 	}
 
 	void FileInfo::MoveTo(String destFileName)

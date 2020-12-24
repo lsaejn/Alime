@@ -17,6 +17,8 @@ namespace Alime::base::System::IO
 		FilePath(const String& filePath);
 		FilePath(const wchar_t* filePath);
 		FilePath(const FilePath& filePath);
+		FilePath& operator=(const FilePath& filePath);
+
 		FilePath	 operator/(const String& relativePath)const;
 		~FilePath();
 

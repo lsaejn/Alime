@@ -21,8 +21,8 @@ namespace Alime::base::System::IO
 		~FileInfo()=default;
 
 		bool Exists() const;
-		void Delete() const;
-		bool Rename(const String& newName) const;//非C#接口
+		void Delete();
+		bool Rename(const String& newName);//非C#接口
 
 		bool IsReadOnly();
 		String DirectoryName();
@@ -36,7 +36,6 @@ namespace Alime::base::System::IO
 		FileStream Create();
 		//StreamWriter CreateText();
 		//void Decrypt();
-		void Delete();
 		//void Encrypt();
 		void MoveTo(String destFileName);
 		void MoveTo(String destFileName, bool overwrite);

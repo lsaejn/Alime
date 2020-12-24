@@ -38,6 +38,12 @@ namespace Alime::base::System::IO
 	{
 	}
 
+	FilePath& FilePath::operator=(const FilePath& filePath)
+	{
+		fullPath_ = filePath.fullPath_;
+		return *this;
+	}
+
 	FilePath::~FilePath()
 	{
 	}
