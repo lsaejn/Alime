@@ -59,7 +59,7 @@ namespace Alime::base::System::IO
 				throw Error(L"Combining FileMode: Create with FileAccess: Read is invalid. ");
 			else if (access == FileAccess::ReadWrite)
 			{
-				mode = L"w+b";
+				mode = L"r+b";
 				accessRight_ = FileAccess::ReadWrite;
 			}
 			else
@@ -128,7 +128,7 @@ namespace Alime::base::System::IO
 			}
 			else if (access == FileAccess::ReadWrite)
 			{
-				mode = L"w+b";
+				mode = L"r+b";
 				accessRight_ = FileAccess::ReadWrite;
 			}
 			else if (access == FileAccess::Write)

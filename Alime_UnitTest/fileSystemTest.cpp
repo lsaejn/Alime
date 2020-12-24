@@ -28,14 +28,19 @@ TEST_UNIT(test_FilePath)
 }
 
 #include <Alime/base/fileSystem/FileStream.h>
+#include <Alime/base/fileSystem/file.h>
 TEST_UNIT(test_FileStream)
 {
-	//Alime::base::FileStream fs(L"./fileSystemTest.cpp",Alime::base::FileMode::OpenOrCreate, Alime::base::FileAccess::ReadWrite, Alime::base::FileShare::None);
-	//bool cr=fs.CanRead();
-	//abyte buffer[1024 * 4] = { 0 };
-	//fs.Read(buffer, 1024 * 4);
-	//std::string s = (char*)buffer;
-	//fs.Close();
+	Alime::base::System::IO::FileStream fs(L"./fuckyou.txt",Alime::base::FileMode::OpenOrCreate, Alime::base::FileAccess::ReadWrite, Alime::base::FileShare::None);
+	bool cr=fs.CanRead();
+	abyte buffer[1024 * 4] = { 0 };
+	fs.Read(buffer, 1024 * 4);
+	std::string s = (char*)buffer;
+	fs.Close();
+
+	auto path = L"./fuckyou.txt";
+	auto str=Alime::base::System::IO::File::ReadAllText(path);
+	str == str;
 }
 
 #include <thread>
