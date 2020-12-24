@@ -10,7 +10,7 @@ namespace Alime::base::System::IO
 
 	//}
 
-	FileInfo::FileInfo(String fileName)
+	FileInfo::FileInfo(const String& fileName)
 		: FileSystemInfo(fileName)
 	{
 
@@ -90,12 +90,12 @@ namespace Alime::base::System::IO
 		return filePath_.GetFullPath();
 	}
 
-	FileInfo FileInfo::CopyTo(String destFilePath)
+	FileInfo FileInfo::CopyTo(const String& destFilePath)
 	{
 		return CopyTo(destFilePath, false);
 	}
 
-	FileInfo FileInfo::CopyTo(String destFilePath, bool overwrite)
+	FileInfo FileInfo::CopyTo(const String& destFilePath, bool overwrite)
 	{
 		auto ret = ::CopyFile(GetFullPath().c_str(), destFilePath.c_str(), !overwrite) != 0;
 		if (!ret)
@@ -118,12 +118,12 @@ namespace Alime::base::System::IO
 		filePath_ = FilePath();
 	}
 
-	void FileInfo::MoveTo(String destFileName)
+	void FileInfo::MoveTo(const String& destFileName)
 	{
 		return MoveTo(destFileName, false);
 	}
 
-	void FileInfo::MoveTo(String destFileName, bool overwrite)
+	void FileInfo::MoveTo(const String& destFileName, bool overwrite)
 	{
 		auto newFile=CopyTo(destFileName, overwrite);
 		Delete();

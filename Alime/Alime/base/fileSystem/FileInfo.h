@@ -17,7 +17,7 @@ namespace Alime::base::System::IO
 
 	public:
 		FileInfo() = default;
-		FileInfo(String fileName);
+		FileInfo(const String& fileName);
 		~FileInfo()=default;
 
 		bool Exists() const;
@@ -31,14 +31,14 @@ namespace Alime::base::System::IO
 		String Name();
 		String GetFullPath();
 		//StreamWriter AppendText();
-		FileInfo CopyTo(String destFileName);
-		FileInfo CopyTo(String destFileName, bool overwrite);
+		FileInfo CopyTo(const String& destFileName);
+		FileInfo CopyTo(const String& destFileName, bool overwrite);
 		FileStream Create();
 		//StreamWriter CreateText();
 		//void Decrypt();
 		//void Encrypt();
-		void MoveTo(String destFileName);
-		void MoveTo(String destFileName, bool overwrite);
+		void MoveTo(const String& destFileName);
+		void MoveTo(const String& destFileName, bool overwrite);
 		//FileStream Open(FileMode mode, FileAccess access);
 		//FileStream Open(FileMode mode, FileAccess access, FileShare share);
 		//FileStream Open(FileMode mode);
