@@ -10,17 +10,22 @@ namespace Alime::base::System::IO
 
 	//}
 
-	FileInfo::FileInfo(String fileName)
+	FileInfo::FileInfo(const String& fileName)
 		: FileSystemInfo(fileName)
 	{
 
 	}
 
-	bool FileInfo::Rename(const String& newName) const
+	bool FileInfo::Rename(const String& newName)
 	{
 		String oldFileName = filePath_.GetFullPath();
 		String newFileName = (filePath_.GetFolder() / newName).GetFullPath();
-		return MoveFile(oldFileName.c_str(), newFileName.c_str()) != 0;
+		bool ret=MoveFile(oldFileName.c_str(), newFileName.c_str()) != 0;
+		if (ret)
+		{
+			filePath_ = FilePath(newFileName);
+		}
+		return ret;
 	}
 
 	bool FileInfo::Exists() const
@@ -42,11 +47,6 @@ namespace Alime::base::System::IO
 			}
 		}
 		return true;
-	}
-
-	void FileInfo::Delete() const
-	{
-		DeleteFile(filePath_.GetFullPath().c_str());
 	}
 
 	bool FileInfo::IsReadOnly()
@@ -90,12 +90,12 @@ namespace Alime::base::System::IO
 		return filePath_.GetFullPath();
 	}
 
-	FileInfo FileInfo::CopyTo(String destFilePath)
+	FileInfo FileInfo::CopyTo(const String& destFilePath)
 	{
 		return CopyTo(destFilePath, false);
 	}
 
-	FileInfo FileInfo::CopyTo(String destFilePath, bool overwrite)
+	FileInfo FileInfo::CopyTo(const String& destFilePath, bool overwrite)
 	{
 		auto ret = ::CopyFile(GetFullPath().c_str(), destFilePath.c_str(), !overwrite) != 0;
 		if (!ret)
@@ -115,14 +115,15 @@ namespace Alime::base::System::IO
 		{
 			throw "failed to delete file.";
 		}
+		filePath_ = FilePath();
 	}
 
-	void FileInfo::MoveTo(String destFileName)
+	void FileInfo::MoveTo(const String& destFileName)
 	{
 		return MoveTo(destFileName, false);
 	}
 
-	void FileInfo::MoveTo(String destFileName, bool overwrite)
+	void FileInfo::MoveTo(const String& destFileName, bool overwrite)
 	{
 		auto newFile=CopyTo(destFileName, overwrite);
 		Delete();

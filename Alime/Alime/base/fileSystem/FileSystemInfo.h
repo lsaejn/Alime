@@ -21,7 +21,7 @@ namespace Alime::base::System::IO
 	{
 	protected:
 		FileSystemInfo();
-		FileSystemInfo(String filename);
+		FileSystemInfo(const String& filename);
 		virtual ~FileSystemInfo();
 		//FileSystemInfo(SerializationInfo info, StreamingContext context);
 		void Init();

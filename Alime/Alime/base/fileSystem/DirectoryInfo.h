@@ -8,7 +8,7 @@ namespace Alime::base::System::IO
 	class DirectoryInfo : public FileSystemInfo
 	{
 	public:
-		DirectoryInfo(String path);
+		DirectoryInfo(const String& path);
 
 		DirectoryInfo Parent();
 		String FullName() override;

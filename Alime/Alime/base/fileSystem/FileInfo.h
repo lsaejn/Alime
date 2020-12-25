@@ -17,12 +17,12 @@ namespace Alime::base::System::IO
 
 	public:
 		FileInfo() = default;
-		FileInfo(String fileName);
+		FileInfo(const String& fileName);
 		~FileInfo()=default;
 
 		bool Exists() const;
-		void Delete() const;
-		bool Rename(const String& newName) const;//非C#接口
+		void Delete();
+		bool Rename(const String& newName);//非C#接口
 
 		bool IsReadOnly();
 		String DirectoryName();
@@ -31,15 +31,14 @@ namespace Alime::base::System::IO
 		String Name();
 		String GetFullPath();
 		//StreamWriter AppendText();
-		FileInfo CopyTo(String destFileName);
-		FileInfo CopyTo(String destFileName, bool overwrite);
+		FileInfo CopyTo(const String& destFileName);
+		FileInfo CopyTo(const String& destFileName, bool overwrite);
 		FileStream Create();
 		//StreamWriter CreateText();
 		//void Decrypt();
-		void Delete();
 		//void Encrypt();
-		void MoveTo(String destFileName);
-		void MoveTo(String destFileName, bool overwrite);
+		void MoveTo(const String& destFileName);
+		void MoveTo(const String& destFileName, bool overwrite);
 		//FileStream Open(FileMode mode, FileAccess access);
 		//FileStream Open(FileMode mode, FileAccess access, FileShare share);
 		//FileStream Open(FileMode mode);

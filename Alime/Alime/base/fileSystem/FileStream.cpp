@@ -52,6 +52,7 @@ namespace Alime::base::System::IO
 	void FileStream::Init(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
 	{
 		const wchar_t* mode = L"rb";//or rt
+		accessRight_ = access;
 		switch (fileMode)
 		{
 		case FileMode::Create:
@@ -60,12 +61,10 @@ namespace Alime::base::System::IO
 			else if (access == FileAccess::ReadWrite)
 			{
 				mode = L"r+b";
-				accessRight_ = FileAccess::ReadWrite;
 			}
 			else
 			{
 				mode = L"wb";
-				accessRight_ = FileAccess::Write;
 			}
 			break;
 		case FileMode::Open:
@@ -76,21 +75,18 @@ namespace Alime::base::System::IO
 			if (access == FileAccess::Read)
 			{
 				mode = L"rb";
-				accessRight_ = FileAccess::Read;
 			}
 			else if (access == FileAccess::ReadWrite)
 			{
 				mode = L"r+b";
-				accessRight_ = FileAccess::ReadWrite;
 			}
 			else
 			{
-				mode = L"r+b";//给file_读权限，但读数据时，抛出异常
-				accessRight_ = FileAccess::Write;
+				mode = L"wb";
 			}
 			break;
 		case FileMode::CreateNew:
-			if (!File::Exists(fileName))
+			if (File::Exists(fileName))
 			{
 				throw Error(L"Failed opening '" + fileName + L"', file_ already exists.");
 			}
@@ -99,12 +95,10 @@ namespace Alime::base::System::IO
 			else if (access == FileAccess::ReadWrite)
 			{
 				mode = L"r+b";
-				accessRight_ = FileAccess::ReadWrite;
 			}
 			else
 			{
-				mode = L"r+b";
-				accessRight_ = FileAccess::Write;
+				mode = L"wb";
 			}
 			break;
 		case FileMode::Append:
@@ -113,12 +107,10 @@ namespace Alime::base::System::IO
 			else if (access == FileAccess::ReadWrite)
 			{
 				mode = L"a+b";
-				accessRight_ = FileAccess::ReadWrite;
 			}
 			else if(access == FileAccess::Write)
 			{
 				mode = L"ab";
-				accessRight_ = FileAccess::Write;
 			}
 			break;
 		case FileMode::OpenOrCreate:

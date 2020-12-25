@@ -3,28 +3,32 @@
 #include <iostream>
 
 #include <Alime/base/fileSystem/filePath.h>
-#include <Alime/base/fileSystem/file.h>
+#include <Alime/base/fileSystem/fileinfo.h>
 #include <Alime/base/strings/string_conversions.h>
 
 TEST_UNIT(test_FilePath)
 {
-	//Alime::base::FilePath path(L".");
-	//auto cwd = path.GetFullPath();
-	//cwd = path.GetFullPath();
+	Alime::base::System::IO::FilePath path(L".");
+	auto cwd = path.GetFullPath();
+	cwd = path.GetFullPath();
 
-	//auto component = Alime::base::FilePath::GetPathComponents(path.GetFullPath());
+	auto component = Alime::base::System::IO::FilePath::GetPathComponents(path.GetFullPath());
 
-	//auto folder=path.GetFolder();
-	//auto folderPath= folder.GetFullPath();
+	auto folder=path.GetFolder();
+	auto folderPath= folder.GetFullPath();
+	bool isDir=path.IsFolder();
+	bool isFile = path.IsFile();
+	bool isRoot =path.IsRoot();
+	
 
 
-	//auto thisFile = Alime::base::File(L"./fileSystemTest.cpp");
+	//auto thisFile = Alime::base::System::IO::FileInfo(L"./fileSystemTest.cpp");
 	//std::string re;
 	//Alime::base::Encoding encoding;
 	//bool containsBom = false;
-	////thisFile.ReadAllText(re, encoding, containsBom);
+	//Alime::base::System::IO::File::ReadAllText(re, encoding, containsBom);
 	//auto u16String=Alime::base::UTF8ToUTF16(re);
-	//int x = 3;
+	int x = 3;
 }
 
 #include <Alime/base/fileSystem/FileStream.h>

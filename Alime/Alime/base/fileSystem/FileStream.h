@@ -33,8 +33,8 @@ namespace Alime::base::System::IO
 		bool	IsLimited()const;
 		bool	IsAvailable()const;
 		void	Close();
-		pos_t	Position() const;
-		pos_t	Size() const;
+		pos_t Position() const;
+		pos_t Size() const;
 		void	Seek(pos_t _size);
 		void	SeekFromBegin(pos_t _size);
 		void	SeekFromEnd(pos_t _size);
