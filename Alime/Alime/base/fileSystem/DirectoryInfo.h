@@ -46,6 +46,9 @@ namespace Alime::base::System::IO
 		//void SetAccessControl(DirectorySecurity directorySecurity);
 		
 		String ToString();
+
+	private:
+		bool Create(bool recursively);
 	};
 
 }
