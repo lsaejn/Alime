@@ -86,5 +86,26 @@ namespace Alime::base::System::IO
 			throw "";//值语义的代码没法写。。
 	}
 
+	void DirectoryInfo::Delete(bool recursive)
+	{
+		if (!Exists())
+			return;
+
+		if (recursive)
+		{
+			//delete sub Files here
+			return Delete(false);
+		}
+#if defined OS_WIN
+		RemoveDirectory(filePath_.GetFullPath().data());
+#else
+		return rmdir(filePath_.GetFullPath().data()) == 0;
+#endif
+	}
+
+	void DirectoryInfo::Delete()
+	{
+	}
+
 }
 
