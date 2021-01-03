@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <list>
 #include <Alime/base/details/string_constants.h>
 
 enum JsonType
@@ -22,37 +23,42 @@ struct JsonContext
 	int colunmn;
 };
 
+struct AlimeJsonMember;
+
+struct AlimeJsonMemberManager
+{
+	std::list< AlimeJsonMember*> members_;
+};
+
+
 class AlimeJson
 {
 public:
+	AlimeJson() = default;
+
 	static AlimeJson Parse(const  char* info)
 	{
-		JsonContext ac;
-		ac.start = info;
-		ac.cur = info;
+		JsonContext jsonContext;
+		jsonContext.start = info;
+		jsonContext.cur = info;
 
 		AlimeJson av;
-		av.context_ = ac;
 		av.type_ = JSON_UNKNOW;
 
-		av.ParseValue();
-		//av.Expect('{');
-		//av.ReadKeyString();
-		//av.ParseValue();
-		//av.Expect('}');
+		av.ParseValue(jsonContext);
 		return av;
 	}
 public:
 	JsonType type_;
-	JsonContext context_;
-	std::string key_;
+	AlimeJsonMemberManager members_;
+
 private:
 	bool IsWhiteSpace(char ch)
 	{
 		return Alime::base::details::IsWhitespace(ch);
 	}
 
-	std::string ReadUntil(char c)
+	std::string ReadUntil(char c, JsonContext& context_)
 	{
 		const char* begin = context_.cur;
 		while (context_.cur && *context_.cur++ != c)
@@ -61,7 +67,7 @@ private:
 		return std::string(begin, context_.cur-1);
 	}
 
-	void Expect(char c)
+	void Expect(char c, JsonContext& context_)
 	{
 		do
 		{
@@ -71,18 +77,18 @@ private:
 		context_.cur++;
 	}
 
-	void ReadKeyString()
+	void ReadKeyString(JsonContext& context_)
 	{
-		SkipWhiteSpace();
+		SkipWhiteSpace(context_);
 		//
-		Expect('\"');
-		key_=ReadUntil('\"');
-		SkipWhiteSpace();
-		Expect(':');
-		SkipWhiteSpace();
+		Expect('\"', context_);
+		//key_=ReadUntil('\"');
+		SkipWhiteSpace(context_);
+		Expect(':', context_);
+		SkipWhiteSpace(context_);
 	}
 
-	void SkipWhiteSpace()
+	void SkipWhiteSpace(JsonContext& context_)
 	{
 		while (context_.cur)
 		{
@@ -106,7 +112,7 @@ private:
 		return true;
 	}
 
-	void ParseNullValue()
+	void ParseNullValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "null"))
@@ -114,7 +120,7 @@ private:
 		context_.cur += 4;
 	}
 
-	void ParseTrueValue()
+	void ParseTrueValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "true"))
@@ -122,7 +128,7 @@ private:
 		context_.cur += 4;
 	}
 
-	void ParseFalseValue()
+	void ParseFalseValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "false"))
@@ -130,17 +136,17 @@ private:
 		context_.cur += 5;
 	}
 
-	void ParseStringValue()
+	void ParseStringValue(JsonContext& context_)
 	{
-		auto value=ReadUntil('\"');
+		auto value=ReadUntil('\"', context_);
 	}
 
-	void ParseIntegerValue()
+	void ParseIntegerValue(JsonContext& context_)
 	{
 		//[-]. 0 | [1-9][0-9]* [.][0-9]* [eE][1-9] 
 	}
 
-	void ParseObjectValue()
+	void ParseObjectValue(JsonContext& context_)
 	{
 	}
 	/*
@@ -150,25 +156,25 @@ private:
 
 
 	*/
-	void ParseValue()
+	void ParseValue(JsonContext& context_)
 	{
-		SkipWhiteSpace();
+		SkipWhiteSpace(context_);
 		if (*context_.cur == 'n')
 		{
-			ParseNullValue();
+			ParseNullValue(context_);
 			type_ = JSON_NULL;
 		}
 		else if (*context_.cur == 't')
 		{
-			ParseTrueValue();
+			ParseTrueValue(context_);
 		}
 		else if (*context_.cur == 'f')
 		{
-			ParseFalseValue();
+			ParseFalseValue(context_);
 		}
 		else if (*context_.cur == '"')
 		{
-			ParseStringValue();
+			ParseStringValue(context_);
 		}
 		else if (*context_.cur == '[')
 		{
@@ -176,15 +182,26 @@ private:
 		}
 		else if (*context_.cur == '{')
 		{
-			ParseObjectValue();
+			ParseObjectValue(context_);
 		}
 		else if (*context_.cur>=0 && *context_.cur<=9)
 		{
-			ParseIntegerValue();
+			ParseIntegerValue(context_);
 		}
-		SkipWhiteSpace();
+		SkipWhiteSpace(context_);
 		//if ','
 	}
 
 };
+
+
+
+struct AlimeJsonMember
+{
+public:
+	std::string key_;
+	AlimeJson json;
+};
+
+
 
