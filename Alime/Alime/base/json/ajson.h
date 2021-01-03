@@ -23,15 +23,20 @@ struct JsonContext
 	int colunmn;
 };
 
-struct AlimeJsonMember;
+class AlimeJsonObject
+{
 
-struct AlimeJsonMemberManager
+};
+
+class AlimeJsonMember;
+
+class AlimeJsonMemberManager : public AlimeJsonObject
 {
 	std::list< AlimeJsonMember*> members_;
 };
 
 
-class AlimeJson
+class AlimeJson : public AlimeJsonObject
 {
 public:
 	AlimeJson() = default;
@@ -50,7 +55,7 @@ public:
 	}
 public:
 	JsonType type_;
-	AlimeJsonMemberManager members_;
+	AlimeJsonObject* members_;
 
 private:
 	bool IsWhiteSpace(char ch)
@@ -196,7 +201,7 @@ private:
 
 
 
-struct AlimeJsonMember
+class AlimeJsonMember: public AlimeJsonObject
 {
 public:
 	std::string key_;
