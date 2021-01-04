@@ -3,10 +3,20 @@
 
 //using namespace Alime;
 
+std::vector<int> rv()
+{
+	std::vector<int> v{ 1,3,5 };
+	return v;
+}
+
 TEST_UNIT(JsonTest)
 {
+	{
+		std::vector<int> vi=rv();
+		vi.size();
+	}
 	AlimeJson value;
-	const char* info = { "{\"key\":  null  }" };
+	const char* info = { "null" };
 	value = AlimeJson::Parse(info);
-	ASSERT_TRUE(value.type_ == JSON_NULL);
+	ASSERT_TRUE(value.GetType() == JSON_NULL);
 }

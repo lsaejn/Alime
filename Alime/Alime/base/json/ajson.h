@@ -23,41 +23,119 @@ struct JsonContext
 	int colunmn;
 };
 
-class AlimeJsonObject
+class AlimeJsonValue
 {
-
+public:
+	JsonType type_;
 };
 
-class AlimeJsonMember;
+class AlimeJsonNull : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_NULL;
+};
 
-class AlimeJsonMemberManager : public AlimeJsonObject
+class AlimeJsonFalse : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_FALSE;
+	bool value_ = false;//debug
+};
+
+class AlimeJsonTrue : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_TRUE;
+	bool value_ = true;//debug
+};
+
+class AlimeJsonString : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_STRING;
+	std::string value_;
+};
+
+#include <list>
+class AlimeJsonArray : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_ARRAY;
+	std::list<std::string> values_;
+};
+
+class AlimeJsonUnknow :public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_UNKNOW;
+};
+
+class AlimeJsonObject :public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_OBJECT;
+};
+
+
+class AlimeJsonMember : public AlimeJsonValue
+{
+public:
+	JsonType type_ = JSON_NUMBER;
+	std::string key_;
+	AlimeJsonValue* value;
+};
+
+class AlimeJsonMemberManager : public AlimeJsonValue
 {
 	std::list< AlimeJsonMember*> members_;
 };
 
 
-class AlimeJson : public AlimeJsonObject
+class AlimeJson
 {
 public:
 	AlimeJson() = default;
+	AlimeJson(AlimeJson&& other)
+	{
+		ajv_ = other.ajv_;
+		other.ajv_ = nullptr;
+	}
 
-	static AlimeJson Parse(const  char* info)
+	~AlimeJson()
+	{
+		if(ajv_)
+			delete ajv_;
+	}
+
+	AlimeJson& operator=(AlimeJson&& other)
+	{
+		ajv_ = other.ajv_;
+		other.ajv_ = nullptr;
+		return *this;
+	}
+
+	AlimeJson(const AlimeJson& other) = delete;
+	AlimeJson& operator=(const AlimeJson& other) = delete;
+
+	static AlimeJson Parse(const char* info)
 	{
 		JsonContext jsonContext;
 		jsonContext.start = info;
 		jsonContext.cur = info;
 
-		AlimeJson av;
-		av.type_ = JSON_UNKNOW;
-
-		av.ParseValue(jsonContext);
-		return av;
+		AlimeJson aj;
+		aj.ParseValue(jsonContext);
+		return std::move(aj); //why rvo not effect?
 	}
-public:
-	JsonType type_;
-	AlimeJsonObject* members_;
+
+	JsonType GetType()
+	{
+		return ajv_->type_;
+	}
 
 private:
+	AlimeJsonValue* ajv_=nullptr;
+
 	bool IsWhiteSpace(char ch)
 	{
 		return Alime::base::details::IsWhitespace(ch);
@@ -158,16 +236,17 @@ private:
 	then we expect :
 	n, t , f , " , [0-9], [, {
 
-
-
 	*/
+
 	void ParseValue(JsonContext& context_)
 	{
 		SkipWhiteSpace(context_);
 		if (*context_.cur == 'n')
 		{
 			ParseNullValue(context_);
-			type_ = JSON_NULL;
+			//if(true)
+			AlimeJsonValue *value = new AlimeJsonNull();
+			ajv_ = value;
 		}
 		else if (*context_.cur == 't')
 		{
@@ -201,12 +280,9 @@ private:
 
 
 
-class AlimeJsonMember: public AlimeJsonObject
-{
-public:
-	std::string key_;
-	AlimeJson json;
-};
+
+
+
 
 
 
