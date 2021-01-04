@@ -38,21 +38,33 @@ public:
 class AlimeJsonFalse : public AlimeJsonValue
 {
 public:
-	JsonType type_ = JSON_FALSE;
+	AlimeJsonFalse()
+	{
+		type_ = JSON_FALSE;
+	}
 	bool value_ = false;//debug
 };
 
 class AlimeJsonTrue : public AlimeJsonValue
 {
 public:
-	JsonType type_ = JSON_TRUE;
+	AlimeJsonTrue()
+	{
+		type_ = JSON_TRUE;
+	}
+
 	bool value_ = true;//debug
 };
 
 class AlimeJsonString : public AlimeJsonValue
 {
 public:
-	JsonType type_ = JSON_STRING;
+	AlimeJsonString(std::string v)
+		:value_(std::move(v))
+	{
+		type_ = JSON_STRING;
+	}
+
 	std::string value_;
 };
 
@@ -114,8 +126,8 @@ public:
 		return *this;
 	}
 
-	AlimeJson(const AlimeJson& other) = delete;
-	AlimeJson& operator=(const AlimeJson& other) = delete;
+	AlimeJson(const AlimeJson& other) = delete;//we delete this until we implement copy()
+	AlimeJson& operator=(const AlimeJson& other) = delete;//
 
 	static AlimeJson Parse(const char* info)
 	{
@@ -219,9 +231,11 @@ private:
 		context_.cur += 5;
 	}
 
-	void ParseStringValue(JsonContext& context_)
+	std::string ParseStringValue(JsonContext& context_)
 	{
+		context_.cur++;
 		auto value=ReadUntil('\"', context_);
+		return value;
 	}
 
 	void ParseIntegerValue(JsonContext& context_)
@@ -231,6 +245,7 @@ private:
 
 	void ParseObjectValue(JsonContext& context_)
 	{
+
 	}
 	/*
 	then we expect :
@@ -251,14 +266,19 @@ private:
 		else if (*context_.cur == 't')
 		{
 			ParseTrueValue(context_);
+			AlimeJsonValue* value = new AlimeJsonTrue();
+			ajv_ = value;
 		}
 		else if (*context_.cur == 'f')
 		{
 			ParseFalseValue(context_);
+			AlimeJsonValue* value = new AlimeJsonFalse();
+			ajv_ = value;
 		}
 		else if (*context_.cur == '"')
 		{
-			ParseStringValue(context_);
+			AlimeJsonValue* value = new AlimeJsonString(ParseStringValue(context_));
+			ajv_ = value;
 		}
 		else if (*context_.cur == '[')
 		{

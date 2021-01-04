@@ -9,14 +9,48 @@ std::vector<int> rv()
 	return v;
 }
 
+class A
+{
+
+};
+
+class B : public A
+{
+
+};
+
 TEST_UNIT(JsonTest)
 {
 	{
-		std::vector<int> vi=rv();
-		vi.size();
+		A* b = new B();
+		auto a = b;
 	}
-	AlimeJson value;
-	const char* info = { "null" };
-	value = AlimeJson::Parse(info);
-	ASSERT_TRUE(value.GetType() == JSON_NULL);
+	{
+		AlimeJson value;
+		const char* info = { "null" };
+		value = AlimeJson::Parse(info);
+		ASSERT_TRUE(value.GetType() == JSON_NULL);
+	}
+
+	{
+		AlimeJson value;
+		const char* info = { "  true  " };
+		value = AlimeJson::Parse(info);
+		ASSERT_TRUE(value.GetType() == JSON_TRUE);
+	}
+
+	{
+		AlimeJson value;
+		const char* info = { "  false  " };
+		value = AlimeJson::Parse(info);
+		ASSERT_TRUE(value.GetType() == JSON_FALSE);
+	}
+
+	{
+		AlimeJson value;
+		const char* info = { "\"fuckkkk\"" };
+		value = AlimeJson::Parse(info);
+		ASSERT_TRUE(value.GetType() == JSON_STRING);
+	}
+
 }
