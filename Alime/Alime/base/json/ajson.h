@@ -156,13 +156,23 @@ private:
 	std::string ReadUntil(char c, JsonContext& context_)
 	{
 		const char* begin = context_.cur;
-		while (context_.cur && *context_.cur++ != c)
+		while (context_.cur)
 		{
 			if (*context_.cur == '\\')
 			{
 				if (*(context_.cur + 1) == 'u')
 				{
-					parseHex();
+					//parseHex();
+				}
+				else
+				{
+					auto c = *(context_.cur + 1);
+					if(c== '\"' || c== '\\' || c== '/' || c== 'b' || c=='f'
+						|| c== 'n' || c== 'r' || c== 't')
+					{		
+						context_.cur+2;
+					}
+
 				}
 			}
 			context_.cur++;
