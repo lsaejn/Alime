@@ -158,6 +158,14 @@ private:
 		const char* begin = context_.cur;
 		while (context_.cur && *context_.cur++ != c)
 		{
+			if (*context_.cur == '\\')
+			{
+				if (*(context_.cur + 1) == 'u')
+				{
+					parseHex();
+				}
+			}
+			context_.cur++;
 		}
 		return std::string(begin, context_.cur-1);
 	}
