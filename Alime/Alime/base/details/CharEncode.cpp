@@ -1,7 +1,7 @@
 #include "CharEncode.h"
 #include <windows.h>
 
-namespace Alime::base::Sysytem::IO
+namespace Alime::base::System::IO
 {
 
 /***********************************************************************

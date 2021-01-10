@@ -14,8 +14,6 @@
 Char Alime::base::System::IO::FilePath::Delimiter= kDelimiter;
 namespace Alime::base::System::IO
 {
-	
-
 	FilePath::FilePath()
 	{
 		Initialize();
@@ -50,7 +48,6 @@ namespace Alime::base::System::IO
 
 	void	FilePath::Initialize()
 	{
-
 		std::vector<wchar_t> buffer(fullPath_.length() + 1);
 		wcscpy_s(&buffer[0], fullPath_.length() + 1, fullPath_.c_str());
 		for (size_t i = 0; i < buffer.size(); i++)
@@ -125,12 +122,13 @@ namespace Alime::base::System::IO
 		return (info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 	}
 
-	bool	FilePath::IsRoot()const
+	bool	FilePath::IsRoot() const
 	{
-		return fullPath_ == L"";
+		//fuck
+		return fullPath_.size()==2 && fullPath_[1]==L':';
 	}
 
-	String  FilePath::GetName()const
+	String  FilePath::GetName() const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
 		if (index != String::npos)
@@ -138,7 +136,7 @@ namespace Alime::base::System::IO
 		return fullPath_;
 	}
 
-	FilePath  FilePath::GetFolder()const
+	FilePath  FilePath::GetFolder() const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
 		if (index != String::npos)
@@ -146,7 +144,7 @@ namespace Alime::base::System::IO
 		return FilePath();
 	}
 
-	String FilePath::GetFullPath()const
+	String FilePath::GetFullPath() const
 	{
 		return fullPath_;
 	}

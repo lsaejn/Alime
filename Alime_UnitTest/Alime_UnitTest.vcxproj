@@ -146,10 +146,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AjsonTest.cpp" />
     <ClCompile Include="DateTimeTest.cpp" />
     <ClCompile Include="FileStreamTest.cpp" />
-    <ClCompile Include="fileSystemTest.cpp" />
+    <ClCompile Include="FileSystemTest.cpp" />
     <ClCompile Include="httpTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StringTest.cpp" />

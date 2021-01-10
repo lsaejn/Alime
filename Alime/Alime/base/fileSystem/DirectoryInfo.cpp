@@ -10,7 +10,7 @@ namespace Alime::base::System::IO
 
 	bool DirectoryInfo::Exists() const
 	{
-		return FileSystemInfo::Exists();
+		return filePath_.IsFolder();
 	}
 
 	String DirectoryInfo::FullName()

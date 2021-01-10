@@ -2,9 +2,10 @@
 
 #include "Alime/base/base_define.h"
 #include "Alime/base/fileSystem/file_define.h"
+#include "Alime/base/fileSystem/IStream.h"
 
 #include <vector>
-struct IStream;
+//struct IStream;
 
 namespace Alime::base::System::IO
 {
@@ -17,7 +18,7 @@ namespace Alime::base::System::IO
 		virtual Char Read() = 0;
 		// index: The position in buffer at which to begin writing.
 		virtual int Read(std::vector<Char>& buffer, int index, int count) = 0;
-		virtual wchar_t Peek() = 0;
+		virtual Char Peek() = 0;
 		virtual void Close() = 0;
 	};
 
@@ -41,6 +42,9 @@ namespace Alime::base::System::IO
 		virtual Char Read() override;
 		virtual int Read(std::vector<Char>& buffer, int index, int count) override;
 		virtual wchar_t Peek() override;
+
+		IStream* stream_;
+		Encoding encoding_;
 	};
 
 }

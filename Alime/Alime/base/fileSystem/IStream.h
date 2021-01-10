@@ -2,7 +2,7 @@
 
 #include <Alime/base/fileSystem/file_define.h>
 
-namespace Alime::base
+namespace Alime::base::System::IO
 {
 	class IStream
 	{

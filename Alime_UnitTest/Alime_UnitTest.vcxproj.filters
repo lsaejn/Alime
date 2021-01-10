@@ -24,9 +24,6 @@
     <ClCompile Include="threadTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="fileSystemTest.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="httpTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -36,7 +33,7 @@
     <ClCompile Include="DateTimeTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AjsonTest.cpp">
+    <ClCompile Include="FileSystemTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

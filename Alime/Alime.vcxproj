@@ -161,7 +161,7 @@
     <ClCompile Include="Alime\base\fileSystem\file.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileSystemInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
-    <ClCompile Include="Alime\base\fileSystem\filePath.cpp" />
+    <ClCompile Include="Alime\base\fileSystem\FilePath.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
     <ClCompile Include="Alime\base\details\CharEncode.cpp" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
@@ -201,7 +201,7 @@
     <ClInclude Include="Alime\base\fileSystem\DirectoryInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\file.h" />
     <ClInclude Include="Alime\base\fileSystem\FileInfo.h" />
-    <ClInclude Include="Alime\base\fileSystem\filePath.h" />
+    <ClInclude Include="Alime\base\fileSystem\FilePath.h" />
     <ClInclude Include="Alime\base\fileSystem\FileStream.h" />
     <ClInclude Include="Alime\base\fileSystem\FileSystemInfo.h" />
     <ClInclude Include="Alime\base\fileSystem\file_define.h" />
@@ -212,7 +212,6 @@
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
     <ClInclude Include="Alime\base\details\CharEncode.h" />
-    <ClInclude Include="Alime\base\details\Interfaces.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />
     <ClInclude Include="Alime\base\strings\unicode.h" />
