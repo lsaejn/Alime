@@ -124,11 +124,11 @@ namespace Alime::base::System::IO
 
 	bool	FilePath::IsRoot() const
 	{
-		//fuck
+		//fix me
 		return fullPath_.size()==2 && fullPath_[1]==L':';
 	}
 
-	String  FilePath::GetName() const
+	String FilePath::GetName() const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
 		if (index != String::npos)
@@ -136,7 +136,7 @@ namespace Alime::base::System::IO
 		return fullPath_;
 	}
 
-	FilePath  FilePath::GetFolder() const
+	FilePath FilePath::GetFolder() const
 	{
 		auto index = fullPath_.find_last_of(Delimiter);
 		if (index != String::npos)

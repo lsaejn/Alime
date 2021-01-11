@@ -22,6 +22,12 @@ namespace Alime::base::System::IO
 		virtual void Close() = 0;
 	};
 
+	//in C# encoding is a class
+	class Encoding_
+	{
+
+	};
+
 	class StreamReader : public TextReader
 	{
 	public:
