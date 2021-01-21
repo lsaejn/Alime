@@ -209,6 +209,7 @@
     <ClInclude Include="Alime\base\fileSystem\IStream.h" />
     <ClInclude Include="Alime\base\function\function.h" />
     <ClInclude Include="Alime\base\Interface.h" />
+    <ClInclude Include="Alime\base\json\alimeJson.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
     <ClInclude Include="Alime\base\details\CharEncode.h" />

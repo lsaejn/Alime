@@ -23,84 +23,73 @@ struct JsonContext
 	int colunmn;
 };
 
-class AlimeJsonValue
+#include <map>
+#include <vector>
+
+template <
+	template<typename U, typename V, typename... Args> class ObjectType = std::map,
+	template<typename U, typename... Args> class ArrayType = std::vector,
+	class StringType = std::string,
+	class BooleanType = bool,
+	class NumberIntegerType = int64_t,
+	class NumberFloatType = double
+>
+class AlimeJsonValueBase
 {
+public:
+	/// a type for an object
+	using object_t = ObjectType<StringType, AlimeJsonValueBase>;
+	/// a type for an array_v
+	using array_t = ArrayType<AlimeJsonValueBase>;
+	/// a type for a string
+	using string_t = StringType;
+	/// a type for a boolean
+	using boolean_t = BooleanType;
+	/// a type for a number (integer)
+	using number_integer_t = NumberIntegerType;
+	/// a type for a number (floating point)
+	using number_float_t = NumberFloatType;
+	/// a type for list initialization
+	using list_init_t = std::initializer_list<AlimeJsonValueBase>;
+
+	union json_value
+	{
+		/// object (stored with pointer to save storage)
+		object_t* object;
+		/// array_v (stored with pointer to save storage)
+		array_t* array_v;
+		/// string (stored with pointer to save storage)
+		string_t* string;
+		/// bolean
+		boolean_t boolean;
+		/// number (integer)
+		number_integer_t number_integer;
+		/// number (floating point)
+		number_float_t number_float;
+
+		/// default constructor (for null values)
+		json_value() = default;
+		/// constructor for objects
+		json_value(object_t* v) : object(v) {}
+		/// constructor for arrays
+		json_value(array_t* v) : array_v(v) {}
+		/// constructor for strings
+		json_value(string_t* v) : string(v) {}
+		/// constructor for booleans
+		json_value(boolean_t v) : boolean(v) {}
+		/// constructor for numbers (integer)
+		json_value(number_integer_t v) : number_integer(v) {}
+		/// constructor for numbers (floating point)
+		json_value(number_float_t v) : number_float(v) {}
+	};
+
+
 public:
 	JsonType type_;
+	json_value value_;
 };
+using  AlimeJsonValue = AlimeJsonValueBase<>;
 
-class AlimeJsonNull : public AlimeJsonValue
-{
-public:
-	JsonType type_ = JSON_NULL;
-};
-
-class AlimeJsonFalse : public AlimeJsonValue
-{
-public:
-	AlimeJsonFalse()
-	{
-		type_ = JSON_FALSE;
-	}
-	bool value_ = false;//debug
-};
-
-class AlimeJsonTrue : public AlimeJsonValue
-{
-public:
-	AlimeJsonTrue()
-	{
-		type_ = JSON_TRUE;
-	}
-
-	bool value_ = true;//debug
-};
-
-class AlimeJsonString : public AlimeJsonValue
-{
-public:
-	AlimeJsonString(std::string v)
-		:value_(std::move(v))
-	{
-		type_ = JSON_STRING;
-	}
-
-	std::string value_;
-};
-
-#include <list>
-class AlimeJsonArray : public AlimeJsonValue
-{
-public:
-	JsonType type_ = JSON_ARRAY;
-	std::list<std::string> values_;
-};
-
-class AlimeJsonUnknow :public AlimeJsonValue
-{
-public:
-	JsonType type_ = JSON_UNKNOW;
-};
-
-class AlimeJsonObject :public AlimeJsonValue
-{
-public:
-	JsonType type_ = JSON_OBJECT;
-};
-
-
-class AlimeJsonMember : public AlimeJsonValue
-{
-public:
-	JsonType type_ = JSON_NUMBER;
-	std::string key_;
-	AlimeJsonValue* value;
-};
-
-class AlimeJsonMemberManager : public AlimeJsonValue
-{
-	std::list< AlimeJsonMember*> members_;
-};
 
 
 class AlimeJson
@@ -156,7 +145,11 @@ private:
 	std::string ReadUntil(char c, JsonContext& context_)
 	{
 		const char* begin = context_.cur;
-		while (context_.cur)
+		while (context_.cur && *context_.cur != c)
+		{
+			context_.cur++;
+		}
+		while (0 &&context_.cur)
 		{
 			if (*context_.cur == '\\')
 			{
@@ -177,7 +170,7 @@ private:
 			}
 			context_.cur++;
 		}
-		return std::string(begin, context_.cur-1);
+		return std::string(begin, context_.cur);
 	}
 
 	void Expect(char c, JsonContext& context_)
@@ -278,24 +271,31 @@ private:
 		{
 			ParseNullValue(context_);
 			//if(true)
-			AlimeJsonValue *value = new AlimeJsonNull();
+			AlimeJsonValue *value = new AlimeJsonValue();
+			value->type_ = JsonType::JSON_NULL;
 			ajv_ = value;
 		}
 		else if (*context_.cur == 't')
 		{
 			ParseTrueValue(context_);
-			AlimeJsonValue* value = new AlimeJsonTrue();
+			AlimeJsonValue* value = new AlimeJsonValue();
+			value->type_ = JsonType::JSON_TRUE;
+			value->value_ = true;
 			ajv_ = value;
 		}
 		else if (*context_.cur == 'f')
 		{
 			ParseFalseValue(context_);
-			AlimeJsonValue* value = new AlimeJsonFalse();
+			AlimeJsonValue* value = new AlimeJsonValue();
+			value->type_ = JsonType::JSON_FALSE;
+			value->value_ = true;
 			ajv_ = value;
 		}
 		else if (*context_.cur == '"')
 		{
-			AlimeJsonValue* value = new AlimeJsonString(ParseStringValue(context_));
+			AlimeJsonValue* value = new AlimeJsonValue();
+			value->type_ = JsonType::JSON_STRING;
+			value->value_ = new std::string(ParseStringValue(context_));
 			ajv_ = value;
 		}
 		else if (*context_.cur == '[')
