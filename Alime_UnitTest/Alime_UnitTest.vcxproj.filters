@@ -36,6 +36,9 @@
     <ClCompile Include="FileSystemTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="JsonTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\gmockd.lib" />

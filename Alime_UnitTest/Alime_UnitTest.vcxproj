@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easyTest.h" />
+    <ClCompile Include="JsonTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alime\Alime.vcxproj">
