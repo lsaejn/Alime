@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <list>
 #include <Alime/base/details/string_constants.h>
-
+//我们将在子项目中完成json。然后移植过来。
 enum JsonType
 {
 	JSON_NULL,
