@@ -274,11 +274,14 @@ Utf8
 				}
 				else
 				{
+					//read a char and look up the total bytes, for, is
+					//there normally 1-4 byte in a utf codepoint
 					if(stream->Read(source, 1)!=1)
 					{
 						break;
 					}
-					if((*source & 0xF0) == 0xF0)
+
+					if((*source & 0xF0) == 0xF0)//11110000b
 					{
 						if(stream->Read(source+1, 3)!=3)
 						{
@@ -286,7 +289,7 @@ Utf8
 						}
 						sourceCount=4;
 					}
-					else if((*source & 0xE0) == 0xE0)
+					else if((*source & 0xE0) == 0xE0)//11100000b
 					{
 						if(stream->Read(source+1, 2)!=2)
 						{
@@ -294,7 +297,7 @@ Utf8
 						}
 						sourceCount=3;
 					}
-					else if((*source & 0xC0) == 0xC0)
+					else if((*source & 0xC0) == 0xC0)//11000000b
 					{
 						if(stream->Read(source+1, 1)!=1)
 						{

@@ -7,7 +7,8 @@ TEST_UNIT(AlimeJson_Test)
     {
         AlimeJson aj;
         std::string str = R"("hello")";
-        aj = aj.Parse(str.c_str());
+        const char* jsonStr = "\"hello\"";
+        aj = aj.Parse(jsonStr);
         auto ty = aj.GetType();
         ASSERT_TRUE(ty==JsonType::JSON_STRING);
     }
@@ -31,5 +32,12 @@ TEST_UNIT(AlimeJson_Test)
         aj = aj.Parse(str.c_str());
         auto ty = aj.GetType();
         ASSERT_TRUE(ty == JsonType::JSON_TRUE);
+    }
+    {
+        AlimeJson aj;
+        std::string str = R"(3.14125)";
+        aj = aj.Parse(str.c_str());
+        auto ty = aj.GetType();
+        ASSERT_TRUE(ty == JsonType::JSON_NUMBER);
     }
 }

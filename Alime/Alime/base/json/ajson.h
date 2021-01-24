@@ -1,9 +1,32 @@
 #pragma once
 #include <windows.h>
 #include <list>
+#include <map>
+#include <vector>
+#include <memory>
 #include <Alime/base/details/string_constants.h>
+
 //我们将在子项目中完成json。然后移植过来。
-enum JsonType
+
+#define EXPECT(c, ch)       do { assert(*c->json == (ch)); c->json++; } while(0)
+//#define ISDIGIT(ch)         ((ch) >= '0' && (ch) <= '9')
+
+template<typename CHAR>
+bool ISDIGIT(CHAR c)
+{
+	return (c) >= '0' && (c) <= '9';
+}
+
+template<typename CHAR>
+bool ISDIGIT1TO9(CHAR c)
+{
+	return (c) >= '1' && (c) <= '9';
+}
+
+#define out 
+#define ref
+
+enum class JsonType
 {
 	JSON_NULL,
 	JSON_FALSE,
@@ -15,16 +38,23 @@ enum JsonType
 	JSON_UNKNOW
 };
 
-struct JsonContext
+enum class JsonParseCode
 {
-	const char* start;
-	const char* cur;
-	int row;
-	int colunmn;
+	OK = 0,
+	EXPECT_VALUE,
+	INVALID_VALUE,
+	ROOT_NOT_SINGULAR,
+	NUMBER_TOO_BIG
 };
 
-#include <map>
-#include <vector>
+
+struct JsonContext
+{
+	const char* start = nullptr;
+	const char* cur = nullptr;
+	int row = -1;
+	int colunmn = -1;
+};
 
 template <
 	template<typename U, typename V, typename... Args> class ObjectType = std::map,
@@ -91,42 +121,31 @@ public:
 using  AlimeJsonValue = AlimeJsonValueBase<>;
 
 
+#include <cassert>
 
 class AlimeJson
 {
 public:
 	AlimeJson() = default;
-	AlimeJson(AlimeJson&& other)
-	{
-		ajv_ = other.ajv_;
-		other.ajv_ = nullptr;
-	}
+	~AlimeJson() = default;
 
-	~AlimeJson()
-	{
-		if(ajv_)
-			delete ajv_;
-	}
-
-	AlimeJson& operator=(AlimeJson&& other)
-	{
-		ajv_ = other.ajv_;
-		other.ajv_ = nullptr;
-		return *this;
-	}
+	AlimeJson(AlimeJson&& other) = default;
+	AlimeJson& operator=(AlimeJson&& other) = default;
 
 	AlimeJson(const AlimeJson& other) = delete;//we delete this until we implement copy()
 	AlimeJson& operator=(const AlimeJson& other) = delete;//
 
 	static AlimeJson Parse(const char* info)
 	{
+		//assert(info != NULL);
 		JsonContext jsonContext;
 		jsonContext.start = info;
 		jsonContext.cur = info;
 
-		AlimeJson aj;
-		aj.ParseValue(jsonContext);
-		return std::move(aj); //why rvo not effect?
+		AlimeJson json;
+		AlimeJsonValue *value=new AlimeJsonValue();
+		json.ParseValue(value, jsonContext);
+		return std::move(json); //why rvo not effect?
 	}
 
 	JsonType GetType()
@@ -135,14 +154,14 @@ public:
 	}
 
 private:
-	AlimeJsonValue* ajv_=nullptr;
+	std::shared_ptr<AlimeJsonValue> ajv_;
 
 	bool IsWhiteSpace(char ch)
 	{
 		return Alime::base::details::IsWhitespace(ch);
 	}
 
-	std::string ReadUntil(char c, JsonContext& context_)
+	std::string ReadUntil(char c, JsonContext& context_, char* filter=nullptr)
 	{
 		const char* begin = context_.cur;
 		while (context_.cur && *context_.cur != c)
@@ -163,14 +182,16 @@ private:
 					if(c== '\"' || c== '\\' || c== '/' || c== 'b' || c=='f'
 						|| c== 'n' || c== 'r' || c== 't')
 					{		
-						context_.cur+2;
+						context_.cur+=2;
 					}
 
 				}
 			}
 			context_.cur++;
 		}
-		return std::string(begin, context_.cur);
+		std::string ret(begin, context_.cur);
+		context_.cur++;
+		return ret;
 	}
 
 	void Expect(char c, JsonContext& context_)
@@ -249,9 +270,44 @@ private:
 		return value;
 	}
 
-	void ParseIntegerValue(JsonContext& context_)
+	//这里有点恶心
+	JsonParseCode ParseNumber(JsonContext& context , out AlimeJsonValue* v)
 	{
-		//[-]. 0 | [1-9][0-9]* [.][0-9]* [eE][1-9] 
+		const char* p = context.cur;
+		if (*p == '-')
+			p++;
+		if (*p == '0')
+			p++;
+		else
+		{
+			if (!ISDIGIT1TO9(*p))
+				return JsonParseCode::INVALID_VALUE;
+			for (p++; ISDIGIT(*p);p++)
+				;
+		}
+		if (*p == '.')
+		{
+			p++;
+			if (!ISDIGIT(*p))
+				return JsonParseCode::INVALID_VALUE;
+			for (p++; ISDIGIT(*p); p++)
+				;
+		}
+		if (*p == 'e' || *p == 'E')
+		{
+			p++;
+			if (*p == '+' || *p == '-') p++;
+			if (!ISDIGIT(*p)) return JsonParseCode::INVALID_VALUE;
+			for (p++; ISDIGIT(*p); p++)
+				;
+		}
+		errno = 0;
+		v->value_ = strtod(context.cur, NULL);
+		if (errno == ERANGE && (v->value_.number_float == HUGE_VAL || v->value_.number_float == -HUGE_VAL))
+			return JsonParseCode::NUMBER_TOO_BIG;
+		v->type_ = JsonType::JSON_NUMBER;
+		context.cur = p;
+		return JsonParseCode::OK;
 	}
 
 	void ParseObjectValue(JsonContext& context_)
@@ -264,39 +320,39 @@ private:
 
 	*/
 
-	void ParseValue(JsonContext& context_)
+	JsonParseCode ParseValue(AlimeJsonValue* value, JsonContext& context_)
 	{
 		SkipWhiteSpace(context_);
 		if (*context_.cur == 'n')
 		{
 			ParseNullValue(context_);
 			//if(true)
-			AlimeJsonValue *value = new AlimeJsonValue();
+			//AlimeJsonValue *value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_NULL;
-			ajv_ = value;
+			ajv_.reset(value);
 		}
 		else if (*context_.cur == 't')
 		{
 			ParseTrueValue(context_);
-			AlimeJsonValue* value = new AlimeJsonValue();
+			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_TRUE;
 			value->value_ = true;
-			ajv_ = value;
+			ajv_ .reset(value);
 		}
 		else if (*context_.cur == 'f')
 		{
 			ParseFalseValue(context_);
-			AlimeJsonValue* value = new AlimeJsonValue();
+			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_FALSE;
 			value->value_ = true;
-			ajv_ = value;
+			ajv_.reset(value);
 		}
 		else if (*context_.cur == '"')
 		{
-			AlimeJsonValue* value = new AlimeJsonValue();
+			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_STRING;
 			value->value_ = new std::string(ParseStringValue(context_));
-			ajv_ = value;
+			ajv_.reset(value);
 		}
 		else if (*context_.cur == '[')
 		{
@@ -304,14 +360,22 @@ private:
 		}
 		else if (*context_.cur == '{')
 		{
-			ParseObjectValue(context_);
+			//ParseObjectValue(context_);
 		}
-		else if (*context_.cur>=0 && *context_.cur<=9)
+		else if (*context_.cur>='0'&& *context_.cur<='9')
 		{
-			ParseIntegerValue(context_);
+			value->type_ = JsonType::JSON_NUMBER;
+			ParseNumber(context_, value);
+			ajv_.reset(value);
 		}
 		SkipWhiteSpace(context_);
-		//if ','
+		if (context_.cur[0] != '\0')
+		{
+			value->type_ = JsonType::JSON_UNKNOW;
+			return JsonParseCode::ROOT_NOT_SINGULAR;
+		}
+			
+		return JsonParseCode::OK;
 	}
 
 };
