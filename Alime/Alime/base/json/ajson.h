@@ -309,15 +309,20 @@ private:
 		for (;;)
 		{
 			AlimeJsonValue* arrayElement = new AlimeJsonValue();
+			//here check return code
 			ParseValue(arrayElement, context_);
+			value->value_.array_v->push_back(*arrayElement);
 			if (t == JsonType::JSON_UNKNOW)
 				t = arrayElement->type_;
 			else if (t != arrayElement->type_)
 				return JsonParseCode::INVALID_VALUE;
 			SkipWhiteSpace(context_);
-			Expect(',', context_);
+			if (context_.cur[0] != ',')
+				break;
+			else
+				Expect(',', context_);
 			SkipWhiteSpace(context_);
-			value->value_.array_v->push_back(*arrayElement);
+			
 		}
 		Expect(']', context_);
 	}
