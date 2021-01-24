@@ -7,6 +7,44 @@
 #include <Alime/base/details/string_constants.h>
 #include <cassert>
 //我们将在子项目中完成json。然后移植过来。
+/*
+希望像nolhmanjson一样,但少一点歧义
+AlimeJson json=AlimeJson.parse("...");
+AlimeJson memberValue=json[".."];//here is an copy
+AlimeJson &memberValue2=json[".."];//ref
+*/
+/*
+The following are valid json format:
+
+"Design Patterns"
+3
+true
+false
+null
+5.0
+["Design Patterns", 3]
+{
+	"title": "Design Patterns",
+	"subtitle": "Elements of Reusable Object-Oriented Software",
+	"author": [
+		"Erich Gamma",
+		"Richard Helm",
+		"Ralph Johnson",
+		"John Vlissides"
+	],
+	"year": 2009,
+	"weight": 1.8,
+	"hardcover": true,
+	"publisher": {
+		"Company": "Pearson Education",
+		"Country": "India"
+	},
+	"website": null
+}
+
+
+
+*/
 
 #define EXPECT(c, ch)       do { assert(*c->json == (ch)); c->json++; } while(0)
 //#define ISDIGIT(ch)         ((ch) >= '0' && (ch) <= '9')
