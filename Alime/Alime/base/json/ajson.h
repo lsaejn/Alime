@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 #include <Alime/base/details/string_constants.h>
-
+#include <cassert>
 //我们将在子项目中完成json。然后移植过来。
 
 #define EXPECT(c, ch)       do { assert(*c->json == (ch)); c->json++; } while(0)
@@ -67,61 +67,37 @@ template <
 class AlimeJsonValueBase
 {
 public:
-	/// a type for an object
 	using object_t = ObjectType<StringType, AlimeJsonValueBase>;
-	/// a type for an array_v
 	using array_t = ArrayType<AlimeJsonValueBase>;
-	/// a type for a string
 	using string_t = StringType;
-	/// a type for a boolean
 	using boolean_t = BooleanType;
-	/// a type for a number (integer)
 	using number_integer_t = NumberIntegerType;
-	/// a type for a number (floating point)
 	using number_float_t = NumberFloatType;
-	/// a type for list initialization
 	using list_init_t = std::initializer_list<AlimeJsonValueBase>;
 
 	union json_value
 	{
-		/// object (stored with pointer to save storage)
 		object_t* object;
-		/// array_v (stored with pointer to save storage)
 		array_t* array_v;
-		/// string (stored with pointer to save storage)
 		string_t* string;
-		/// bolean
 		boolean_t boolean;
-		/// number (integer)
 		number_integer_t number_integer;
-		/// number (floating point)
 		number_float_t number_float;
 
-		/// default constructor (for null values)
 		json_value() = default;
-		/// constructor for objects
 		json_value(object_t* v) : object(v) {}
-		/// constructor for arrays
 		json_value(array_t* v) : array_v(v) {}
-		/// constructor for strings
 		json_value(string_t* v) : string(v) {}
-		/// constructor for booleans
 		json_value(boolean_t v) : boolean(v) {}
-		/// constructor for numbers (integer)
 		json_value(number_integer_t v) : number_integer(v) {}
-		/// constructor for numbers (floating point)
 		json_value(number_float_t v) : number_float(v) {}
 	};
-
 
 public:
 	JsonType type_;
 	json_value value_;
 };
-using  AlimeJsonValue = AlimeJsonValueBase<>;
-
-
-#include <cassert>
+using AlimeJsonValue = AlimeJsonValueBase<>;
 
 class AlimeJson
 {
@@ -145,6 +121,12 @@ public:
 		AlimeJson json;
 		AlimeJsonValue *value=new AlimeJsonValue();
 		json.ParseValue(value, jsonContext);
+		json.SkipWhiteSpace(jsonContext);
+		if (jsonContext.cur[0] != '\0')
+		{
+			value->type_ = JsonType::JSON_UNKNOW;
+			throw "bad parse";
+		}
 		return std::move(json); //why rvo not effect?
 	}
 
@@ -161,7 +143,7 @@ private:
 		return Alime::base::details::IsWhitespace(ch);
 	}
 
-	std::string ReadUntil(char c, JsonContext& context_, char* filter=nullptr)
+	std::string ReadUntil(char c, JsonContext& context_, void* filterFunction=nullptr)
 	{
 		const char* begin = context_.cur;
 		while (context_.cur && *context_.cur != c)
@@ -310,15 +292,35 @@ private:
 		return JsonParseCode::OK;
 	}
 
-	void ParseObjectValue(JsonContext& context_)
+	JsonParseCode ParseObjectValue(JsonContext& context_)
 	{
-
+		return JsonParseCode::INVALID_VALUE;
 	}
 	/*
 	then we expect :
 	n, t , f , " , [0-9], [, {
 
 	*/
+	JsonParseCode ParseArrayValue(JsonContext& context_, AlimeJsonValue* value)
+	{
+		Expect('[', context_);
+		value->value_.array_v = new AlimeJsonValue::array_t();
+		JsonType t = JsonType::JSON_UNKNOW;
+		for (;;)
+		{
+			AlimeJsonValue* arrayElement = new AlimeJsonValue();
+			ParseValue(arrayElement, context_);
+			if (t == JsonType::JSON_UNKNOW)
+				t = arrayElement->type_;
+			else if (t != arrayElement->type_)
+				return JsonParseCode::INVALID_VALUE;
+			SkipWhiteSpace(context_);
+			Expect(',', context_);
+			SkipWhiteSpace(context_);
+			value->value_.array_v->push_back(*arrayElement);
+		}
+		Expect(']', context_);
+	}
 
 	JsonParseCode ParseValue(AlimeJsonValue* value, JsonContext& context_)
 	{
@@ -356,23 +358,19 @@ private:
 		}
 		else if (*context_.cur == '[')
 		{
-			//ParseArrayValue();
+			ParseArrayValue(context_, value);
+			value->type_ = JsonType::JSON_ARRAY;
+			ajv_.reset(value);
 		}
 		else if (*context_.cur == '{')
 		{
-			//ParseObjectValue(context_);
+			ParseObjectValue(context_);
 		}
 		else if (*context_.cur>='0'&& *context_.cur<='9')
 		{
 			value->type_ = JsonType::JSON_NUMBER;
 			ParseNumber(context_, value);
 			ajv_.reset(value);
-		}
-		SkipWhiteSpace(context_);
-		if (context_.cur[0] != '\0')
-		{
-			value->type_ = JsonType::JSON_UNKNOW;
-			return JsonParseCode::ROOT_NOT_SINGULAR;
 		}
 			
 		return JsonParseCode::OK;

@@ -40,4 +40,11 @@ TEST_UNIT(AlimeJson_Test)
         auto ty = aj.GetType();
         ASSERT_TRUE(ty == JsonType::JSON_NUMBER);
     }
+    {
+        AlimeJson aj;
+        std::string str = R"([3,4,5,6,7])";
+        aj = aj.Parse(str.c_str());
+        auto ty = aj.GetType();
+        ASSERT_TRUE(ty == JsonType::JSON_ARRAY);
+    }
 }

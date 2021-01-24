@@ -155,7 +155,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Alime\base\fileSystem\DirectoryInfo.cpp" />
-    <ClCompile Include="Alime\base\json\ajson.cpp" />
     <ClCompile Include="Alime.cpp" />
     <ClCompile Include="Alime\base\details\string_constants.h" />
     <ClCompile Include="Alime\base\fileSystem\file.cpp" />
