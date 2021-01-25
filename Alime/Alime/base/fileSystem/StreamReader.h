@@ -38,7 +38,7 @@ namespace Alime::base::System::IO
 		StreamReader(String path, bool detectEncodingFromByteOrderMarks);
 		StreamReader(String path, Encoding encoding);
 
-		IStream BaseStream();
+		//IStream BaseStream();
 		Encoding CurrentEncoding();
 		bool EndOfStream();
 		virtual void Close() override;

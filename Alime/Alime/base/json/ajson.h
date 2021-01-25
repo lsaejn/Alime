@@ -41,12 +41,9 @@ null
 	},
 	"website": null
 }
-
-
-
 */
 
-#define EXPECT(c, ch)       do { assert(*c->json == (ch)); c->json++; } while(0)
+#define EXPECT(c, ch) do { assert(*c->json == (ch)); c->json++; } while(0)
 //#define ISDIGIT(ch)         ((ch) >= '0' && (ch) <= '9')
 
 template<typename CHAR>
@@ -85,7 +82,6 @@ enum class JsonParseCode
 	NUMBER_TOO_BIG
 };
 
-
 struct JsonContext
 {
 	const char* start = nullptr;
@@ -115,38 +111,100 @@ public:
 
 	union json_value
 	{
-		object_t* object;
-		array_t* array_v;
-		string_t* string;
-		boolean_t boolean;
-		number_integer_t number_integer;
-		number_float_t number_float;
+		object_t* object_;
+		array_t* array_v_;
+		string_t* string_;
+		boolean_t boolean_;
+		number_integer_t number_integer_;
+		number_float_t number_float_;
 
 		json_value() = default;
-		json_value(object_t* v) : object(v) {}
-		json_value(array_t* v) : array_v(v) {}
-		json_value(string_t* v) : string(v) {}
-		json_value(boolean_t v) : boolean(v) {}
-		json_value(number_integer_t v) : number_integer(v) {}
-		json_value(number_float_t v) : number_float(v) {}
+
+		json_value(object_t* v)
+			: object(v)
+		{
+		}
+
+		json_value(array_t* v)
+			: array_v(v)
+		{
+		}
+
+		json_value(string_t* v)
+			: string_(v)
+		{
+		}
+
+		json_value(boolean_t v)
+			: boolean_(v)
+		{
+		}
+
+		json_value(number_integer_t v)
+			: number_integer_(v)
+		{
+		}
+
+		json_value(number_float_t v)
+			: number_float_(v)
+		{
+		}
+
 	};
 
+	void FreeValueBase()
+	{
+		switch (type_)
+		{
+		case JsonType::JSON_STRING:
+			delete value_.string_;
+			break;
+		case JsonType::JSON_ARRAY:
+			delete value_.array_v_;
+			break;
+		case JsonType::JSON_OBJECT:
+			delete value_.object_;
+			break;
+		default:
+			break;
+		}
+	}
+
+	~AlimeJsonValueBase()
+	{
+		FreeValueBase();
+	}
+
+//fix me, private after unitTest?
 public:
 	JsonType type_;
 	json_value value_;
 };
 using AlimeJsonValue = AlimeJsonValueBase<>;
 
+
+//AlimeJson hold an AlimeJsonValue
 class AlimeJson
 {
 public:
 	AlimeJson() = default;
 	~AlimeJson() = default;
 
-	AlimeJson(AlimeJson&& other) = default;
-	AlimeJson& operator=(AlimeJson&& other) = default;
+	AlimeJson(AlimeJson&& other)
+	{
+		valueBase_ = other.valueBase_;
+		other.valueBase_.reset();
+	}
 
-	AlimeJson(const AlimeJson& other) = delete;//we delete this until we implement copy()
+	AlimeJson& operator=(AlimeJson&& other)
+	{
+		valueBase_ = other.valueBase_;
+		other.valueBase_.reset();
+		return *this;
+	}
+
+	//fix me, we now did not support copy 
+	AlimeJson(const AlimeJson& other) = delete;
 	AlimeJson& operator=(const AlimeJson& other) = delete;//
 
 	static AlimeJson Parse(const char* info)
@@ -158,7 +216,8 @@ public:
 
 		AlimeJson json;
 		AlimeJsonValue *value=new AlimeJsonValue();
-		json.ParseValue(value, jsonContext);
+		json.ParseValue(jsonContext, value);
+		json.valueBase_.reset(value);
 		json.SkipWhiteSpace(jsonContext);
 		if (jsonContext.cur[0] != '\0')
 		{
@@ -170,11 +229,11 @@ public:
 
 	JsonType GetType()
 	{
-		return ajv_->type_;
+		return valueBase_->type_;
 	}
 
 private:
-	std::shared_ptr<AlimeJsonValue> ajv_;
+	std::shared_ptr<AlimeJsonValue> valueBase_;
 
 	bool IsWhiteSpace(char ch)
 	{
@@ -184,10 +243,11 @@ private:
 	std::string ReadUntil(char c, JsonContext& context_, void* filterFunction=nullptr)
 	{
 		const char* begin = context_.cur;
-		while (context_.cur && *context_.cur != c)
+		while (context_.cur && context_.cur[0] != c)
 		{
 			context_.cur++;
 		}
+		//fix me
 		while (0 &&context_.cur)
 		{
 			if (*context_.cur == '\\')
@@ -209,9 +269,7 @@ private:
 			}
 			context_.cur++;
 		}
-		std::string ret(begin, context_.cur);
-		context_.cur++;
-		return ret;
+		return std::string(begin, context_.cur++);
 	}
 
 	void Expect(char c, JsonContext& context_)
@@ -293,6 +351,7 @@ private:
 	//这里有点恶心
 	JsonParseCode ParseNumber(JsonContext& context , out AlimeJsonValue* v)
 	{
+		assert(v);
 		const char* p = context.cur;
 		if (*p == '-')
 			p++;
@@ -323,7 +382,8 @@ private:
 		}
 		errno = 0;
 		v->value_ = strtod(context.cur, NULL);
-		if (errno == ERANGE && (v->value_.number_float == HUGE_VAL || v->value_.number_float == -HUGE_VAL))
+		if (errno == ERANGE &&
+			(v->value_.number_float_ == HUGE_VAL || v->value_.number_float_ == -HUGE_VAL))
 			return JsonParseCode::NUMBER_TOO_BIG;
 		v->type_ = JsonType::JSON_NUMBER;
 		context.cur = p;
@@ -342,14 +402,14 @@ private:
 	JsonParseCode ParseArrayValue(JsonContext& context_, AlimeJsonValue* value)
 	{
 		Expect('[', context_);
-		value->value_.array_v = new AlimeJsonValue::array_t();
+		value->value_.array_v_ = new AlimeJsonValue::array_t();
 		JsonType t = JsonType::JSON_UNKNOW;
 		for (;;)
 		{
 			AlimeJsonValue* arrayElement = new AlimeJsonValue();
 			//here check return code
-			ParseValue(arrayElement, context_);
-			value->value_.array_v->push_back(*arrayElement);
+			ParseValue(context_, arrayElement);
+			value->value_.array_v_->push_back(*arrayElement);
 			if (t == JsonType::JSON_UNKNOW)
 				t = arrayElement->type_;
 			else if (t != arrayElement->type_)
@@ -365,7 +425,7 @@ private:
 		Expect(']', context_);
 	}
 
-	JsonParseCode ParseValue(AlimeJsonValue* value, JsonContext& context_)
+	JsonParseCode ParseValue(JsonContext& context_, AlimeJsonValue* value)
 	{
 		SkipWhiteSpace(context_);
 		if (*context_.cur == 'n')
@@ -374,7 +434,6 @@ private:
 			//if(true)
 			//AlimeJsonValue *value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_NULL;
-			ajv_.reset(value);
 		}
 		else if (*context_.cur == 't')
 		{
@@ -382,7 +441,6 @@ private:
 			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_TRUE;
 			value->value_ = true;
-			ajv_ .reset(value);
 		}
 		else if (*context_.cur == 'f')
 		{
@@ -390,20 +448,17 @@ private:
 			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_FALSE;
 			value->value_ = true;
-			ajv_.reset(value);
 		}
 		else if (*context_.cur == '"')
 		{
 			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_STRING;
 			value->value_ = new std::string(ParseStringValue(context_));
-			ajv_.reset(value);
 		}
 		else if (*context_.cur == '[')
 		{
 			ParseArrayValue(context_, value);
 			value->type_ = JsonType::JSON_ARRAY;
-			ajv_.reset(value);
 		}
 		else if (*context_.cur == '{')
 		{
@@ -413,7 +468,6 @@ private:
 		{
 			value->type_ = JsonType::JSON_NUMBER;
 			ParseNumber(context_, value);
-			ajv_.reset(value);
 		}
 			
 		return JsonParseCode::OK;
