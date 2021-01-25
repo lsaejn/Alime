@@ -513,7 +513,8 @@ private:
 		}
 		else if (*context_.cur == '{')
 		{
-			ParseObjectValue(context_);
+			ParseObjectValue(context_, value);
+			value->type_ = JsonType::JSON_OBJECT;
 		}
 		else if (*context_.cur>='0'&& *context_.cur<='9')
 		{
