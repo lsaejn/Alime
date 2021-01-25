@@ -95,7 +95,7 @@ TEST_UNIT(test_Thread)
     t3.start();
     t3.join();
 
-    Alime::Thread t4(std::bind(&Foo::memberFunc2, std::ref(foo), std::string("Shuo Chen")), false);
+    Alime::Thread t4(std::bind(&Foo::memberFunc2, std::ref(foo), std::string("thanks Shuo Chen")), false);
     t4.start();
     t4.join();
 

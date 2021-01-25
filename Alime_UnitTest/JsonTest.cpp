@@ -2,16 +2,49 @@
 #include "easyTest.h"
 #include <Alime/base/json/aJson.h>
 
-TEST_UNIT(AlimeJson_Test)
+TEST_UNIT(AlimeJson_Test_JSON_STRING)
 {
+    {
+        bool isSpace=Alime::base::details::IsWhitespace('\0');
+        isSpace = Alime::base::details::IsWhitespace('\r');
+        isSpace = Alime::base::details::IsWhitespace('\n');
+    }
+    {
+        AlimeJson aj;
+        std::string str = R"("hello world")";
+        aj = AlimeJson::Parse(str.c_str());
+        ASSERT_TRUE(aj.GetType() == JsonType::JSON_STRING);
+    }
     {
         AlimeJson aj;
         std::string str = R"("hello")";
-        const char* jsonStr = "\"hello\"";
-        aj = aj.Parse(jsonStr);
-        auto ty = aj.GetType();
-        ASSERT_TRUE(ty==JsonType::JSON_STRING);
+        aj = AlimeJson::Parse(str.c_str());
+        ASSERT_TRUE(aj.GetType() == JsonType::JSON_STRING);
     }
+    {
+        AlimeJson aj;
+        std::string str = R"("hello world")";
+        aj = AlimeJson::Parse(str.c_str());
+        ASSERT_TRUE(aj.GetType() == JsonType::JSON_STRING);
+    }
+    {
+        AlimeJson aj;
+        std::string str = R"("   hello    ")";
+        aj = AlimeJson::Parse(str.c_str());
+        ASSERT_TRUE(aj.GetType() == JsonType::JSON_STRING);
+    }
+    {
+        AlimeJson aj;
+        std::string str = R"("hello 
+ world
+")";
+        aj = AlimeJson::Parse(str.c_str());
+        ASSERT_TRUE(aj.GetType() == JsonType::JSON_STRING);
+    }
+}
+
+TEST_UNIT(AlimeJson_Test)
+{
     {
         AlimeJson aj;
         std::string str = R"(null)";
@@ -43,6 +76,13 @@ TEST_UNIT(AlimeJson_Test)
     {
         AlimeJson aj;
         std::string str = R"([3,4,5,6,7])";
+        aj = aj.Parse(str.c_str());
+        auto ty = aj.GetType();
+        ASSERT_TRUE(ty == JsonType::JSON_ARRAY);
+    }
+    {
+        AlimeJson aj;
+        std::string str = R"([3,[4,5,6,7],6,7])";
         aj = aj.Parse(str.c_str());
         auto ty = aj.GetType();
         ASSERT_TRUE(ty == JsonType::JSON_ARRAY);

@@ -170,6 +170,22 @@ public:
 		}
 	}
 
+	AlimeJsonValueBase() = default;
+	//fix me, implement swap(this, other);
+	AlimeJsonValueBase(AlimeJsonValueBase&& other)
+	{
+		value_ = other.value_;
+		type_ = other.type_;
+		other.type_ = JsonType::JSON_UNKNOW;
+	}
+
+	AlimeJsonValueBase operator=(AlimeJsonValueBase&& value)
+	{
+		value_ = other.value_;
+		type_ = other.type_;
+		other.type_ = JsonType::JSON_UNKNOW;
+	}
+
 	~AlimeJsonValueBase()
 	{
 		FreeValueBase();
@@ -235,12 +251,14 @@ public:
 private:
 	std::shared_ptr<AlimeJsonValue> valueBase_;
 
-	bool IsWhiteSpace(char ch)
+	static bool IsWhiteSpace(char ch)
 	{
+		//if(ch)
+		//fix me, in json '\0' is a valid whitespace...
 		return Alime::base::details::IsWhitespace(ch);
 	}
 
-	std::string ReadUntil(char c, JsonContext& context_, void* filterFunction=nullptr)
+	std::string ReadUntil(char c, JsonContext& context_, bool& succ)
 	{
 		const char* begin = context_.cur;
 		while (context_.cur && context_.cur[0] != c)
@@ -269,28 +287,36 @@ private:
 			}
 			context_.cur++;
 		}
+		succ = true;
 		return std::string(begin, context_.cur++);
 	}
 
-	void Expect(char c, JsonContext& context_)
+	JsonParseCode Expect(char c, JsonContext& context_)
 	{
 		do
 		{
 			if (!context_.cur || *context_.cur != c)
-				throw "fuck";
+				return JsonParseCode::INVALID_VALUE;
 		} while (0);
 		context_.cur++;
+		return JsonParseCode::OK;
 	}
 
-	void ReadKeyString(JsonContext& context_)
+	JsonParseCode ReadKeyString(JsonContext& context_, std::string* str)
 	{
+		assert(str);
 		SkipWhiteSpace(context_);
 		//
 		Expect('\"', context_);
-		//key_=ReadUntil('\"');
+		bool succ = false;
+		*str =ReadUntil('\"', context_, succ);
+		if (!succ)
+			return JsonParseCode::INVALID_VALUE;
+		//fix me, skip here?
 		SkipWhiteSpace(context_);
 		Expect(':', context_);
 		SkipWhiteSpace(context_);
+		return JsonParseCode::OK;
 	}
 
 	void SkipWhiteSpace(JsonContext& context_)
@@ -317,35 +343,42 @@ private:
 		return true;
 	}
 
-	void ParseNullValue(JsonContext& context_)
+	JsonParseCode ParseNullValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "null"))
-			throw "fuck";
+			return JsonParseCode::INVALID_VALUE;
 		context_.cur += 4;
+		return JsonParseCode::OK;
 	}
 
-	void ParseTrueValue(JsonContext& context_)
+	JsonParseCode ParseTrueValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "true"))
-			throw "fuck";
+			return JsonParseCode::INVALID_VALUE;
 		context_.cur += 4;
+		return JsonParseCode::OK;
 	}
 
-	void ParseFalseValue(JsonContext& context_)
+	JsonParseCode ParseFalseValue(JsonContext& context_)
 	{
 		//expect("null")
 		if (!StringCompare(context_.cur, "false"))
-			throw "fuck";
+			return JsonParseCode::INVALID_VALUE;
 		context_.cur += 5;
+		return JsonParseCode::OK;
 	}
 
-	std::string ParseStringValue(JsonContext& context_)
+	JsonParseCode ParseStringValue(JsonContext& context_, std::string* str)
 	{
 		context_.cur++;
-		auto value=ReadUntil('\"', context_);
-		return value;
+		bool flag = false;
+		auto value=ReadUntil('\"', context_, flag);
+		if (!flag)
+			return JsonParseCode::INVALID_VALUE;
+		*str=value;
+		return JsonParseCode::OK;
 	}
 
 	//这里有点恶心
@@ -390,9 +423,22 @@ private:
 		return JsonParseCode::OK;
 	}
 
-	JsonParseCode ParseObjectValue(JsonContext& context_)
+	JsonParseCode ParseObjectValue(JsonContext& context, AlimeJsonValue* v)
 	{
-		return JsonParseCode::INVALID_VALUE;
+		assert(v);
+		v->value_.object_ = new AlimeJsonValue::object_t();
+		SkipWhiteSpace(context);
+		std::string keyString;
+		//fix me, check return code here
+		ReadKeyString(context, &keyString);
+		SkipWhiteSpace(context);
+		Expect(',', context);
+		SkipWhiteSpace(context);
+		AlimeJsonValue value;
+		ParseValue(context, &value);
+		v->value_.object_->insert({ keyString, std::move(value) });
+		SkipWhiteSpace(context);
+		return JsonParseCode::OK;
 	}
 	/*
 	then we expect :
@@ -403,17 +449,17 @@ private:
 	{
 		Expect('[', context_);
 		value->value_.array_v_ = new AlimeJsonValue::array_t();
-		JsonType t = JsonType::JSON_UNKNOW;
 		for (;;)
 		{
 			AlimeJsonValue* arrayElement = new AlimeJsonValue();
 			//here check return code
 			ParseValue(context_, arrayElement);
-			value->value_.array_v_->push_back(*arrayElement);
-			if (t == JsonType::JSON_UNKNOW)
-				t = arrayElement->type_;
-			else if (t != arrayElement->type_)
-				return JsonParseCode::INVALID_VALUE;
+			value->value_.array_v_->push_back(std::move(*arrayElement));
+			//assert(t == JsonType::JSON_UNKNOW);
+			//if (t == JsonType::JSON_UNKNOW)
+			//	t = arrayElement->type_;
+			//else if (t != arrayElement->type_)
+			//	return JsonParseCode::INVALID_VALUE;
 			SkipWhiteSpace(context_);
 			if (context_.cur[0] != ',')
 				break;
@@ -423,10 +469,12 @@ private:
 			
 		}
 		Expect(']', context_);
+		return JsonParseCode::OK;
 	}
 
 	JsonParseCode ParseValue(JsonContext& context_, AlimeJsonValue* value)
 	{
+		assert(value);
 		SkipWhiteSpace(context_);
 		if (*context_.cur == 'n')
 		{
@@ -453,7 +501,10 @@ private:
 		{
 			//AlimeJsonValue* value = new AlimeJsonValue();
 			value->type_ = JsonType::JSON_STRING;
-			value->value_ = new std::string(ParseStringValue(context_));
+			std::string *stringValue=new std::string();
+			//fix me, check here
+			ParseStringValue(context_, stringValue);
+			value->value_ = stringValue;
 		}
 		else if (*context_.cur == '[')
 		{

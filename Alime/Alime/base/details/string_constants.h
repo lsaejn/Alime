@@ -9,7 +9,9 @@ namespace Alime
         /// quick judge with a char
 #define NOT_SPACE(x) ((x) != 0x20 && ((x) < 0 || 0x1d < (x)))
 
-        /// not within /r/n
+        /// not within /r/n , note that 0x0B 0x0c are used in dos, i 'm not sure.
+        /// what's sure is that in json 0x0b and 0x0c are not space, though we trait
+        /// thm not accord this
 #define WHITESPACE_ASCII_NO_CR_LF      \
       0x09, /* CHARACTER TABULATION */ \
       0x0B, /* LINE TABULATION */      \
