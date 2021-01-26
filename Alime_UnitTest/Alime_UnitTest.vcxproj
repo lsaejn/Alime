@@ -150,6 +150,7 @@
     <ClCompile Include="FileStreamTest.cpp" />
     <ClCompile Include="FileSystemTest.cpp" />
     <ClCompile Include="httpTest.cpp" />
+    <ClCompile Include="JsonTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StringTest.cpp" />
     <ClCompile Include="threadTest.cpp" />
@@ -160,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="easyTest.h" />
-    <ClCompile Include="JsonTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alime\Alime.vcxproj">

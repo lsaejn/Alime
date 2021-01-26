@@ -2,6 +2,17 @@
 #include "easyTest.h"
 #include <Alime/base/json/aJson.h>
 
+TEST_UNIT(AlimeJson_Test_AlimeJsonValue)
+{
+    AlimeJsonValue jsonValue;
+    jsonValue.value_.string_ = new std::string("hello");
+    jsonValue.type_ = JsonType::JSON_STRING;
+    AlimeJsonValue copy = jsonValue;
+    ASSERT_TRUE(copy.type_ == JsonType::JSON_STRING);
+    ASSERT_TRUE(*copy.value_.string_ == *jsonValue.value_.string_);
+    ASSERT_TRUE(*copy.value_.string_ == "hello");
+}
+
 TEST_UNIT(AlimeJson_Test_JSON_STRING)
 {
     {
