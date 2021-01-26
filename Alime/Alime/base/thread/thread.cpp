@@ -172,7 +172,7 @@ namespace Alime
 		//running Thr_.tid==0 判断不出是join还是detach了
 		if (state_ == ThreadState::Running && joinable())
 		{
-			detach();
+			join();
 		}
 		else if (joinable())//bug
 			std::terminate();

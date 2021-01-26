@@ -105,8 +105,9 @@ TEST_UNIT(test_Thread)
     }
     Alime::this_thread::sleep_for(200);
     {
+        //thread析构执行detach，导致launcher无法被delete,内存泄露
         Alime::Thread t6(threadFunc3, false);
-        t6.start();
+        t6.start();// 
         Alime::this_thread::sleep_for(200);
         // t6 destruct later than thread creation.
     }
