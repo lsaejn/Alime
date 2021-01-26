@@ -172,18 +172,52 @@ public:
 
 	AlimeJsonValueBase() = default;
 	//fix me, implement swap(this, other);
-	AlimeJsonValueBase(AlimeJsonValueBase&& other)
+	void Swap(AlimeJsonValueBase&& other)
 	{
 		value_ = other.value_;
 		type_ = other.type_;
 		other.type_ = JsonType::JSON_UNKNOW;
 	}
 
-	AlimeJsonValueBase operator=(AlimeJsonValueBase&& value)
+	void Clone(const AlimeJsonValueBase& other)
 	{
+		FreeValueBase();
 		value_ = other.value_;
 		type_ = other.type_;
-		other.type_ = JsonType::JSON_UNKNOW;
+		switch (type_)
+		{
+		case JsonType::JSON_STRING:
+			value_.string_=new string_t(*other.value_.string_);
+			break;
+		case JsonType::JSON_ARRAY:
+			value_.array_v_ = new array_t(*other.value_.array_v_);
+			break;
+		case JsonType::JSON_OBJECT:
+			value_.object_ = new object_t(*other.value_.object_);
+			break;
+		default:
+			break;
+		}
+	}
+
+	AlimeJsonValueBase(AlimeJsonValueBase&& other)
+	{
+		Swap(static_cast<AlimeJsonValueBase&&>(other));
+	}
+
+	AlimeJsonValueBase(const AlimeJsonValueBase& other)
+	{
+		Clone(other);
+	}
+
+	AlimeJsonValueBase operator=(const AlimeJsonValueBase& other)
+	{
+		Clone(other);
+	}
+
+	AlimeJsonValueBase& operator=(AlimeJsonValueBase&& other)
+	{
+		Swap(std::forward(other));
 	}
 
 	~AlimeJsonValueBase()
