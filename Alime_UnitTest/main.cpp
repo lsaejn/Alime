@@ -1,4 +1,6 @@
+#define _CRTDBG_MAP_ALLOC 
 #include <stdio.h>
+#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)  
 #include "gtest/gtest.h"
 
 
@@ -12,12 +14,10 @@ int main(int argc, char** argv)
     tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
 
     _CrtSetDbgFlag(tmpFlag);
-    int* leak = new int[3];
-    leak[0] = 0xFFFFFFFF;
-    leak[1] = 0;
-    leak[2] = 0xFFFFFFFF;
 
     printf("Running main() from gtest_main.cc\n");
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    
+   
+    RUN_ALL_TESTS();
 }

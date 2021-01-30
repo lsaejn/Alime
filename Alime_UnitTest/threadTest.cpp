@@ -8,26 +8,26 @@
 
 
 
-//TEST_UNIT(test_SpinLock)
-//{
-//    int count = 3;
-//    Alime::CountDownLatchXp latch(count);
-//    Alime::Thread t1([&latch]() {
-//        //Sleep(3000);
-//        latch.countDown();
-//        });
-//    Alime::Thread t2([&latch]() {
-//        Sleep(3000);
-//        latch.countDown();
-//        });
-//    Alime::Thread t3([&latch]() {
-//        Sleep(3000);
-//        latch.countDown();
-//        });
-//    latch.wait();
-//
-//
-//}
+TEST_UNIT(test_SpinLock)
+{
+    int count = 3;
+    Alime::CountDownLatchXp latch(count);
+    Alime::Thread t1([&latch]() {
+        //Sleep(3000);
+        latch.countDown();
+        });
+    Alime::Thread t2([&latch]() {
+        Sleep(3000);
+        latch.countDown();
+        });
+    Alime::Thread t3([&latch]() {
+        Sleep(3000);
+        latch.countDown();
+        });
+    latch.wait();
+
+
+}
 
 
 
@@ -45,7 +45,7 @@ void threadFunc2(int x)
 void threadFunc3()
 {
     printf("tid=%d\n", Alime::this_thread::get_id());
-    Alime::this_thread::sleep_for(3500);
+    Alime::this_thread::sleep_for(1000);
 }
 
 class Foo
@@ -77,45 +77,38 @@ to save time, we use muduo::thread 's testCase
 TEST_UNIT(test_Thread)
 {
 
-    //Alime::Thread t1(threadFunc, false);
-    //t1.start();
-    //printf("t1.tid=%d\n", t1.get_id());
-    //t1.join();
+    Alime::Thread t1(threadFunc, false);
+    t1.start();
+    printf("t1.tid=%d\n", t1.get_id());
+    t1.join();
 
-    //Alime::Thread t2(std::bind(threadFunc2, 42), false);
-    //t2.SetThreadName(t2.get_id(), "balabala");
-    //t2.start();
+    Alime::Thread t2(std::bind(threadFunc2, 42), false);
+    t2.SetThreadName(t2.get_id(), "balabala");
+    t2.start();
 
-    //printf("t2.tid=%d\n", t2.get_id());
-    //t2.join();
+    printf("t2.tid=%d\n", t2.get_id());
+    t2.join();
 
-    //Foo foo(87.53);
-    //Alime::Thread t3(std::bind(&Foo::memberFunc, &foo), false);
-    //t2.SetThreadName(t2.get_id(), "thread for member function without argument");
-    //t3.start();
-    //t3.join();
+    Foo foo(87.53);
+    Alime::Thread t3(std::bind(&Foo::memberFunc, &foo), false);
+    t2.SetThreadName(t2.get_id(), "thread for member function without argument");
+    t3.start();
+    t3.join();
 
-    //Alime::Thread t4(std::bind(&Foo::memberFunc2, std::ref(foo), std::string("thanks Shuo Chen")), false);
-    //t4.start();
-    //t4.join();
+    Alime::Thread t4(std::bind(&Foo::memberFunc2, std::ref(foo), std::string("thanks Shuo Chen")), false);
+    t4.start();
+    t4.join();
 
-    //{
-    //    Alime::Thread t5(threadFunc3);
-    //    // t5 may destruct eariler than thread creation.
-    //}
-    Alime::this_thread::sleep_for(200);
+    {
+        Alime::Thread t5(threadFunc3);
+        // t5 may destruct eariler than thread creation.
+    }
     {
         //thread析构执行detach，导致launcher无法被delete,内存泄露
         Alime::Thread t6=Alime::Thread(threadFunc3, false);
         t6.start();
         // t6 destruct later than thread creation.
     }
-    //Alime::this_thread::sleep_for(200);
-    //printf("number of created threads %d\n", Alime::Thread::numCreated());
-    //{
-    //    std::thread t7(threadFunc3);
-    //    t7.detach();
-    //}
 
-    Alime::this_thread::sleep_for(5000);
+    Alime::this_thread::sleep_for(1100);
 }

@@ -168,6 +168,7 @@ public:
 		default:
 			break;
 		}
+		type_ = JsonType::JSON_UNKNOW;
 	}
 
 	AlimeJsonValueBase() = default;
@@ -179,6 +180,7 @@ public:
 		other.type_ = JsonType::JSON_UNKNOW;
 	}
 
+	
 	void Clone(const AlimeJsonValueBase& other)
 	{
 		FreeValueBase();
@@ -271,7 +273,6 @@ public:
 		json.SkipWhiteSpace(jsonContext);
 		if (jsonContext.cur[0] != '\0')
 		{
-			value->type_ = JsonType::JSON_UNKNOW;
 			throw "bad parse";
 		}
 		return std::move(json); //why rvo not effect?
@@ -279,7 +280,7 @@ public:
 
 	JsonType GetType()
 	{
-		return valueBase_->type_;
+		return valueBase_? valueBase_->type_ : JsonType::JSON_UNKNOW;
 	}
 
 private:
@@ -287,9 +288,7 @@ private:
 
 	static bool IsWhiteSpace(char ch)
 	{
-		//if(ch)
-		//fix me, in json '\0' is a valid whitespace...
-		return Alime::base::details::IsWhitespace(ch);
+		return  ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' ;
 	}
 
 	std::string ReadUntil(char c, JsonContext& context_, bool& succ)
@@ -353,7 +352,7 @@ private:
 		return JsonParseCode::OK;
 	}
 
-	void SkipWhiteSpace(JsonContext& context_)
+	static void SkipWhiteSpace(JsonContext& context_)
 	{
 		while (context_.cur)
 		{
@@ -379,7 +378,7 @@ private:
 
 	JsonParseCode ParseNullValue(JsonContext& context_)
 	{
-		//expect("null")
+		//Expect('n', context_);
 		if (!StringCompare(context_.cur, "null"))
 			return JsonParseCode::INVALID_VALUE;
 		context_.cur += 4;
@@ -483,12 +482,14 @@ private:
 	{
 		Expect('[', context_);
 		value->value_.array_v_ = new AlimeJsonValue::array_t();
+		AlimeJsonValue* arrayElement = new AlimeJsonValue();
 		for (;;)
 		{
-			AlimeJsonValue* arrayElement = new AlimeJsonValue();
+			
 			//here check return code
 			ParseValue(context_, arrayElement);
 			value->value_.array_v_->push_back(std::move(*arrayElement));
+			
 			//assert(t == JsonType::JSON_UNKNOW);
 			//if (t == JsonType::JSON_UNKNOW)
 			//	t = arrayElement->type_;
@@ -502,6 +503,7 @@ private:
 			SkipWhiteSpace(context_);
 			
 		}
+		delete arrayElement;
 		Expect(']', context_);
 		return JsonParseCode::OK;
 	}
@@ -560,8 +562,6 @@ private:
 	}
 
 };
-
-
 
 
 
