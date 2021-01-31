@@ -291,37 +291,49 @@ private:
 		return  ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' ;
 	}
 
-	std::string ReadUntil(char c, JsonContext& context_, bool& succ)
+	//fix me
+	std::string ReadUntil(char c, JsonContext& context_, bool& succ, bool escape=false)
 	{
 		const char* begin = context_.cur;
-		while (context_.cur && context_.cur[0] != c)
+		if (!escape)
 		{
-			context_.cur++;
-		}
-		//fix me
-		while (0 &&context_.cur)
-		{
-			if (*context_.cur == '\\')
+			while (context_.cur && context_.cur[0] != c)
 			{
-				if (*(context_.cur + 1) == 'u')
+				context_.cur++;
+			}
+		}
+		else
+		{
+			assert(context_.cur);
+			while (context_.cur)
+			{
+				if (context_.cur[0]== '\\')
 				{
-					//parseHex();
+					char v = context_.cur[1];
+					if (v == '\"' || v == '\\' || v == '/' || v == 'b' || v == 'f'
+						|| v == 'n' || v == 'r' || v == 't')
+					{
+						context_.cur += 2;
+					}
+					else
+					{
+						succ = false;
+						return "";
+					}
+				}
+				else if(context_.cur[0] != c)
+				{
+					context_.cur++;
 				}
 				else
 				{
-					auto c = *(context_.cur + 1);
-					if(c== '\"' || c== '\\' || c== '/' || c== 'b' || c=='f'
-						|| c== 'n' || c== 'r' || c== 't')
-					{		
-						context_.cur+=2;
-					}
-
+					break;
 				}
 			}
-			context_.cur++;
 		}
+
 		succ = true;
-		return std::string(begin, context_.cur++);
+		return std::string(begin, context_.cur++);//note that we skip character c
 	}
 
 	JsonParseCode Expect(char c, JsonContext& context_)
