@@ -221,11 +221,7 @@ TEST_UNIT(AlimeJson_Test_NUMBER)
         auto ty = aj.GetType();
         ASSERT_TRUE(ty == JsonType::JSON_ARRAY);
     }
-    {
-        wchar_t* hello = L"你好";
-        auto u8Hello=Alime::base::UTF16ToUTF8(hello);
-        auto u8Ansi = Alime::base::SysWideToNativeMB(hello);
-    }
+
     {
         wchar_t* unicode =L"\u941c";
         char* u8 = "\xe9\x90\x9c";//
@@ -255,14 +251,54 @@ TEST_UNIT(AlimeJson_Test_NUMBER)
         const char* test4 = "𝄞";
 
         {
-            const char* you = "\u4f60\u597d";
+            const char* you = "\u4f60\u597d";//\u一个码点
+            const char* y = "\u00A2";//¢
+            const char* y2 = "\u5784";
         }
         {
             const char* u8Str = "\x4F\x60\x59\x7D";
             auto wstr= Alime::base::UTF8ToUTF16(u8Str);
             auto wstr2 = Alime::base::UTF8ToUTF16(u8Str);
         }
+        {
+            auto func = [](const char* p, unsigned* u)->const char* {
+                int i;
+                *u = 0;
+                for (i = 0; i < 4; i++)
+                {
+                    char ch = *p++;
+                    *u <<= 4;
+                    if (ch >= '0' && ch <= '9')
+                        *u |= ch - '0';
+                    else if (ch >= 'A' && ch <= 'F')
+                        *u |= ch - ('A' - 10);
+                    else if (ch >= 'a' && ch <= 'f')
+                        *u |= ch - ('a' - 10);
+                    else return NULL;
+                }
+                return p;
+            };
 
-        getchar();
+            unsigned unicode = 0;
+            func("0024", &unicode);
+            unicode = 0;
+
+        }
+
+    }
+}
+
+TEST_UNIT(AlimeJson_Test_Unicode)
+{
+    //概念
+    {
+        wchar_t* w_hello = L"你好";
+        wchar_t* w_hello2 = L"\u4f60\u597d";//一个字符的unicode编码是确定的
+
+        char* hello = "\xC4\xE3\xBA\xC3";
+        char hello2[5] = { 0 }; hello2[0] = 0xC4; hello2[1] = 0xE3; hello2[2] = 0xBA; hello2[3] = 0xC3;
+        bool eq = strcmp(hello, hello2);
+        //auto u8Hello = Alime::base::UTF16ToUTF8(hello);
+        //auto u8Ansi = Alime::base::SysWideToNativeMB(hello);
     }
 }
