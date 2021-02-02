@@ -261,27 +261,11 @@ TEST_UNIT(AlimeJson_Test_NUMBER)
             auto wstr2 = Alime::base::UTF8ToUTF16(u8Str);
         }
         {
-            auto func = [](const char* p, unsigned* u)->const char* {
-                int i;
-                *u = 0;
-                for (i = 0; i < 4; i++)
-                {
-                    char ch = *p++;
-                    *u <<= 4;
-                    if (ch >= '0' && ch <= '9')
-                        *u |= ch - '0';
-                    else if (ch >= 'A' && ch <= 'F')
-                        *u |= ch - ('A' - 10);
-                    else if (ch >= 'a' && ch <= 'f')
-                        *u |= ch - ('a' - 10);
-                    else return NULL;
-                }
-                return p;
-            };
+            
 
-            unsigned unicode = 0;
-            func("0024", &unicode);
-            unicode = 0;
+            //unsigned unicode = 0;
+            //func("0024", &unicode);
+            //unicode = 0;
 
         }
 

@@ -230,7 +230,7 @@ public:
 //fix me, private after unitTest?
 public:
 	JsonType type_;
-	json_value value_;
+json_value value_;
 };
 using AlimeJsonValue = AlimeJsonValueBase<>;
 
@@ -267,7 +267,7 @@ public:
 		jsonContext.cur = info;
 
 		AlimeJson json;
-		AlimeJsonValue *value=new AlimeJsonValue();
+		AlimeJsonValue* value = new AlimeJsonValue();
 		json.ParseValue(jsonContext, value);
 		json.valueBase_.reset(value);
 		json.SkipWhiteSpace(jsonContext);
@@ -280,7 +280,7 @@ public:
 
 	JsonType GetType()
 	{
-		return valueBase_? valueBase_->type_ : JsonType::JSON_UNKNOW;
+		return valueBase_ ? valueBase_->type_ : JsonType::JSON_UNKNOW;
 	}
 
 private:
@@ -288,52 +288,82 @@ private:
 
 	static bool IsWhiteSpace(char ch)
 	{
-		return  ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' ;
+		return  ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';
 	}
 
 	//fix me
-	std::string ReadUntil(char c, JsonContext& context_, bool& succ, bool escape=false)
+	std::string ReadString(JsonContext& context_, bool& succ)
 	{
-		const char* begin = context_.cur;
-		if (!escape)
+		std::string result;
+
+		const char* p = context_.cur;
+		assert(p);
+		while (true)
 		{
-			while (context_.cur && context_.cur[0] != c)
+			auto ch = *p;
+			if (ch == '\\')
 			{
-				context_.cur++;
-			}
-		}
-		else
-		{
-			assert(context_.cur);
-			while (context_.cur)
-			{
-				if (context_.cur[0]== '\\')
+				char v = *(++p);
+				if (v == '\"' || v == '\\' || v == '/' || v == 'b' || v == 'f'
+					|| v == 'n' || v == 'r' || v == 't')
 				{
-					char v = context_.cur[1];
-					if (v == '\"' || v == '\\' || v == '/' || v == 'b' || v == 'f'
-						|| v == 'n' || v == 'r' || v == 't')
-					{
-						context_.cur += 2;
-					}
-					else
+					result.push_back('\\');
+					result.push_back(v);
+					++p;
+				}
+				else if (v == 'u')
+				{
+					unsigned u;
+					auto ret = ReadHex(p, &u);
+					if (ret != JsonParseCode::OK)
 					{
 						succ = false;
 						return "";
 					}
-				}
-				else if(context_.cur[0] != c)
-				{
-					context_.cur++;
-				}
-				else
-				{
-					break;
+
+					if (u >= 0xD800 && u <= 0xDBFF)
+					{
+						unsigned u2;
+						if (*p++ != '\\' || *p++ != 'u' || JsonParseCode::OK != ReadHex(p, &u2))
+						{
+							succ = false;
+							return "";
+						}
+						if (u2 < 0xDC00 || u2 > 0xDFFF)
+						{
+							succ = false;
+							return "";
+						}
+						u = (((u - 0xD800) << 10) | (u2 - 0xDC00)) + 0x10000;
+						result+=unicode_to_utf8(u);
+						break;
+					}
+
 				}
 			}
+			else if(context_.cur[0] == '\"')
+			{
+				context_.cur++;
+				break;
+			}
+			else if(context_.cur[0] == '\0')
+			{
+				succ = false;
+				return "";
+			}
+			else if ((unsigned char)context_.cur[0] < 0x20)
+			{
+				succ = false;
+				return "";
+			}
+			else
+			{
+				result += context_.cur[0];
+			}
 		}
-
+		
 		succ = true;
-		return std::string(begin, context_.cur++);//note that we skip character c
+		return result;//note that we skip character c
 	}
 
 	JsonParseCode Expect(char c, JsonContext& context_)
@@ -354,7 +384,7 @@ private:
 		//
 		Expect('\"', context_);
 		bool succ = false;
-		*str =ReadUntil('\"', context_, succ);
+		*str = ReadString(context_, succ);
 		if (!succ)
 			return JsonParseCode::INVALID_VALUE;
 		//fix me, skip here?
@@ -419,7 +449,7 @@ private:
 	{
 		context_.cur++;
 		bool flag = false;
-		auto value=ReadUntil('\"', context_, flag);
+		auto value=ReadString(context_, flag);
 		if (!flag)
 			return JsonParseCode::INVALID_VALUE;
 		*str=value;
@@ -573,6 +603,53 @@ private:
 		return JsonParseCode::OK;
 	}
 
+	//read a unicode codepoint
+	static JsonParseCode ReadHex(const char* &p, unsigned* u)
+	{
+		int i;
+		*u = 0;
+		for (i = 0; i < 4; i++)
+		{
+			char ch = *p++;
+			*u <<= 4;
+			if (ch >= '0' && ch <= '9')
+				*u |= ch - '0';
+			else if (ch >= 'A' && ch <= 'F')
+				*u |= ch - ('A' - 10);
+			else if (ch >= 'a' && ch <= 'f')
+				*u |= ch - ('a' - 10);
+			else
+				return JsonParseCode::INVALID_VALUE;
+		}
+		return JsonParseCode::OK;
+	};
+
+	static std::string unicode_to_utf8(unsigned u)
+	{
+		std::string result;
+		if (u <= 0x7F)
+			result += char(u & 0xFF);
+		else if (u <= 0x7FF)
+		{
+			result += 0xC0 | ((u >> 6) & 0xFF);
+			result += 0x80 | (u & 0x3F);
+		}
+		else if (u <= 0xFFFF)
+		{
+			result += 0xE0 | ((u >> 12) & 0xFF);
+			result += 0x80 | ((u >> 6) & 0x3F);
+			result += 0x80 | (u & 0x3F);
+		}
+		else
+		{
+			assert(u <= 0x10FFFF);
+			result += 0xF0 | ((u >> 18) & 0xFF);
+			result += 0x80 | ((u >> 12) & 0x3F);
+			result += 0x80 | ((u >> 6) & 0x3F);
+			result += 0x80 | (u & 0x3F);
+		}
+		return result;
+	}
 };
 
 
