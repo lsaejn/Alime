@@ -47,16 +47,18 @@ null
 //#define ISDIGIT(ch)         ((ch) >= '0' && (ch) <= '9')
 
 template<typename CHAR>
+bool ISDIGIT1TO9(CHAR c)
+{
+	return (c) >= '1' && (c) <= '9';
+}
+
+template<typename CHAR>
 bool ISDIGIT(CHAR c)
 {
 	return (c) >= '0' && (c) <= '9';
 }
 
-template<typename CHAR>
-bool ISDIGIT1TO9(CHAR c)
-{
-	return (c) >= '1' && (c) <= '9';
-}
+
 
 #define out 
 #define ref
@@ -87,7 +89,13 @@ struct JsonContext
 	const char* start = nullptr;
 	const char* cur = nullptr;
 	int row = -1;
-	int colunmn = -1;
+	int column = -1;
+	std::string toString()
+	{
+		auto r=std::to_string(row);
+		auto c= std::to_string(column);
+		return "position: row= " + r + " and column = " + "c";
+	}
 };
 
 template <
