@@ -26,12 +26,12 @@ namespace Alime::base::System::IO
 
 		~FileStream();
 
-		bool	CanRead()const;
-		bool	CanWrite()const;
-		bool	CanSeek()const;
-		bool	CanPeek()const;
-		bool	IsLimited()const;
-		bool	IsAvailable()const;
+		bool	CanRead()		const;
+		bool	CanWrite()	const;
+		bool	CanSeek()		const;
+		bool	CanPeek()		const;
+		bool	IsLimited()		const;
+		bool	IsAvailable()	const;
 		void	Close();
 		pos_t Position() const;
 		pos_t Size() const;
@@ -43,7 +43,7 @@ namespace Alime::base::System::IO
 		aint	Peek(void* _buffer, aint _size);
 
 	protected:
-		void CheckFileHandle();
+		void AssertFileHandleValid();
 
 	protected:
 		void Init(const String& fileName, FileMode fileMode, FileAccess _accessRight, FileShare share);

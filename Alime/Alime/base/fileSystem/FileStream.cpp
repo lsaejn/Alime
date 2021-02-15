@@ -316,7 +316,7 @@ namespace Alime::base::System::IO
 		return -1;
 	}
 
-	void FileStream::CheckFileHandle()
+	void FileStream::AssertFileHandleValid()
 	{
 		if(file_ != 0)
 			throw Error(L"Stream is closed, cannot perform this operation");

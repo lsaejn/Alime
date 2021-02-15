@@ -32,17 +32,17 @@ namespace Alime::base::System::IO
 		class CharDecoder : public IDecoder
 		{
 		protected:
-			IStream*						stream;
-			auint8					cacheBuffer[sizeof(wchar_t)];
-			aint							cacheSize;
+			IStream* stream;
+			auint8 cacheBuffer[sizeof(wchar_t)];
+			aint cacheSize;
 
-			virtual aint					ReadString(wchar_t* _buffer, aint chars)=0;
+			virtual aint	 ReadString(wchar_t* _buffer, aint chars)=0;
 		public:
 			CharDecoder();
 
-			void							Setup(IStream* _stream);
-			void							Close();
-			aint							Read(void* _buffer, aint _size);
+			void Setup(IStream* _stream);
+			void Close();
+			aint Read(void* _buffer, aint _size);
 		};
 
 /***********************************************************************
@@ -89,14 +89,14 @@ Utf-16-be
 		class Utf16BEEncoder : public CharEncoder
 		{
 		protected:
-			aint							WriteString(wchar_t* _buffer, aint chars);
+			aint WriteString(wchar_t* _buffer, aint chars);
 		};
 		
 		/// <summary>Decoder to transform big endian UTF-16 text to wchar_t.</summary>
 		class Utf16BEDecoder : public CharDecoder
 		{
 		protected:
-			aint							ReadString(wchar_t* _buffer, aint chars);
+			aint ReadString(wchar_t* _buffer, aint chars);
 		};
 
 /***********************************************************************
@@ -107,7 +107,7 @@ Utf-8
 		class Utf8Encoder : public CharEncoder
 		{
 		protected:
-			aint							WriteString(wchar_t* _buffer, aint chars);
+			aint WriteString(wchar_t* _buffer, aint chars);
 		};
 		
 		/// <summary>Decoder to transform UTF-8 text to wchar_t.</summary>
@@ -115,10 +115,10 @@ Utf-8
 		{
 		protected:
 
-			wchar_t							cache;
-			bool							cacheAvailable;
+			wchar_t	 cache;
+			bool cacheAvailable;
 
-			aint							ReadString(wchar_t* _buffer, aint chars);
+			aint ReadString(wchar_t* _buffer, aint chars);
 		public:
 			Utf8Decoder();
 		};
@@ -128,20 +128,20 @@ Bom
 ***********************************************************************/
 		
 		/// <summary>Encoder to transform text from wchar_t. A BOM will be added at the beginning.</summary>
-		class BomEncoder :public IEncoder
+		class BomEncoder : public IEncoder
 		{
 		protected:
-			Encoding						encoding;
-			IEncoder*						encoder;
+			Encoding encoding;
+			IEncoder* encoder;
 		public:
 			/// <summary>Create an encoder.</summary>
 			/// <param name="_encoding">Specified encoding.</param>
 			BomEncoder(Encoding _encoding);
 			~BomEncoder();
 
-			void							Setup(IStream* _stream);
-			void							Close();
-			aint							Write(void* _buffer, aint _size);
+			void Setup(IStream* _stream);
+			void Close();
+			aint Write(void* _buffer, aint _size);
 		};
 		
 		/// <summary>Decoder to transform text to wchar_t. This decoder depends on the BOM information at the beginning to decide the format of the input.</summary>
@@ -151,41 +151,41 @@ Bom
 			class BomStream : public IStream
 			{
 			protected:
-				IStream*					stream;
-				char						bom[3];
-				aint						bomLength;
-				aint						bomPosition;
+				IStream* stream;
+				char bom[3];
+				aint bomLength;
+				aint bomPosition;
 			public:
 				BomStream(IStream* _stream, char* _bom, aint _bomLength);
 
-				bool						CanRead()const;
-				bool						CanWrite()const;
-				bool						CanSeek()const;
-				bool						CanPeek()const;
-				bool						IsLimited()const;
-				bool						IsAvailable()const;
-				void						Close();
-				pos_t						Position()const;
-				pos_t						Size()const;
-				void						Seek(pos_t _size);
-				void						SeekFromBegin(pos_t _size);
-				void						SeekFromEnd(pos_t _size);
-				aint						Read(void* _buffer, aint _size);
-				aint						Write(void* _buffer, aint _size);
-				aint						Peek(void* _buffer, aint _size);
+				bool CanRead()const;
+				bool CanWrite()const;
+				bool CanSeek()const;
+				bool CanPeek()const;
+				bool IsLimited()const;
+				bool IsAvailable()const;
+				void Close();
+				pos_t	Position()const;
+				pos_t	Size()const;
+				void	Seek(pos_t _size);
+				void	SeekFromBegin(pos_t _size);
+				void	SeekFromEnd(pos_t _size);
+				aint	Read(void* _buffer, aint _size);
+				aint	Write(void* _buffer, aint _size);
+				aint	Peek(void* _buffer, aint _size);
 			};
 		protected:
-			IDecoder*						decoder;
-			IStream*						stream;
+			IDecoder* decoder;
+			IStream* stream;
 
 		public:
 			/// <summary>Create an decoder.</summary>
 			BomDecoder();
 			~BomDecoder();
 
-			void							Setup(IStream* _stream);
-			void							Close();
-			aint							Read(void* _buffer, aint _size);
+			void Setup(IStream* _stream);
+			void Close();
+			aint Read(void* _buffer, aint _size);
 		};
 
 /***********************************************************************

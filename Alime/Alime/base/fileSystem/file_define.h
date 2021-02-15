@@ -9,7 +9,7 @@ namespace Alime::base
 {
 	/// 传统fopen的api里
 	/// r和r+ 要求文件必须存在，否则返回句柄为空
-	/// w会截断文件
+	/// w/w+会截断文件
 	/// w,a,w+,a+都会创建文件
 	/// 在a/a+模式下， 每次写入时会重新seek到文件尾部， 即使先前fseek到前面的某个位置。
 	/// a和a+的区别在于，a+可读(视a为特殊的w即可)
@@ -46,7 +46,7 @@ namespace Alime::base
 		Inheritable,//win32不支持
 	};
 
-	//unix系统以U32为主，但各个库使用U16,
+	//unix系统下的unicode以U32为主，但各个库使用U16,
 	//所以我们只支持u8+u16
 	enum class Encoding
 	{

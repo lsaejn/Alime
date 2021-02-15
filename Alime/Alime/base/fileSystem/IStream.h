@@ -27,6 +27,9 @@ namespace Alime::base::System::IO
 		virtual aint Peek(void* _buffer, aint _size) = 0;
 	};
 
+	/// <summary>
+	/// IEncoder绑定一个Stream, 赋予用户写Stream的能力
+	/// </summary>
 	class IEncoder
 	{
 	public:
@@ -35,6 +38,9 @@ namespace Alime::base::System::IO
 		virtual int Write(void* _buffer, int _size) = 0;
 	};
 
+	/// <summary>
+	/// IDecoder绑定一个Stream, 赋予用户读Stream的能力
+	/// </summary>
 	class IDecoder
 	{
 	public:
