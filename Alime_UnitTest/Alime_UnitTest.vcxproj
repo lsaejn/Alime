@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DateTimeTest.cpp" />
+    <ClCompile Include="Encoding.cpp" />
     <ClCompile Include="FileStreamTest.cpp" />
     <ClCompile Include="FileSystemTest.cpp" />
     <ClCompile Include="httpTest.cpp" />
