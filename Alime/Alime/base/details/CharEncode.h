@@ -5,11 +5,6 @@
 #include "../fileSystem/file_define.h"
 #include "Alime/base/fileSystem/IStream.h"
 
-//你可能会混乱wr/rd/cin/cout, 只要记住des/src是针对流而言就可以
-//也就是说流是源。
-//这样，read是from stream;write from stream
-//cin是from screenStream, cout 是to screenStream
-//比如 wr/out 都是写到流
 namespace Alime::base::System::IO
 {
 		/// <summary>Base type of all character encoder.</summary>

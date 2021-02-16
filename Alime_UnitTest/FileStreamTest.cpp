@@ -45,3 +45,22 @@ TEST_UNIT(FileInfo)
 
 	//f_in_cSharp.CreationTime();
 }
+
+
+#include "../Alime/Alime/base/fileSystem/StreamReader.h"
+TEST_UNIT(StreamReader)
+{
+	using Alime::base::System::IO::FileStream;
+	FileStream fs(L"fuckyou-u16.txt");
+	auto sz=fs.Size();
+	char buffer[2046] = { 0 };
+	auto all = fs.Read(buffer, 2046);
+	fs.SeekFromBegin(0);
+	all = fs.Read(buffer, 2046);
+	fs.SeekFromBegin(0);
+	Alime::base::System::IO::StreamReader sr(fs);
+	auto info=sr.ReadLine();
+	
+	fs.SeekFromBegin(0);
+	info = sr.ReadLine();
+}

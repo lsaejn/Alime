@@ -5,27 +5,21 @@
 #include "Alime/base/fileSystem/IStream.h"
 
 #include <vector>
-//struct IStream;
+
 
 namespace Alime::base::System::IO
 {
 	class TextReader
 	{
 	public:
-		virtual String	 ReadString(aint length)=0;
-		virtual String	 ReadLine() = 0;
-		virtual String	 ReadToEnd() = 0;
+		virtual String	 ReadString(aint length);
+		virtual String	 ReadLine();
+		virtual String	 ReadToEnd();
+		virtual int Read(std::vector<Char>& buffer, int index, int count);
+
 		virtual Char Read() = 0;
-		// index: The position in buffer at which to begin writing.
-		virtual int Read(std::vector<Char>& buffer, int index, int count) = 0;
-		virtual Char Peek() = 0;
-		virtual void Close() = 0;
-	};
-
-	//in C# encoding is a class
-	class Encoding_
-	{
-
+		//virtual Char Peek() = 0;
+		//virtual void Close() = 0;
 	};
 
 	class StreamReader : public TextReader
@@ -41,13 +35,9 @@ namespace Alime::base::System::IO
 		//IStream BaseStream();
 		Encoding CurrentEncoding();
 		bool EndOfStream();
-		virtual void Close() override;
-		virtual String	 ReadString(aint length) override;
-		virtual String	 ReadLine() override;
-		virtual String	 ReadToEnd() override;
+		//virtual void Close() override;
 		virtual Char Read() override;
-		virtual int Read(std::vector<Char>& buffer, int index, int count) override;
-		virtual wchar_t Peek() override;
+		//virtual wchar_t Peek() override;
 
 		IStream* stream_;
 		Encoding encoding_;
