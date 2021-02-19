@@ -17,4 +17,12 @@ TEST_UNIT(CharDecode_Test)
 	u8Encoder.Write(L"ÎÒ°®Äã", 6);
 	u8Encoder.Close();
 	fs->Close();
+
+	Alime::base::System::IO::Utf8Decoder u8Decoder;
+	fs = new Alime::base::System::IO::FileStream(L"D:\\MyProject\\Alime\\Alime_UnitTest\\fuckyouU8.txt");
+	u8Decoder.Setup(fs);
+	wchar_t buf[1024];
+	auto nRead=u8Decoder.Read(buf, 1024);
+	//buf[nRead] = L'\0';
+	std::wstring str = buf;
 }

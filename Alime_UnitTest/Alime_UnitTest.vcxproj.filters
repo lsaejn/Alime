@@ -39,7 +39,7 @@
     <ClCompile Include="JsonTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Encoding.cpp">
+    <ClCompile Include="EncodingTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
