@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interfaces.h"
+//#include "Interfaces.h"
 
 #include "../fileSystem/file_define.h"
 #include "Alime/base/fileSystem/IStream.h"

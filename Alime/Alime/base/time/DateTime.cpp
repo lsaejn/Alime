@@ -50,6 +50,15 @@ namespace Alime::base::System
 
 	//algorithm
 	//https://blog.csdn.net/Solstice/article/details/5814486
+
+	template<int year, int month, int day>
+	struct JulianDayNumberCal
+	{
+		static const int value = day + (153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5 +
+			(year + 4800 - ((14 - month) / 12)) * 365 + (year + 4800 - ((14 - month) / 12)) / 4 
+			- (year + 4800 - ((14 - month) / 12)) / 100 + (year + 4800 - ((14 - month) / 12)) / 400 - 32045;
+	};
+
 	int getJulianDayNumber(int year, int month, int day)
 	{
 		int a = (14 - month) / 12;
@@ -73,14 +82,14 @@ namespace Alime::base::System
 		return ymd;
 	}
 
-	const int64_t kSecondsPerMinute = 60;
-	const int64_t kSecondsPerHour = 60 * kSecondsPerMinute;
-	const int64_t kSecondsPerDay = 24 * kSecondsPerHour;
+	const aint kSecondsPerMinute = 60;
+	const aint kSecondsPerHour = 60 * kSecondsPerMinute;
+	const aint kSecondsPerDay = 24 * kSecondsPerHour;
 	const aint kDaysPerWeek = 7;
 
-	const aint kJulianDayOf1900_01_01 = getJulianDayNumber(1900, 1, 1);
-	const aint kJulianDayOf1970_01_01 = getJulianDayNumber(1970, 1, 1);
-	const aint kJulianDayOf0001_01_01 = getJulianDayNumber(1, 1, 1);
+	const aint kJulianDayOf1900_01_01 = JulianDayNumberCal<1900, 1, 1>::value;
+	const aint kJulianDayOf1970_01_01 = JulianDayNumberCal<1970, 1, 1>::value;
+	const aint kJulianDayOf0001_01_01 = JulianDayNumberCal<1, 1, 1>::value;
 
 	const aint64 kTickOf1900_01_01 = (kJulianDayOf1900_01_01 - kJulianDayOf0001_01_01) * TimeSpan::kDay;
 	const aint64 kTickOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * TimeSpan::kDay;
