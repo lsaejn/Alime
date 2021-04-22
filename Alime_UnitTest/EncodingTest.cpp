@@ -10,7 +10,7 @@ TEST_UNIT(CharEncode_Test)
 
 TEST_UNIT(CharDecode_Test)
 {
-	auto fs = new Alime::base::System::IO::FileStream(L"D:\\MyProject\\Alime\\Alime_UnitTest\\fuckyouU8.txt");
+	auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU8.txt");
 	fs->SeekFromEnd(0);
 	Alime::base::System::IO::Utf8Encoder u8Encoder;
 	u8Encoder.Setup(fs);
@@ -19,7 +19,7 @@ TEST_UNIT(CharDecode_Test)
 	fs->Close();
 
 	Alime::base::System::IO::Utf8Decoder u8Decoder;
-	fs = new Alime::base::System::IO::FileStream(L"D:\\MyProject\\Alime\\Alime_UnitTest\\fuckyouU8.txt");
+	fs = new Alime::base::System::IO::FileStream(L"./fuckyouU8.txt");
 	u8Decoder.Setup(fs);
 	wchar_t buf[1024];
 	auto nRead=u8Decoder.Read(buf, 1024);

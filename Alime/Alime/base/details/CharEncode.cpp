@@ -1,4 +1,5 @@
 #include "CharEncode.h"
+#include "Alime/base/base_define.h"
 #include <windows.h>
 
 namespace Alime::base::System::IO
@@ -229,23 +230,43 @@ Utf-16-be
 Utf8
 ***********************************************************************/
 
-		aint Utf8Encoder::WriteString(wchar_t* _buffer, aint chars)
+#include "Alime/base/third_party/convert_utf/ConvertUTF.h"
+		aint Utf8Encoder::WriteString(wchar_t* buffer, aint chars)
 		{
+#ifdef OS_WIN
+			UTF8 output[1024 * 8] = { 0 };
+			const UTF16* src_begin = reinterpret_cast<const UTF16*>(buffer);
+			const UTF16* src_end = src_begin + chars;
+			UTF8* dst_begin = output;
 
-			aint length=WideCharToMultiByte(CP_UTF8, 0, _buffer, (int)chars, NULL, NULL, NULL, NULL);
-			char* mbcs=new char[length];
-			WideCharToMultiByte(CP_UTF8, 0, _buffer, (int)chars, mbcs, (int)length, NULL, NULL);
-			aint result=stream->Write(mbcs, length);
-			delete[] mbcs;
-			if(result==length)
+			while (src_begin < src_end)
 			{
-				return chars;
+				ConversionResult result = ConvertUTF16toUTF8(&src_begin,
+					src_end,
+					&dst_begin,
+					dst_begin + 1024 * 8,
+					lenientConversion);
+
+				aint byteWrited = stream->Write(output, dst_begin - reinterpret_cast<UTF8*>(output));
+				//assert byteWrited==(dst_begin - reinterpret_cast<UTF8*>(output))
+				dst_begin = reinterpret_cast<UTF8*>(output);
+				if (result == sourceExhausted)
+				{
+					return chars*sizeof(wchar_t);
+				}
+				else if (result == sourceIllegal)
+				{
+					Close();
+					return 0;
+				}
+				else if (result == targetExhausted || result == conversionOK)
+					continue;
 			}
-			else
-			{
-				Close();
-				return 0;
-			}
+			return chars * sizeof(wchar_t);
+#else
+			//fix me
+			//ConvertUTF32toUTF8(_buffer, _buffer + chars, );
+#endif
 		}
 
 		Utf8Decoder::Utf8Decoder()
