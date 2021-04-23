@@ -154,7 +154,7 @@ namespace Alime::base::System
 		DateTime operator+ (TimeSpan rhs) const;
 		DateTime operator-=(TimeSpan rhs);
 		DateTime operator- (TimeSpan rhs) const;
-		TimeSpan  operator- (const DateTime& rhs) const;
+		TimeSpan operator- (const DateTime& rhs) const;
 
 		bool valid() const;
 		static DateTime invalid();
