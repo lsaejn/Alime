@@ -10,11 +10,11 @@ TEST_UNIT(CharEncode_Test)
 
 TEST_UNIT(CharDecode_Test)
 {
-	auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU8.txt");
+	auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU8.txt", Alime::base::FileMode::OpenOrCreate);
 	fs->SeekFromEnd(0);
 	Alime::base::System::IO::Utf8Encoder u8Encoder;
 	u8Encoder.Setup(fs);
-	u8Encoder.Write(L"ÎÒ°®Äã", 6);
+	int nWrited = u8Encoder.Write(L"ÎÒ°®Äã", 6);
 	u8Encoder.Close();
 	fs->Close();
 
@@ -24,5 +24,6 @@ TEST_UNIT(CharDecode_Test)
 	wchar_t buf[1024];
 	auto nRead=u8Decoder.Read(buf, 1024);
 	//buf[nRead] = L'\0';
-	std::wstring str = buf;
+	std::wstring str;
+	str.append(buf, nRead/2);
 }

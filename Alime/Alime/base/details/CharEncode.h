@@ -16,9 +16,9 @@ namespace Alime::base::System::IO
 			aint cacheSize;
 
 			/// <summary>
-			/// 写入chars个wchar_t
+			/// 向stream写入chars个wchar_t
 			/// </summary>
-			/// <param name="_buffer">字符流</param>
+			/// <param name="_buffer">数据指针</param>
 			/// <param name="chars">字符个数</param>
 			/// <returns>写入的字符数</returns>
 			virtual aint	 WriteString(wchar_t* _buffer, aint chars)=0;
@@ -26,12 +26,13 @@ namespace Alime::base::System::IO
 			CharEncoder();
 			void Setup(IStream* _stream);
 			void Close();
+
 			/// <summary>
 			/// 写入_size个字节，多余字节被cache
 			/// </summary>
 			/// <param name="_buffer">字节流</param>
 			/// <param name="_size">字节数</param>
-			/// <returns>写入的字节数</returns>
+			/// <returns>成功写入的字节数</returns>
 			aint Write(void* _buffer, aint _size);
 		};
 		
@@ -43,12 +44,24 @@ namespace Alime::base::System::IO
 			auint8 cacheBuffer[sizeof(wchar_t)];
 			aint cacheSize;
 
+			/// <summary>
+			/// Read data to _buffer from stream
+			/// </summary>
+			/// <param name="_buffer"></param>
+			/// <param name="chars"></param>
+			/// <returns></returns>
 			virtual aint	 ReadString(wchar_t* _buffer, aint chars)=0;
 		public:
 			CharDecoder();
 
 			void Setup(IStream* _stream);
 			void Close();
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="_buffer"></param>
+			/// <param name="_size"></param>
+			/// <returns>读取的字节数</returns>
 			aint Read(void* _buffer, aint _size);
 		};
 

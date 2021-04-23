@@ -1,6 +1,7 @@
 #include "CharEncode.h"
 #include "Alime/base/base_define.h"
 #include <windows.h>
+#include "assert.h"
 
 namespace Alime::base::System::IO
 {
@@ -248,11 +249,12 @@ Utf8
 					lenientConversion);
 
 				aint byteWrited = stream->Write(output, dst_begin - reinterpret_cast<UTF8*>(output));
-				//assert byteWrited==(dst_begin - reinterpret_cast<UTF8*>(output))
-				dst_begin = reinterpret_cast<UTF8*>(output);
+				//fix me. 
+				assert(byteWrited == (dst_begin - reinterpret_cast<UTF8*>(output)));
+				dst_begin = output;
 				if (result == sourceExhausted)
 				{
-					return chars*sizeof(wchar_t);
+					return chars;
 				}
 				else if (result == sourceIllegal)
 				{
@@ -262,10 +264,10 @@ Utf8
 				else if (result == targetExhausted || result == conversionOK)
 					continue;
 			}
-			return chars * sizeof(wchar_t);
+			return chars;
 #else
-			//fix me
-			//ConvertUTF32toUTF8(_buffer, _buffer + chars, );
+			//fix me in linux
+			//use ConvertUTF32toUTF8(_buffer, _buffer + chars, );
 #endif
 		}
 
