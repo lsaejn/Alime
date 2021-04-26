@@ -9,7 +9,7 @@ namespace Alime::base::System::IO
 {
 
 	FileStream::FileStream(const String& fileName, FileMode fileMode, FileAccess access, FileShare share)
-		:accessRight_(access)
+		: accessRight_(access)
 	{
 		Init(fileName, fileMode, access, share);
 	}
@@ -104,13 +104,17 @@ namespace Alime::base::System::IO
 		case FileMode::Append:
 			if (access == FileAccess::Read)
 				throw Error(L"Read-only access is incompatible with Append mode.");
-			else if (access == FileAccess::ReadWrite)
+			else if (!File::Exists(fileName))
 			{
-				mode = L"a+b";
-			}
-			else if(access == FileAccess::Write)
-			{
-				mode = L"ab";
+				File::Create(fileName);
+				if (access == FileAccess::ReadWrite)
+				{
+					mode = L"a+b";
+				}
+				else if (access == FileAccess::Write)
+				{
+					mode = L"ab";
+				}
 			}
 			break;
 		case FileMode::OpenOrCreate:
@@ -118,7 +122,11 @@ namespace Alime::base::System::IO
 			{
 				throw Error(L"Read-only access is incompatible with OpenOrCreate mode.");
 			}
-			else if (access == FileAccess::ReadWrite)
+			if (!File::Exists(fileName))
+			{
+				File::Create(fileName);
+			}
+			if (access == FileAccess::ReadWrite)
 			{
 				mode = L"r+b";
 				accessRight_ = FileAccess::ReadWrite;

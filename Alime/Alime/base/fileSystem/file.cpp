@@ -192,11 +192,24 @@ namespace Alime::base::System::IO
 
 	FileStream File::Create(const String& path)
 	{
-		//we did not use CreateFile becz we still need to return a fileStream
-		FileStream fs(path, FileMode::Create, FileAccess::ReadWrite, FileShare::ReadWrite);
-		if (!fs.IsAvailable())
-			throw "failed to open";
-		return std::move(fs);
+		if (!path.empty())
+			throw "fix me";
+
+		HANDLE hFile = CreateFileW(path.c_str(), GENERIC_WRITE, 0, 0, CREATE_NEW, 0, 0);
+		if (hFile != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(hFile);
+			FileStream fs(path, FileMode::Create, FileAccess::ReadWrite, FileShare::ReadWrite);
+			if (!fs.IsAvailable())
+				throw "failed to open";
+			return std::move(fs);
+		}
+		else
+		{
+			if(GetLastError() == ERROR_FILE_EXISTS)
+				throw "fix me";
+			throw "fix me";
+		}
 	}
 
 	FileStream File::Create(const String& path, int bufferSize)
@@ -270,7 +283,6 @@ namespace Alime::base::System::IO
 		BOOL result = GetFileAttributesEx(path.c_str(), GetFileExInfoStandard, &info);
 		FILETIME createFileTime = info.ftCreationTime;
 		return FTIMEToDateTime(createFileTime);
-		
 	}
 
 	DateTime File::GetCreationTimeUtc(const String& path)
