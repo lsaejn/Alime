@@ -13,7 +13,6 @@ namespace Alime
 			cv_(),
 			lock_()
 		{
-
 		}
 
 		void countDown()
@@ -37,9 +36,9 @@ namespace Alime
 			return count_;
 		}
 
+		std::mutex lock_;
 		std::atomic<int> count_;
 		std::condition_variable cv_;
-		std::mutex lock_;
 	};
 
 	//我没想好怎么写
@@ -73,7 +72,7 @@ namespace Alime
 				Lock_guard g(mutex_);
 				count = count_;
 			}
-			//bug will happend here,but thank for Event keeping a pulsing state
+			//bug will happen here,but thank for Event keeping a pulsing state
 			if(count > 0)
 			{
 				WaitForSingleObject(handle_, INFINITE);
