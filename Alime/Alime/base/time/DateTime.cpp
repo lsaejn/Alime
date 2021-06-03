@@ -230,7 +230,7 @@ namespace Alime::base::System
 		auto ymd=getYearMonthDayFromTicks(date.Ticks());
 		return DateTime(ymd.year, ymd.month, ymd.day);
 		//fix me
-		static const int64_t kSecondOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * 24 * 3600;
+		static const int64_t kSecondOf1970_01_01 = (kJulianDayOf1970_01_01 - kJulianDayOf0001_01_01) * 24i64 * 3600;
 		auto second = static_cast<int64_t>(utcsecond());
 		second = second - second % (24 * 3600);
 		return DateTime((second+ kSecondOf1970_01_01)* TimeSpan::kSecond);

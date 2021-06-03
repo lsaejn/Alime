@@ -39,7 +39,7 @@ public:
 				_mm_pause();
 				if (timeTried == 3000)
 				{
-					Sleep(100);//un...我不确定这么做是不是合适
+					Sleep(100);//un...我不确定这么做是合适的
 					timeTried = 0;
 				}
 			}

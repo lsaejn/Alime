@@ -179,13 +179,13 @@ namespace Alime::base::System
 		DateTimeKind kind_;
 	};
 
-	static DateTime operator +(const DateTime& d, TimeSpan t);
-	static TimeSpan operator -(const DateTime& d1, const DateTime& d2);
-	static DateTime operator -(const DateTime& d, TimeSpan t);
-	static bool operator ==(const DateTime& d1, const DateTime& d2);
-	static bool operator !=(const DateTime& d1, const DateTime& d2);
-	static bool operator <(const DateTime& t1, const DateTime& t2);
-	static bool operator >(const DateTime& t1, const DateTime& t2);
-	static bool operator <=(const DateTime& t1, const DateTime& t2);
-	static bool operator >=(const DateTime& t1, const DateTime& t2);
+	//static DateTime operator +(const DateTime& d, TimeSpan t);
+	//static TimeSpan operator -(const DateTime& d1, const DateTime& d2);
+	//static DateTime operator -(const DateTime& d, TimeSpan t);
+	//static bool operator ==(const DateTime& d1, const DateTime& d2);
+	//static bool operator !=(const DateTime& d1, const DateTime& d2);
+	//static bool operator <(const DateTime& t1, const DateTime& t2);
+	//static bool operator >(const DateTime& t1, const DateTime& t2);
+	//static bool operator <=(const DateTime& t1, const DateTime& t2);
+	//static bool operator >=(const DateTime& t1, const DateTime& t2);
 }
