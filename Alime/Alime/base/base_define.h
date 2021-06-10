@@ -1,10 +1,11 @@
 #pragma once
+#include <Alime/base/build_config.h>
 //portable header
 #include <string>
 #include <stdint.h>
 #include <sys/types.h>
 
-#include <Alime/base/build_config.h>
+
 
 typedef int8_t		aint8;
 typedef uint8_t		auint8;

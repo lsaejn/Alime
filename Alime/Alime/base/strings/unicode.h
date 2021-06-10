@@ -1,10 +1,10 @@
 ﻿#pragma once
-
+#include "Alime/base/build_config.h"
 #include "stdint.h"
 
 #include <string>
 
-#include "Alime/base/build_config.h"
+
 
 typedef char UTF8Char;
 static_assert(CHAR_MAX == 127, "char type need be signed");

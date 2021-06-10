@@ -1,7 +1,8 @@
 #ifndef BASE_MACROS_H_
 #define BASE_MACROS_H_
-#include <stdarg.h>
 #include "Alime/base/build_config.h"
+#include <stdarg.h>
+
 
 
 #define implements :public

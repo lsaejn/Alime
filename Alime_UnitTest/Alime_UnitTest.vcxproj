@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BufferTest.cpp" />
     <ClCompile Include="DateTimeTest.cpp" />
     <ClCompile Include="EncodingTest.cpp" />
     <ClCompile Include="FileStreamTest.cpp" />

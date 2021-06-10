@@ -1,6 +1,7 @@
+#include <Alime/base/build_config.h>
 #include "DirectoryInfo.h"
 
-#include <Alime/base/build_config.h>
+
 namespace Alime::base::System::IO
 {
 	DirectoryInfo::DirectoryInfo(const String& path)

@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Alime\base\details\buffer.cpp" />
     <ClCompile Include="Alime\base\details\Encoding.cpp" />
     <ClCompile Include="Alime\base\fileSystem\DirectoryInfo.cpp" />
     <ClCompile Include="Alime.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Alime\base\time\Locale.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alime\base\details\buffer.h" />
     <ClInclude Include="Alime\base\details\Encoding.h" />
     <ClInclude Include="Alime\base\json\ajson.h" />
     <ClInclude Include="Alime\base\base_define.h" />

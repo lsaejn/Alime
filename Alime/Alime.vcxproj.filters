@@ -108,6 +108,9 @@
     <ClCompile Include="Alime\base\details\Encoding.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Alime\base\details\buffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\strings\string_util.h">
@@ -291,6 +294,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\details\Encoding.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Alime\base\details\buffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

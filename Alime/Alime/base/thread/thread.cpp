@@ -1,3 +1,6 @@
+#include "Alime/base/build_config.h"
+#include "Alime/base/thread/CountDownLatch.h"
+
 #include "thread.h"
 #include "windows.h"
 #include <iosfwd>
@@ -7,8 +10,8 @@
 #include <assert.h>
 
 
-#include "Alime/base/build_config.h"
-#include "Alime/base/thread/CountDownLatch.h"
+
+
 
 namespace Alime
 {

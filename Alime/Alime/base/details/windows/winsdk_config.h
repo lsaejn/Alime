@@ -35,4 +35,12 @@
 #pragma warning(disable: 4996)
 #endif
 
+
+
+#include <ws2tcpip.h>
+#include <WinSock2.h>
+#include <io.h>
+#include <ws2ipdef.h>
+#pragma comment(lib, "ws2_32.lib")
+
 #endif // BUILD_WINSDK_CONFIG_H_
