@@ -60,7 +60,7 @@ The representation limits the largest representable duration to approximately 58
 		TimeSpan operator/=(int ns);
 
 	private:
-		uint64_t ticks_;
+		int64_t ticks_;
 	};
 }
 
