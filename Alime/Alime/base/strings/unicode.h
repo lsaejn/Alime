@@ -7,7 +7,7 @@
 
 
 typedef char UTF8Char;
-static_assert(CHAR_MAX == 127, "char type need be signed");
+static_assert(CHAR_MAX == 127, "char type need be signed, Alime haven't support uinx now");
 
 #if defined(WCHAR_T_IS_UTF16)
 typedef wchar_t UTF16Char;

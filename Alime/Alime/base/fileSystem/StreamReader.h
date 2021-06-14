@@ -27,6 +27,11 @@ namespace Alime::base::System::IO
 	public:
 		StreamReader(IStream& stream);
 		StreamReader(IStream& stream, bool detectEncodingFromByteOrderMarks);
+		/// <summary>
+		/// 由于存在bom，指定encoding是危险的事情。所以这个标记仅在没有bom时使用
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="encoding"></param>
 		StreamReader(IStream& stream, Encoding encoding);
 		StreamReader(String path);
 		StreamReader(String path, bool detectEncodingFromByteOrderMarks);
@@ -40,6 +45,9 @@ namespace Alime::base::System::IO
 		//virtual wchar_t Peek() override;
 
 		IStream* stream_;
+		std::shared_ptr<IStream> streamHolder_;
+
+		std::shared_ptr<IDecoder> innerStream_;
 		Encoding encoding_;
 	};
 

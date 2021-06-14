@@ -1,4 +1,4 @@
-#include "easyTest.h"
+ï»¿#include "easyTest.h"
 
 #include "../Alime/Alime/base/details/CharEncode.h"
 #include "../Alime/Alime/base/fileSystem/FileStream.h"
@@ -8,14 +8,14 @@ TEST_UNIT(CharEncode_Test)
 
 }
 
-TEST_UNIT(CharDecode_Test)
+TEST_UNIT(Utf8Decode_Test)
 {
 	auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU8.txt", Alime::base::FileMode::Truncate);
 	fs->SeekFromEnd(0);
 	Alime::base::System::IO::Utf8Encoder u8Encoder;
 	u8Encoder.Setup(fs);
-	int nWrited = u8Encoder.Write(L"ÎÒ°®Äã", 6);
-	H_TEST_EQUAL(nWrited, 6);
+	int nWrited = u8Encoder.Write(L"æˆ‘çˆ±ä½ ó°€‹", 10);
+	H_TEST_EQUAL(nWrited, 10);
 	u8Encoder.Close();
 	fs->Close();
 
@@ -27,6 +27,6 @@ TEST_UNIT(CharDecode_Test)
 	//buf[nRead] = L'\0';
 	std::wstring str;
 	str.append(buf, nRead/2);
-	H_TEST_EQUAL(str, L"ÎÒ°®Äã");
+	H_TEST_EQUAL(str, L"æˆ‘çˆ±ä½ ó°€‹");
 	H_TEST_EQUAL(nRead, 6);
 }

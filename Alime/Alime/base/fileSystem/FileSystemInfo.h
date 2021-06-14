@@ -4,11 +4,16 @@
 #include <Alime/base/fileSystem/filePath.h>
 #include <Alime/base/time/DateTime.h>
 
+#include <memory>
+
 #ifdef OS_WIN
 #include "windows.h"
 #else
 
 #endif // OS_POSIX
+
+
+
 namespace Alime::base::System::IO
 {
 	struct FileSystemInfoBase
@@ -39,7 +44,7 @@ namespace Alime::base::System::IO
 		FilePath filePath_;
 		String originalPath_;
 		FileAttributes attributes_;
-		FileSystemInfoBase* base_;
+		std::shared_ptr<FileSystemInfoBase> base_;
 		
 		DateTime lastWriteTime_;
 		DateTime lastAccessTime_;

@@ -1,5 +1,8 @@
 #include "StreamReader.h"
 
+#include "Alime/base/details/CharEncode.h"
+#include "Alime/base/fileSystem/FileStream.h"
+
 
 
 namespace Alime::base::System::IO
@@ -135,23 +138,26 @@ namespace Alime::base::System::IO
 		return i;
 	}
 
-
-
 	StreamReader::StreamReader(String path)
 	{
-
+		stream_ = new FileStream(path);
+		streamHolder_.reset(stream_);
+		auto bomEncoder = new BomDecoder();
+		bomEncoder->Setup(stream_);
+		innerStream_.reset(bomEncoder);
 	}
 
 	StreamReader::StreamReader(IStream& stream, Encoding encoding)
 		:stream_(&stream),
 		encoding_(encoding)
 	{
-
+		IDecoder* bomEncoder = new BomDecoder();
+		bomEncoder->Setup(stream_);
+		innerStream_.reset(bomEncoder);
 	}
 
 	StreamReader::StreamReader(IStream& stream)
-		:stream_(&stream),
-		encoding_(Encoding::Utf8)
+		: StreamReader(stream, Encoding::Utf8)
 	{
 
 	}
@@ -179,7 +185,7 @@ namespace Alime::base::System::IO
 			if (stream_->Read(&buffer, sizeof(buffer)) == 0)
 			{
 				stream_ = 0;
-				return 0;
+				return L'\0';
 			}
 			else
 			{

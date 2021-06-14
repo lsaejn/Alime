@@ -38,9 +38,6 @@ namespace Alime::base::System::IO
 
 	FileSystemInfo::~FileSystemInfo()
 	{
-		if (base_)
-			delete base_;
-		base_ = nullptr;
 	}
 
 	String FileSystemInfo::FullName()
