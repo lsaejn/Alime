@@ -194,7 +194,7 @@ namespace Alime::base::System::IO
 
 	FileStream File::Create(const String& path)
 	{
-		if (!path.empty())
+		if (path.empty())
 			throw "fix me";
 
 		HANDLE hFile = CreateFileW(path.c_str(), GENERIC_WRITE, 0, 0, CREATE_NEW, 0, 0);

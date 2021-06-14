@@ -90,9 +90,6 @@
     <ClCompile Include="Alime\base\time\Locale.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Alime\base\details\CharEncode.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Alime\base\fileSystem\file.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -279,9 +276,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\time\Locale.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Alime\base\details\CharEncode.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Alime\base\json\ajson.h">

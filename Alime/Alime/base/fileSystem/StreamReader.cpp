@@ -1,6 +1,6 @@
 #include "StreamReader.h"
 
-#include "Alime/base/details/CharEncode.h"
+#include "Alime/base/details/Encoding.h"
 #include "Alime/base/fileSystem/FileStream.h"
 
 
@@ -139,42 +139,43 @@ namespace Alime::base::System::IO
 	}
 
 	StreamReader::StreamReader(String path)
+		:StreamReader(path, Encoding::Utf8)
 	{
-		stream_ = new FileStream(path);
-		streamHolder_.reset(stream_);
-		auto bomEncoder = new BomDecoder();
-		bomEncoder->Setup(stream_);
-		innerStream_.reset(bomEncoder);
 	}
 
 	StreamReader::StreamReader(IStream& stream, Encoding encoding)
 		:stream_(&stream),
 		encoding_(encoding)
 	{
-		IDecoder* bomEncoder = new BomDecoder();
-		bomEncoder->Setup(stream_);
-		innerStream_.reset(bomEncoder);
+		IDecoder* bomDecoder = new BomDecoder(encoding_);
+		bomDecoder->Setup(stream_);
+		innerStream_.reset(bomDecoder);
 	}
 
 	StreamReader::StreamReader(IStream& stream)
 		: StreamReader(stream, Encoding::Utf8)
 	{
-
 	}
 
 	StreamReader::StreamReader(IStream& stream, bool detectEncodingFromByteOrderMarks)
+		: StreamReader(stream, Encoding::Utf8)
 	{
 
 	}
 
 	StreamReader::StreamReader(String path, bool detectEncodingFromByteOrderMarks)
+		: StreamReader(path, Encoding::Utf8)
 	{
-
 	}
 
 	StreamReader::StreamReader(String path, Encoding encoding)
+		: encoding_(encoding)
 	{
-
+		stream_ = new FileStream(path);
+		streamHolder_.reset(stream_);
+		auto bomDecoder = new BomDecoder(encoding);
+		bomDecoder->Setup(stream_);
+		innerStream_.reset(bomDecoder);
 	}
 
 	Char StreamReader::Read()

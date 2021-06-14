@@ -164,7 +164,6 @@
     <ClCompile Include="Alime\base\fileSystem\FileInfo.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FilePath.cpp" />
     <ClCompile Include="Alime\base\fileSystem\FileStream.cpp" />
-    <ClCompile Include="Alime\base\details\CharEncode.cpp" />
     <ClCompile Include="Alime\base\strings\string_conversions.cpp" />
     <ClCompile Include="Alime\base\strings\string_util.cpp" />
     <ClCompile Include="Alime\base\system\IteratorHelper.cpp" />
@@ -215,7 +214,6 @@
     <ClInclude Include="Alime\base\json\alimeJson.h" />
     <ClInclude Include="Alime\base\macros.h" />
     <ClInclude Include="Alime\base\notCopyable.h" />
-    <ClInclude Include="Alime\base\details\CharEncode.h" />
     <ClInclude Include="Alime\base\strings\string_conversions.h" />
     <ClInclude Include="Alime\base\strings\string_util.h" />
     <ClInclude Include="Alime\base\strings\unicode.h" />
