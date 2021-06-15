@@ -12,10 +12,12 @@ namespace Alime::base
 		}
 
 		Error(const std::wstring& _description)
-			:description_(new wchar_t[_description.length()+1]),
+			:description_(new wchar_t[_description.length() + 1]{ 0 }),
 			memoryLocated_(false)
 		{
 			memoryLocated_ = true;
+			memcpy_s((void*)description_, _description.length() * sizeof(wchar_t),
+				_description.c_str(), _description.length() * sizeof(wchar_t));
 		}
 
 		~Error()

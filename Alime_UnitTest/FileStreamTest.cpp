@@ -1,9 +1,42 @@
 #include "easyTest.h"
 #include <Alime/base/fileSystem/FileStream.h>
 #include <Alime/base/fileSystem/file.h>
+#include <Alime/base/fileSystem/FileInfo.h>
+#include <Alime/base/exceptionBase.h>
 #include <iostream>
 
-//巴拉巴拉
+
+TEST_UNIT(FileStreamAccessTest)
+{
+	using Alime::base::System::IO::FileStream;
+	Alime::base::System::IO::File::Delete(L"FileStreamAccess.cpp");
+	bool exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
+	H_TEST_EQUAL(exist, false);
+	{
+		try {
+			FileStream fst(L"FileStreamAccess.cpp", Alime::base::FileMode::Open);
+			exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
+			H_TEST_EQUAL(exist, false);
+		}
+		catch (Alime::base::Error &e)
+		{
+			auto msg = e.Message();
+			auto copy = msg;
+		}
+
+	}
+	FileStream fs(L"FileStreamAccess.cpp", Alime::base::FileMode::OpenOrCreate);
+	exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
+	H_TEST_EQUAL(exist, true);
+	H_TEST_EQUAL(fs.CanRead(), true);
+	H_TEST_EQUAL(fs.CanWrite(), true);
+	H_TEST_EQUAL(fs.CanSeek(), true);
+	H_TEST_EQUAL(fs.CanPeek(), true);
+	fs.Close();
+
+	FileStream fs2(L"FileStreamAccess.cpp", Alime::base::FileMode::Create);
+}
+
 TEST_UNIT(FileStreamRequest)
 {
 	using Alime::base::System::IO::FileStream;
@@ -16,7 +49,7 @@ TEST_UNIT(FileStreamRequest)
 		std::cout << str;
 		auto ret = str.empty();
 	}
-	ASSERT_TRUE(fs.CanWrite());
+	H_TEST_EQUAL(fs.CanWrite(), 1);
 
 }
 
@@ -27,11 +60,11 @@ TEST_UNIT(FileTest)
 	lines.push_back(L"你好1");
 	lines.push_back(L"你好2");
 	lines.push_back(L"你好3");
-	Alime::base::System::IO::File::AppendAllLines(L"FileStreamTest2.cpp", lines);
+	Alime::base::System::IO::File::AppendAllLines(L"FileTest.text", lines);
 }
 
 
-#include <Alime/base/fileSystem/FileInfo.h>
+
 //we have to compare with C# now due to reason that we modify Datetime class totally
 TEST_UNIT(FileInfo)
 {

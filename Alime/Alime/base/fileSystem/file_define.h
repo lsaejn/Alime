@@ -28,9 +28,9 @@ namespace Alime::base
 
 	enum class FileAccess
 	{
-		Read,
-		Write,
-		ReadWrite
+		Read=1,
+		Write=2,
+		ReadWrite=4
 	};
 
 	/// <summary>

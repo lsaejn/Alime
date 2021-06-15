@@ -3,23 +3,9 @@
 #include <Alime/base/exceptionBase.h>
 #include <Alime/base/fileSystem/File.h>
 
+#include "Alime/base/details/FileUtility.h"
+
 //https://docs.microsoft.com/en-ca/cpp/c-runtime-library/reference/fsopen-wfsopen?f1url=https%3A%2F%2Fmsdn.microsoft.com%2Fquery%2Fdev16.query%3FappId%3DDev16IDEF1&l=ZH-CN&k=k(CORECRT_WSTDIO%2F_wfsopen);k(_wfsopen);k(DevLang-C%20%20);k(TargetOS-Windows)&rd=true&view=vs-2019
-namespace {
-	bool CreateFileImpl(const String& path)
-	{
-		if (path.empty())
-			throw "fix me";
-
-		HANDLE hFile = CreateFileW(path.c_str(), GENERIC_WRITE, 0, 0, CREATE_NEW, 0, 0);
-		if (hFile != INVALID_HANDLE_VALUE)
-		{
-			CloseHandle(hFile);
-			return true;
-		}
-		return false;
-	}
-}
-
 
 
 namespace Alime::base::System::IO
@@ -81,7 +67,7 @@ namespace Alime::base::System::IO
 				{
 					File::Delete(fileName);
 				}
-				CreateFileImpl(fileName);
+				Alime::details::CreateFileImpl(fileName);
 
 				if (access == FileAccess::ReadWrite)
 				{

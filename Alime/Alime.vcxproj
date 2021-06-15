@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="Alime\base\details\buffer.h" />
     <ClInclude Include="Alime\base\details\Encoding.h" />
+    <ClInclude Include="Alime\base\details\FileUtility.h" />
     <ClInclude Include="Alime\base\json\ajson.h" />
     <ClInclude Include="Alime\base\base_define.h" />
     <ClInclude Include="Alime\base\base_export.h" />

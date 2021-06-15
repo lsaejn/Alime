@@ -293,5 +293,8 @@
     <ClInclude Include="Alime\base\details\buffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Alime\base\details\FileUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

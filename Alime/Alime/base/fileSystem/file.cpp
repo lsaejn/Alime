@@ -92,6 +92,7 @@ namespace Alime::base::System::IO
 		{
 			auto u8Str=UTF16ToUTF8(line);
 			fs.Write((void*)u8Str.c_str(), u8Str.length());
+			fs.Write((void*)("\n"), 1);
 		}	
 	}
 
