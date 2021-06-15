@@ -9,19 +9,25 @@
 TEST_UNIT(FileStreamAccessTest)
 {
 	using Alime::base::System::IO::FileStream;
-	Alime::base::System::IO::File::Delete(L"FileStreamAccess.cpp");
-	bool exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
+	bool exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.txt");
+	if (exist)
+	{
+		bool ret = Alime::base::System::IO::File::Delete(L"FileStreamAccess.txt");
+		H_TEST_EQUAL(exist, false);
+	}
+	
+	exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.txt");
 	H_TEST_EQUAL(exist, false);
 	{
 		try {
-			FileStream fst(L"FileStreamAccess.cpp", Alime::base::FileMode::Open);
-			exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
+			FileStream fst(L"FileStreamAccess.txt", Alime::base::FileMode::Open);
+			exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.txt");
 			H_TEST_EQUAL(exist, false);
 		}
 		catch (Alime::base::Error &e)
 		{
 			auto msg = e.Message();
-			auto copy = msg;
+			H_TEST_NOTEQUAL(msg, nullptr);
 		}
 
 	}
@@ -34,13 +40,16 @@ TEST_UNIT(FileStreamAccessTest)
 	H_TEST_EQUAL(fs.CanPeek(), true);
 	fs.Close();
 
-	FileStream fs2(L"FileStreamAccess.cpp", Alime::base::FileMode::Create);
 }
 
 TEST_UNIT(FileStreamRequest)
 {
 	using Alime::base::System::IO::FileStream;
-	FileStream fs(L"FileStreamTest.cpp");
+	//本文件
+	FileStream fs(L"FileStreamTest.cpp", Alime::base::FileMode::Open,
+		Alime::base::FileAccess::ReadWrite,
+		Alime::base::FileShare::Write);
+	H_TEST_EQUAL(fs.CanWrite(), 1);
 	if (fs.CanRead())
 	{
 		char buffer[2046] = { 0 };
@@ -49,19 +58,60 @@ TEST_UNIT(FileStreamRequest)
 		std::cout << str;
 		auto ret = str.empty();
 	}
-	H_TEST_EQUAL(fs.CanWrite(), 1);
+
+	try
+	{
+		//try to open a file not exist
+		FileStream fs1(L"FileStreamTest1.cpp");
+	}
+	catch (Alime::base::Error& e)
+	{
+		std::cout << e.Message();
+	}
+
+	try
+	{
+		//opened by another process
+		FileStream fs2(L"FileStreamTest.cpp");
+	}
+	catch (Alime::base::Error& e)
+	{
+		std::cout << e.Message();
+	}
+
+	try
+	{
+		FileStream fs3(L"FileStreamTest.cpp", Alime::base::FileMode::OpenOrCreate);
+	}
+	catch (Alime::base::Error& e)
+	{
+		std::cout << e.Message();
+	}
+
+	try
+	{
+		FileStream fs4(L"FileStreamTest.cpp", Alime::base::FileMode::Append);
+	}
+	catch (Alime::base::Error& e)
+	{
+		std::cout << e.Message();
+	}
+
+	try
+	{
+		//读写权限打开一个被truncated的文件
+		FileStream fs4(L"FileStreamTest.cpp", Alime::base::FileMode::Truncate);
+	}
+	catch (Alime::base::Error& e)
+	{
+		std::cout << e.Message();
+	}
+	
+
 
 }
 
-TEST_UNIT(FileTest)
-{
-	std::wstring ws = L"你好吗";
-	std::vector<std::wstring> lines;
-	lines.push_back(L"你好1");
-	lines.push_back(L"你好2");
-	lines.push_back(L"你好3");
-	Alime::base::System::IO::File::AppendAllLines(L"FileTest.text", lines);
-}
+
 
 
 

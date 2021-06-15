@@ -5,6 +5,7 @@
 #include "Alime/base/fileSystem/IStream.h"
 
 #include <vector>
+#include <memory>
 
 
 namespace Alime::base::System::IO

@@ -17,11 +17,11 @@ namespace Alime::base::System::IO
 		Init(fileName, fileMode, access, share);
 	}
 
-	FileStream::FileStream(const String& fileName, FileMode fileMode)
-		: accessRight_(FileAccess::Read)
-	{
-		Init(fileName, fileMode, FileAccess::ReadWrite, FileShare::ReadWrite);
-	}
+	//FileStream::FileStream(const String& fileName, FileMode fileMode)
+	//	: accessRight_(FileAccess::Read)
+	//{
+	//	Init(fileName, fileMode, FileAccess::ReadWrite, FileShare::ReadWrite);
+	//}
 
 	FileStream::FileStream(FileStream&& fs)
 	{
@@ -189,6 +189,8 @@ namespace Alime::base::System::IO
 			break;
 		}
 		file_ = _wfsopen(fileName.c_str(), mode, shFlag);
+		if (!file_)
+			throw Error(ErrnoStr(GetLastError()));
 	}
 
 	bool FileStream::CanRead()const

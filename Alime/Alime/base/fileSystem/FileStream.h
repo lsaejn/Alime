@@ -15,8 +15,9 @@ namespace Alime::base::System::IO
 	class FileStream : public virtual IStream
 	{
 	public:
-		FileStream(const String& fileName,FileMode fileMode, FileAccess accessRight, FileShare share);
-		FileStream(const String& fileName, FileMode fileMode=FileMode::Open);
+		FileStream(const String& fileName,FileMode fileMode = FileMode::Open, 
+			FileAccess accessRight = FileAccess::Read, FileShare share = FileShare::ReadWrite);
+		//FileStream(const String& fileName, FileMode fileMode=FileMode::Open);
 
 		FileStream(FileStream&& fs);
 		FileStream(const FileStream& fs)=delete;
@@ -26,12 +27,12 @@ namespace Alime::base::System::IO
 
 		~FileStream();
 
-		bool	CanRead()		const;
-		bool	CanWrite()	const;
-		bool	CanSeek()		const;
-		bool	CanPeek()		const;
-		bool	IsLimited()		const;
-		bool	IsAvailable()	const;
+		bool	CanRead() const;
+		bool	CanWrite() const;
+		bool	CanSeek() const;
+		bool	CanPeek() const;
+		bool	IsLimited() const;
+		bool	IsAvailable() const;
 		void	Close();
 		pos_t Position() const;
 		pos_t Size() const;
@@ -41,6 +42,14 @@ namespace Alime::base::System::IO
 		aint	Read(void* _buffer, aint _size);
 		aint	Write(void* _buffer, aint  _size);
 		aint	Peek(void* _buffer, aint _size);
+
+		void Flush();
+		void Flush(bool flushToDisk);
+		int ReadByte();
+		void WriteByte(aint8 value);
+		String Name() const;
+		aint64 Length() const;
+		aint Handle() const;
 
 	protected:
 		void AssertFileHandleValid();
