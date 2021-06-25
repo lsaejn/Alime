@@ -10,11 +10,12 @@
 #include <tuple>
 
 #include "string.h"
+
 #include "Alime/base/third_party/double-conversion/double-conversion.h"
 #include "Alime/base/compiler_specific.h"
 
 
-namespace
+namespace details
 {
     inline uint32_t digits10(uint64_t v)
     {
@@ -56,14 +57,13 @@ namespace
             buffer[pos--] = static_cast<char>('0' + r);
             v = q;
         }
-        // Last digit is trivial to handle
         buffer[pos] = static_cast<char>(v + '0');
         return result;
     }
 
-}
-////////step-1
-//我们将ts转成最后tuple, 然后拿最后一个参数的类型/值
+}//namespace details
+
+
 template <typename... Ts>
 auto getLastElement(Ts&&... ts) -> decltype(std::get<sizeof...(Ts) - 1>(
     std::forward_as_tuple(std::forward<Ts>(ts)...)))
@@ -72,8 +72,6 @@ auto getLastElement(Ts&&... ts) -> decltype(std::get<sizeof...(Ts) - 1>(
         std::forward_as_tuple(std::forward<Ts>(ts)...));
 }
 
-/////////////step2
-//我们仍然需要tuple，可以省掉很多工作量
 template <size_t size, typename... Ts>
 struct LastElementType : std::tuple_element<size - 1, std::tuple<Ts...>>
 {
@@ -85,10 +83,12 @@ struct LastElementType<0>
     using type = void;
 };
 
+//fix me, 补充一个 <index, Ts>类
 template <class... Ts>
 struct LastElement
     : std::decay<typename LastElementType<sizeof...(Ts), Ts...>::type>
 {
+    //value 
 };
 
 
@@ -187,10 +187,10 @@ typename std::enable_if<
         result->push_back('-');
         result->append(
             buffer,
-            uint64ToBufferUnsafe(~static_cast<uint64_t>(value) + 1, buffer));
+            details::uint64ToBufferUnsafe(~static_cast<uint64_t>(value) + 1, buffer));
     }
     else {
-        result->append(buffer, uint64ToBufferUnsafe(uint64_t(value), buffer));
+        result->append(buffer, details::uint64ToBufferUnsafe(uint64_t(value), buffer));
     }
 }
 
@@ -205,7 +205,7 @@ typename std::enable_if<
     toAppend(Src value, Tgt* result)
 {
     char buffer[20];
-    result->append(buffer, uint64ToBufferUnsafe(value, buffer));
+    result->append(buffer, details::uint64ToBufferUnsafe(value, buffer));
 }
 
 
