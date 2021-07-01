@@ -12,9 +12,6 @@ namespace Alime::base::System::IO
 
 	class FileInfo: public FileSystemInfo
 	{
-	private:
-		
-
 	public:
 		FileInfo() = default;
 		FileInfo(const String& fileName);

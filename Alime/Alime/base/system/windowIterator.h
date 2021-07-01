@@ -88,6 +88,13 @@ namespace Alime::base::win32
             return buffer;
         }
 
+        static DWORD GetPidByWindow(HWND hwnd)
+        {
+            DWORD id;
+            ::GetWindowThreadProcessId(hwnd, &id);
+            return id;
+        }
+
     };
 
 }

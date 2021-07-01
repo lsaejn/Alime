@@ -37,7 +37,7 @@ TEST_UNIT(Utf8_Encoding_Test)
 TEST_UNIT(Utf16_Encoding_Test)
 {
 	{
-		auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU16.txt", Alime::base::FileMode::Truncate);
+		auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouU16.txt", Alime::base::FileMode::Truncate, Alime::base::FileAccess::ReadWrite);
 		Alime::base::System::IO::Utf16Encoder encoder;
 		encoder.Setup(fs);
 		encoder.Write("\xFF\xFE", 2);
@@ -101,7 +101,7 @@ TEST_UNIT(Utf16_Encoding_Test)
 TEST_UNIT(Mbcs_Encoding_Test)
 {
 	{
-		auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouAnsi.txt", Alime::base::FileMode::Create);
+		auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouAnsi.txt", Alime::base::FileMode::Create, Alime::base::FileAccess::ReadWrite);
 		Alime::base::System::IO::MbcsEncoder encoder;
 		encoder.Setup(fs);
 
@@ -121,5 +121,16 @@ TEST_UNIT(Mbcs_Encoding_Test)
 		H_TEST_EQUAL(str, L"a test我爱你\n第二行");//字符长度12
 		H_TEST_EQUAL(nRead, 26);
 		delete fs2;
+	}
+	{
+		auto fs = new Alime::base::System::IO::FileStream(L"./fuckyouAnsi.txt", Alime::base::FileMode::Create);
+		Alime::base::System::IO::MbcsDecoder decoder;
+		decoder.Setup(fs);
+
+		char buf[1024] = { 0 };
+		int n = decoder.Read(buf, 1024);
+		n = 0;
+
+
 	}
 }

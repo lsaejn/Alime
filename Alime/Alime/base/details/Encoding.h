@@ -7,7 +7,7 @@
 
 namespace Alime::base::System::IO
 {
-	/// <summary>Base type of all character encoder.</summary>
+	/// <summary>Base type of all character encoder. wchar_t -> type</summary>
 	class CharEncoder : public IEncoder
 	{
 	protected:
@@ -18,22 +18,22 @@ namespace Alime::base::System::IO
 		/// <summary>
 		/// 向stream写入chars个wchar_t
 		/// </summary>
-		/// <param name="_buffer">数据指针</param>
-		/// <param name="chars">字符个数</param>
+		/// <param name="buffer">The address of a string of UTF-16 encoded characters to convert.</param>
+		/// <param name="chars">The number of characters in chars to convert</param>
 		/// <returns>写入的字符数</returns>
-		virtual aint	 WriteString(wchar_t* _buffer, aint chars) = 0;
+		virtual aint	 WriteString(wchar_t* chars, aint charCount) = 0;
 	public:
 		CharEncoder();
-		void Setup(IStream* _stream);
+		void Setup(IStream* stream);
 		void Close();
 
 		/// <summary>
-		/// 写入_size个字节，多余字节被cache
+		/// 写入size个字节到流，其中多余字节被cache
 		/// </summary>
-		/// <param name="_buffer">字节流</param>
-		/// <param name="_size">字节数</param>
+		/// <param name="buffer">字节流</param>
+		/// <param name="size">字节数</param>
 		/// <returns>成功写入的字节数</returns>
-		aint Write(void* _buffer, aint _size);
+		aint Write(void* buffer, aint size);
 	};
 
 	/// <summary>Base type of all character decoder.</summary>

@@ -515,7 +515,8 @@ namespace Alime::base::System::IO
 	}
 
 	BomDecoder::BomDecoder(Encoding defaultEncoding)
-		:decoder(0)
+		:decoder(0),
+		encoding_(defaultEncoding)
 	{
 	}
 
