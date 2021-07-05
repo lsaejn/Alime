@@ -185,6 +185,9 @@
     <ClCompile Include="Alime\base\fileSystem\StreamReader.cpp" />
     <ClCompile Include="Alime\base\fileSystem\StreamWriter.cpp" />
     <ClCompile Include="Alime\base\time\Locale.cpp" />
+    <ClCompile Include="Alime\base\Encoding\Encoder.cpp" />
+    <ClCompile Include="Alime\base\Encoding\NEWEncoding.cpp" />
+    <ClCompile Include="Alime\base\Encoding\Decoder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alime\base\details\buffer.h" />
@@ -249,6 +252,9 @@
     <ClInclude Include="Alime\base\fileSystem\StreamReader.h" />
     <ClInclude Include="Alime\base\fileSystem\StreamWriter.h" />
     <ClInclude Include="Alime\base\time\Locale.h" />
+    <ClInclude Include="Alime\base\Encoding\Encoder.h" />
+    <ClInclude Include="Alime\base\Encoding\NEWEncoding.h" />
+    <ClInclude Include="Alime\base\Encoding\Decoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

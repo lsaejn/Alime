@@ -150,6 +150,7 @@
     <ClCompile Include="ConvTest.cpp" />
     <ClCompile Include="DateTimeTest.cpp" />
     <ClCompile Include="EncodingTest.cpp" />
+    <ClCompile Include="EncodingTest2.cpp" />
     <ClCompile Include="FileStreamTest.cpp" />
     <ClCompile Include="FileSystemTest.cpp" />
     <ClCompile Include="FileTest.cpp" />
