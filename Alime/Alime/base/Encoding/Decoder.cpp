@@ -9,9 +9,25 @@ static_assert(sizeof abyte == sizeof auint8, "size error");
 
 namespace
 {
-	int GetUTF8CodePointLengthByFirstByte()
+	/// <summary>
+	/// 我们和C#接口保持一致，0xxxxxxxx和10xxxxxxx都视为一个完整码点
+	/// </summary>
+	int GetUTF8CodePointLengthByFirstByte(auint8 byte)
 	{
-		return 1;
+		if ((byte & 0xF0) == 0xF0)
+		{
+			return 4;
+		}
+		else if ((byte & 0xE0) == 0xE0)
+		{
+			return 3;
+		}
+		else if ((byte & 0xC0) == 0xC0)
+		{
+			return 2;
+		}
+		else
+			return 1;
 	}
 }
 
@@ -30,7 +46,7 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 	completed = false;
 
 #ifdef OS_WIN
-	auint8 source[4];//本次
+
 	aint sourceCount = 0;
 
 	wchar_t target[2];
@@ -40,24 +56,25 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 
 	if (cacheByteSize_ > 0)
 	{
-		memcpy(source, cacheByte_, cacheByteSize_);
-		if ((*source & 0xF0) == 0xF0)
-		{
-			sourceCount = 4;
-		}
-		else if ((*source & 0xE0) == 0xE0)
-		{
-			sourceCount = 3;
-		}
-		else if ((*source & 0xC0) == 0xC0)
-		{
-			sourceCount = 2;
-		}
-		else
-			assert(false);
+		sourceCount =GetUTF8CodePointLengthByFirstByte(*cacheByte_);
+		assert(sourceCount !=1);
 
-		int cacheByteSurfix = sourceCount - cacheByteSize_;
+		//check valid
+		int cacheByteSurfix = sourceCount - cacheByteSize_;//cache缺少的长度
 		assert(cacheByteSurfix>0);
+
+		bool isValidByte = true;
+		int i = 0;
+		for (; i < cacheByteSurfix; ++i)
+		{
+			if ( (src[i] & 0x80) != 0x80)
+			{
+				isValidByte = false;
+				break;
+			}
+		}
+		if (!isValidByte)
+			cacheByteSurfix = i;
 
 		memcpy(cacheByte_ + cacheByteSize_, src, cacheByteSurfix);
 
@@ -84,8 +101,6 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 		cacheByteSize_ = 0;
 	}
 
-
-	
 	while (charsUsed < charCount)//fix me, check chars' index
 	{
 		if (cacheAvailable_)
@@ -100,34 +115,27 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 			if (byteLeft < 1)
 				break;
 
-			source[0] =(auint8)(*src);
+			sourceCount = GetUTF8CodePointLengthByFirstByte(*src);
 
-			if ((*source & 0xF0) == 0xF0)
+			if (byteLeft < sourceCount)
 			{
-				if (byteLeft < 4)
+				bool isValidByte = true;
+				int i = 1;
+				for (; i < sourceCount; ++i)
+				{
+					if ((src[i] & 0x80) != 0x80)
+					{
+						isValidByte = false;
+						break;
+					}
+				}
+				if(isValidByte)
 					break;
-				sourceCount = 4;
 			}
-			else if ((*source & 0xE0) == 0xE0)
-			{
-				if (byteLeft < 3)
-					break;
-				sourceCount = 3;
-			}
-			else if ((*source & 0xC0) == 0xC0)
-			{
-				if (byteLeft < 3)
-					break;
-				sourceCount = 2;
-			}
-			else
-			{
-				sourceCount = 1;
-			}
-			memcpy(source, src, sourceCount);
-			src += sourceCount; byteLeft-= sourceCount;
-			
-			int nChar = Convert_internal(source, sourceCount, target);
+				
+
+
+			int nChar = Convert_internal(src, sourceCount, target);
 			if (1 == nChar)
 				*writing++ = target[0];
 			else if (2 == nChar)
@@ -137,7 +145,14 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 				cacheChar_ = target[1];
 			}
 			else
-				break;
+			{
+				//fix me, log here
+				memset(writing, 1, sizeof(Char));
+			}
+				
+
+			src += sourceCount;
+			byteLeft -= sourceCount;
 			charsUsed++;
 		}
 	}
@@ -155,15 +170,15 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 			return;
 
 		auto fb = (auint8)(*src);
-		if ((*source & 0xF0) == 0xF0 && byteLeft < 4)
+		if ((fb & 0xF0) == 0xF0 && byteLeft < 4)
 		{
 			cacheByteSize_ = byteLeft;
 		}
-		else if ((*source & 0xE0) == 0xE0 && byteLeft < 3)
+		else if ((fb & 0xE0) == 0xE0 && byteLeft < 3)
 		{
 			cacheByteSize_ = byteLeft;
 		}
-		else if ((*source & 0xC0) == 0xC0 && byteLeft < 2)
+		else if ((fb & 0xC0) == 0xC0 && byteLeft < 2)
 		{
 			cacheByteSize_ = byteLeft;
 		}
@@ -176,98 +191,82 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 #endif
 }
 
+//10 , 0xxxxxxx, 110xxxxx, 1110xxxx, 1111xxxx
 //fix me, windows only
 int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush)
 {
-	int charsUsed = 0;
+	int charsCaculated = 0;
 
 	auint8 source[4];
 	aint sourceCount = 0;
 
-	wchar_t target[2];
-
 	auto src = (bytes + index);
 	aint byteLeft = count;
 
+	// 0 1 2 3
 	if (cacheByteSize_ > 0)
 	{
 		memcpy(source, cacheByte_, cacheByteSize_);
-		if ((*source & 0xF0) == 0xF0)
+		sourceCount =GetUTF8CodePointLengthByFirstByte(*source);
+		assert(cacheByteSize_ < sourceCount && sourceCount<=4 && cacheByteSize_ >=1);
+		memcpy(source, src, sourceCount - cacheByteSize_);
+		
+		int i = 1;
+		for (; i < sourceCount; ++i)
 		{
-			sourceCount = 4;
+			if (source[i] & 0x80 != 0x80)
+				break;
 		}
-		else if ((*source & 0xE0) == 0xE0)
+		if (i != sourceCount)
 		{
-			sourceCount = 3;
-		}
-		else if ((*source & 0xC0) == 0xC0)
-		{
-			sourceCount = 2;
-		}
-		else
-			assert(false);
-
-		int cacheByteSurfix = sourceCount - cacheByteSize_;
-		assert(cacheByteSurfix > 0);
-
-		memcpy(cacheByte_ + cacheByteSize_, src, cacheByteSurfix);
-
-		int nRet = Convert_internal(cacheByte_, sourceCount, target);
-		byteLeft -= cacheByteSurfix;
-		src += cacheByteSurfix;
-		//bytesUsed += cacheByteSurfix;
-		if (1 == nRet)
-			charsUsed++;
-		else if (2 == nRet)
-			charsUsed+=2;
-		else
-			assert(false);
-		//cacheByteSize_ = 0; // just simulate, not to clear internal buffer
+			assert(i > cacheByteSize_ - 1);
+			charsCaculated++;
+			src += i - cacheByteSize_;//bytes第 i - cacheByteSize_个字节无效，移动src
+			byteLeft -= i - cacheByteSize_;
+		}	
 	}
 
-	while (byteLeft)//fix me, check chars' index
+	auint8* pos = src;
+	auint8* end = src+ byteLeft;// [src, end)
+	while (pos!= end)
 	{
-		if (byteLeft < 1)
-			break;
-
-		source[0] = (auint8)(*src);
-
-		if ((*source & 0xF0) == 0xF0)
+		aint count = GetUTF8CodePointLengthByFirstByte(*pos);
+		if (1 == count)
 		{
-			if (byteLeft < 4)
-				break;
-			sourceCount = 4;
-		}
-		else if ((*source & 0xE0) == 0xE0)
-		{
-			if (byteLeft < 3)
-				break;
-			sourceCount = 3;
-		}
-		else if ((*source & 0xC0) == 0xC0)
-		{
-			if (byteLeft < 3)
-				break;
-			sourceCount = 2;
+			pos++;
+			charsCaculated++;
+			continue;
 		}
 		else
 		{
-			sourceCount = 1;
-		}
-		memcpy(source, src, sourceCount);
-		src += sourceCount; byteLeft -= sourceCount;
-
-		int nChar = Convert_internal(source, sourceCount, target);
-		if (1 == nChar)
-			charsUsed++;
-		else if (2 == nChar)
-		{
-			charsUsed+=2;
-		}
-		else
-			break;
+			sourceCount = count;
+			pos++;
+			bool done = true;
+			while (--sourceCount && pos != end)
+			{
+				if ((*pos >>6) == 2)
+				{
+					pos++;
+				}
+				else
+				{
+					done = false;
+					break;
+				}
+			}
+			if (done)
+			{
+				Char buf[2];
+				int charsTransfered = Convert_internal(src, sourceCount, buf);
+				charsCaculated += charsTransfered;
+			}
+			else
+			{
+				charsCaculated++;
+			}
+		}	
 	}
-	return charsUsed;
+	return charsCaculated;
 }
 
 int NEWUTF8Decoder::Convert_internal(abyte* bytes, int byteCount, Char chars[2])

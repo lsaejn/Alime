@@ -84,6 +84,15 @@ private:
 	/// <returns>chars transfered</returns>
 	int Convert_internal(abyte*bytes, int byteCount, Char chars[2]);
 
+	/// <summary>
+	/// 下一个码点占几个字节。
+	/// 错误的字节流不应中断程序，我们视每个错误码的码点为一个字符
+	/// </summary>
+	/// <param name="bytes"></param>
+	/// <param name="byteCount"></param>
+	/// <returns></returns>
+	int GetNextCodePointLength(abyte* bytes, int byteCount);
+
 	bool cacheAvailable_ = false;
 	wchar_t	 cacheChar_;
 	abyte cacheByte_[4];//3
