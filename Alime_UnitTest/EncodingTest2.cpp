@@ -10,7 +10,22 @@ TEST_UNIT(newUtf8decoder_Test)
 		int bytesUsed = 0;
 		int charsUsed = 0;
 		bool completed = false;
-		auto CharCount=u8Decoder->GetCharCount((abyte*)str_in_u8.c_str(), 0, str_in_u8.size(), 1);
+
+		auto begin = (abyte*)str_in_u8.c_str();
+
+		auto CharCount=u8Decoder->GetCharCount(begin, 0, 1, false);
+		H_TEST_EQUAL(CharCount, 0);
+		CharCount = u8Decoder->GetCharCount(begin, 1, 1, false);
+		H_TEST_EQUAL(CharCount, 0);
+		CharCount = u8Decoder->GetCharCount(begin, 2, 1, false);
+		H_TEST_EQUAL(CharCount, 1);
+		CharCount = u8Decoder->GetCharCount(begin, 0, 1, false);
+		H_TEST_EQUAL(CharCount, 0);
+		CharCount = u8Decoder->GetCharCount(begin, 1, 1, false);
+		H_TEST_EQUAL(CharCount, 0);
+		CharCount = u8Decoder->GetCharCount(begin, 2, 1, false);
+		H_TEST_EQUAL(CharCount, 1);
+
 		{
 			char buf[1024];
 			buf[0] = 0b11110000;//1

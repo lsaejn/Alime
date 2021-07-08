@@ -31,7 +31,7 @@ public:
 class NEWUTF8Decoder : public NEWDecoder
 {
 public:
-	//行为不同于C#, 不太清楚flush机制。注意，不能连续GetCharCount
+	//flush意味着当前buffer剩余将视为一个完整码点
 	virtual int GetCharCount(abyte bytes[], int index, int count, bool flush) override;
 
     // 摘要:

@@ -209,7 +209,7 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 		memcpy(source, cacheByte_, cacheByteSize_);
 		sourceCount =GetUTF8CodePointLengthByFirstByte(*source);
 		assert(cacheByteSize_ < sourceCount && sourceCount<=4 && cacheByteSize_ >=1);
-		memcpy(source, src, sourceCount - cacheByteSize_);
+		memcpy(source + cacheByteSize_, src, sourceCount - cacheByteSize_);
 		
 		int i = 1;
 		for (; i < sourceCount; ++i)
@@ -223,7 +223,8 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 			charsCaculated++;
 			src += i - cacheByteSize_;//bytes第 i - cacheByteSize_个字节无效，移动src
 			byteLeft -= i - cacheByteSize_;
-		}	
+		}else
+			charsCaculated++;
 	}
 
 	auint8* pos = src;
@@ -239,30 +240,42 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 		}
 		else
 		{
+			auto begin = pos;
 			sourceCount = count;
-			pos++;
-			bool done = true;
-			while (--sourceCount && pos != end)
+			pos++; sourceCount--;
+
+			while (pos != end && sourceCount)
 			{
 				if ((*pos >>6) == 2)
 				{
 					pos++;
+					sourceCount--;
 				}
 				else
 				{
-					done = false;
 					break;
 				}
 			}
-			if (done)
+			if (0 == sourceCount)
 			{
 				Char buf[2];
-				int charsTransfered = Convert_internal(src, sourceCount, buf);
+				int charsTransfered = Convert_internal(begin, sourceCount, buf);
 				charsCaculated += charsTransfered;
 			}
 			else
 			{
-				charsCaculated++;
+				if (pos == end)
+				{
+					if(flush)
+						charsCaculated++;
+					else
+					{
+						cacheByteSize_= count - sourceCount;
+						memcpy(cacheByte_, begin, cacheByteSize_);
+					}
+				}
+				else
+					charsCaculated++;
 			}
 		}	
 	}
