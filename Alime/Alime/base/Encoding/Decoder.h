@@ -32,6 +32,7 @@ class NEWUTF8Decoder : public NEWDecoder
 {
 public:
 	//flush意味着当前buffer剩余将视为一个完整码点
+	//本函数不会影响buffer
 	virtual int GetCharCount(abyte bytes[], int index, int count, bool flush) override;
 
     // 摘要:
@@ -95,6 +96,7 @@ private:
 
 	bool cacheAvailable_ = false;
 	wchar_t	 cacheChar_;
+
 	abyte cacheByte_[4];//3
 	aint cacheByteSize_ = 0;
 };
