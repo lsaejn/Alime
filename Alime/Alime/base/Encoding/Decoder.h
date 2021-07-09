@@ -86,13 +86,14 @@ private:
 	int Convert_internal(abyte*bytes, int byteCount, Char chars[2]);
 
 	/// <summary>
-	/// 下一个码点占几个字节。
-	/// 错误的字节流不应中断程序，我们视每个错误码的码点为一个字符
+	/// 尝试从buffer和bytes里读一个完整码点
 	/// </summary>
 	/// <param name="bytes"></param>
 	/// <param name="byteCount"></param>
-	/// <returns></returns>
-	int GetNextCodePointLength(abyte* bytes, int byteCount);
+	/// <param name="byteUsed">bytes将被使用的字节数</param>
+	/// <param name="byteCompleted">完整码点需要从bytes里消耗的字节数</param>
+	/// <param name="isLegal">读取时是否遇到了无效字节</param>
+	void GetNextCodePointLength(abyte* bytes, int byteCount, int& bytesUsed, int& bytesCompleted, bool& isLegal);
 
 	bool cacheAvailable_ = false;
 	wchar_t	 cacheChar_;

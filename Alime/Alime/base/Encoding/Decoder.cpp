@@ -141,6 +141,8 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 	{
 		if (cacheAvailable_)
 		{
+			if(charsUsed== charCount)
+				throw "The output char buffer is too small to contain the decoded characters, encoding 'Unicode (UTF-8)'";
 			*writing++ = cacheChar_;
 			cacheChar_ = L'0';
 			charsUsed++;
@@ -153,7 +155,7 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 
 			sourceCount = GetUTF8CodePointLengthByFirstByte(*src);
 
-			if (byteLeft < sourceCount)
+			if (byteLeft < sourceCount)//跳过第一个字符
 			{
 				bool isValidByte = true;
 				int i = 1;
@@ -192,6 +194,7 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 			charsUsed++;
 		}
 	}
+
 
 	if (byteLeft == 0)
 	{
@@ -240,43 +243,34 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 	// 0 1 2 3
 	if (cacheByteSize_ > 0)
 	{
-		memcpy(source, cacheByte_, cacheByteSize_);
-		sourceCount =GetUTF8CodePointLengthByFirstByte(*source);
-		assert(cacheByteSize_ < sourceCount && sourceCount>1 && sourceCount<=4 && cacheByteSize_ >=1);
+		int surfixBytesUsed = 0;
+		int surfixBytesNeeded = 0;
+		bool isLegal = false;
+		GetNextCodePointLength(src, byteLeft, surfixBytesUsed, surfixBytesNeeded, isLegal);
 
-		int surfixBytesNeeded = sourceCount - cacheByteSize_;
-
-		int validBytesCount = 0;
-		for (int i = 0; i < count; ++i)
+		if (surfixBytesUsed == surfixBytesNeeded)
 		{
-			if (IsValidUTF8Value(src[i]))
-			{
-				if (++validBytesCount == surfixBytesNeeded)
-					break;
-			}
-		}
-
-		if (validBytesCount == surfixBytesNeeded)//完整
-		{
-			charsCaculated+=Convert_internal(source, surfixBytesNeeded, NULL);
-			src += validBytesCount;
-			byteLeft -= validBytesCount;
+			memcpy(source, cacheByte_, cacheByteSize_);
+			memcpy(source + cacheByteSize_, src, sourceCount - surfixBytesUsed);
+			//fix
+			charsCaculated += Convert_internal(source, surfixBytesNeeded, NULL);
+			src += surfixBytesUsed;
+			byteLeft -= surfixBytesUsed;
 		}
 		else
 		{
-			assert(validBytesCount < surfixBytesNeeded);
-			if (validBytesCount == count)//不完整，但是合法
+			if (isLegal)//cache
 			{
 				return flush ? 1 : 0;
 			}
 			else//不完整，且非法
 			{
-				assert(validBytesCount< count);
+				assert(surfixBytesUsed < count);
 				charsCaculated++;
-				src += validBytesCount;
-				byteLeft -= validBytesCount;
+				src += surfixBytesUsed;
+				byteLeft -= surfixBytesUsed;
 			}
-		}		
+		}
 	}
 
 	auint8* pos = src;
@@ -326,6 +320,37 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 		}	
 	}
 	return charsCaculated;
+}
+
+void NEWUTF8Decoder::GetNextCodePointLength(abyte* bytes, int byteCount, int& bytesUsed, int& bytesCompleted, bool& isLegal)
+{
+	auint8 source[4];
+	aint sourceCount = 0;
+
+	if (cacheByteSize_ > 0)
+	{
+		memcpy(source, cacheByte_, cacheByteSize_);
+		sourceCount = GetUTF8CodePointLengthByFirstByte(*source);
+		bytesCompleted = sourceCount;
+		assert(cacheByteSize_ < sourceCount&& sourceCount>1 && sourceCount <= 4 && cacheByteSize_ >= 1);
+
+		int surfixBytesNeeded = sourceCount - cacheByteSize_;
+
+		isLegal = true;
+		for (int i = 0; i < byteCount; ++i)
+		{
+			if (IsValidUTF8Value(bytes[i]))
+			{
+				if (++bytesUsed == surfixBytesNeeded)
+					break;
+			}
+			else
+			{
+				isLegal = false;
+				break;
+			}
+		}
+	}
 }
 
 int NEWUTF8Decoder::Convert_internal(abyte* bytes, int byteCount, Char chars[2])
