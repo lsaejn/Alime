@@ -1,11 +1,11 @@
-#include "easyTest.h"
+ï»¿#include "easyTest.h"
 #include "../Alime/Alime/base/Encoding/NEWEncoding.h"
 
 TEST_UNIT(newUtf8decoder_Test)
 {
 	{
 		auto u8Decoder = NEWUTF8Encoding().GetDecoder();
-		std::string str_in_u8 = u8"ÄãºÃÂğ";
+		std::string str_in_u8 = u8"ä½ å¥½å—";
 		wchar_t buffer[8] = { 0 };
 		int bytesUsed = 0;
 		int charsUsed = 0;
@@ -61,7 +61,7 @@ TEST_UNIT(newUtf8decoder_Test)
 		}
 		{
 			char buf[1024];
-			buf[0] = 0b11110000;//ÕâÊÇ¸öË«×Ö½Úu8
+			buf[0] = 0b11110000;//è¿™æ˜¯ä¸ªåŒå­—èŠ‚u8
 			auto CharCount = u8Decoder->GetCharCount((abyte*)buf, 0, 1, 1);
 			H_TEST_EQUAL(CharCount, 1);
 
@@ -106,7 +106,7 @@ TEST_UNIT(newUtf8decoder_Test)
 
 	{
 		auto u8Decoder = NEWUTF8Encoding().GetDecoder();
-		std::string str_in_u8 = u8"ÄãºÃÂğ";
+		std::string str_in_u8 = u8"ä½ å¥½å—";
 		wchar_t buffer[8] = { 0 };
 		int bytesUsed = 0;
 		int charsUsed = 0;
@@ -133,7 +133,7 @@ TEST_UNIT(newUtf8decoder_Test)
 
 	{
 		auto u8Decoder = NEWUTF8Encoding().GetDecoder();
-		std::string str_in_u8 = u8"²âÊÔÍêÕû×Ö·û";
+		std::string str_in_u8 = u8"ó°€‹";
 		bool completed = false;
 		int bytesUsed = 0;
 		int charsUsed = 0;
@@ -156,7 +156,7 @@ TEST_UNIT(newUtf8decoder_Test)
 	}
 	{
 		auto u8Decoder = NEWUTF8Encoding().GetDecoder();
-		std::string str_in_u8 = u8"²âÊÔÍêÕû×Ö·û";
+		std::string str_in_u8 = u8"æµ‹è¯•å®Œæ•´å­—ç¬¦";
 		bool completed = false;
 		int bytesUsed = 0;
 		int charsUsed = 0;

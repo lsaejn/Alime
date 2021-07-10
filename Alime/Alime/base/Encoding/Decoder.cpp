@@ -259,11 +259,11 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 		}
 		else
 		{
-			if (isLegal)//cache
+			if (isLegal)//合法，意味着src长度不够
 			{
 				return flush ? 1 : 0;
 			}
-			else//不完整，且非法
+			else//不合法，阶段src
 			{
 				assert(surfixBytesUsed < count);
 				charsCaculated++;
@@ -324,6 +324,8 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 
 void NEWUTF8Decoder::GetNextCodePointLength(abyte* bytes, int byteCount, int& bytesUsed, int& bytesCompleted, bool& isLegal)
 {
+	assert(byteCount > 0);
+
 	auint8 source[4];
 	aint sourceCount = 0;
 
@@ -348,6 +350,51 @@ void NEWUTF8Decoder::GetNextCodePointLength(abyte* bytes, int byteCount, int& by
 			{
 				isLegal = false;
 				break;
+			}
+		}
+	}
+	else
+	{
+		bytesCompleted = GetUTF8CodePointLengthByFirstByte(*bytes);
+		if (1 == bytesCompleted)
+		{
+			isLegal = true;
+			bytesUsed = 1;
+			return;
+		}
+		else
+		{
+			isLegal = true;
+			int i = 1;
+			for (; i < byteCount; ++i)
+			{
+				if (IsValidUTF8Value(bytes[i]))
+				{
+					if (i == bytesCompleted-1)
+						break;
+				}
+				else
+				{
+					isLegal = false;
+					break;
+				}
+			}
+
+			if (i == bytesCompleted - 1)
+			{
+				bytesUsed = bytesCompleted;
+				return;
+			}
+			else
+			{
+				if (isLegal)
+				{
+					bytesUsed = byteCount;
+				}
+				else
+				{
+					bytesUsed = i+1;
+				}
 			}
 		}
 	}
