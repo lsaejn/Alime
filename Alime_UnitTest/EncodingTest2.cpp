@@ -19,7 +19,6 @@ TEST_UNIT(newUtf8decoder_Test)
 		H_TEST_EQUAL(CharCount, 1);
 		CharCount = u8Decoder->GetCharCount(begin, 2, 1, false);
 		H_TEST_EQUAL(CharCount, 1);
-
 		CharCount = u8Decoder->GetCharCount(begin, 0, 9, false);
 		H_TEST_EQUAL(CharCount, 3);
 
@@ -29,6 +28,8 @@ TEST_UNIT(newUtf8decoder_Test)
 		H_TEST_EQUAL(CharCount, 1);
 		CharCount = u8Decoder->GetCharCount(begin, 2, 1, true);
 		H_TEST_EQUAL(CharCount, 1);
+		CharCount = u8Decoder->GetCharCount(begin, 0, 9, true);
+		H_TEST_EQUAL(CharCount, 3);
 
 		CharCount = u8Decoder->GetCharCount(begin, 0, 3, false);
 		H_TEST_EQUAL(CharCount, 1);
@@ -59,6 +60,16 @@ TEST_UNIT(newUtf8decoder_Test)
 			auto CharCount2= u8Decoder->GetCharCount((abyte*)buf, 0, 8, 1);
 			H_TEST_EQUAL(CharCount2, 8);
 		}
+
+		{
+			char buf[1024];
+			buf[0] =0xEF;
+			buf[1] = 0xBB;
+			buf[2] =0xBF;
+			auto CharCount2 = u8Decoder->GetCharCount((abyte*)buf, 0, 3, 1);
+			H_TEST_EQUAL(CharCount2, 8);
+		}
+
 		{
 			char buf[1024];
 			buf[0] = 0b11110000;//这是个双字节u8

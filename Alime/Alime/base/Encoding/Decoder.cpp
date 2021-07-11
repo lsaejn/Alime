@@ -32,7 +32,7 @@ namespace
 
 	bool IsValidUTF8Value(auint8 byte)
 	{
-		if (byte & 0x80 == 0x80)
+		if ((byte & 0xC0) == 0x80)
 			return true;
 		else
 			return false;
@@ -277,45 +277,54 @@ int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush
 	auint8* end = src+ byteLeft;// [src, end)
 	while (pos!= end)
 	{
-		aint legalCount = GetUTF8CodePointLengthByFirstByte(*pos);
-		if (1 == legalCount)
+		int bytesUsed = 0;
+		int bytesCompleted = 0;
+		bool isLegal = false;
+		GetNextCodePointLength(pos, byteLeft, bytesUsed, bytesCompleted, isLegal);
+
+		//aint legalCount = GetUTF8CodePointLengthByFirstByte(*pos);
+		if (bytesUsed == bytesCompleted)
 		{
-			pos++;
-			charsCaculated++;
-			continue;
+			assert(isLegal);
+			int n= Convert_internal(pos, bytesUsed, NULL);
+			if (0 == n)
+			{
+				//invalid single codepoint by BeginOfbyte--0x10xxxxx
+				n = 1;
+			}
+			charsCaculated += n;
+			pos+=bytesUsed;
+			byteLeft -= bytesUsed;
 		}
 		else
 		{
-			auto begin = pos;
-			sourceCount = legalCount;
-			pos++; sourceCount--;
-
-			while (pos != end && sourceCount)
+			if (isLegal)//break?
 			{
-				if ((*pos >>6) == 2)
+				if (byteLeft== bytesUsed)
 				{
-					pos++;
-					sourceCount--;
+					if (flush)
+					{
+						charsCaculated++;
+						pos += bytesUsed;
+						byteLeft -= bytesUsed;
+					}
+					else
+					{
+						break;
+					}
 				}
 				else
 				{
-					break;
+					charsCaculated++;
+					pos += bytesUsed;
+					byteLeft -= bytesUsed;
 				}
-			}
-			if (0 == sourceCount)
-			{
-				int charsTransfered = Convert_internal(begin, legalCount, NULL);
-				charsCaculated += charsTransfered;
 			}
 			else
 			{
-				if (pos == end)//ºÏ·¨
-				{
-					if(flush)
-						charsCaculated++;
-				}
-				else
-					charsCaculated++;
+				charsCaculated++;
+				pos += bytesUsed;
+				byteLeft -= bytesUsed;
 			}
 		}	
 	}
@@ -365,11 +374,13 @@ void NEWUTF8Decoder::GetNextCodePointLength(abyte* bytes, int byteCount, int& by
 		else
 		{
 			isLegal = true;
+			bytesUsed += 1;
 			int i = 1;
 			for (; i < byteCount; ++i)
 			{
 				if (IsValidUTF8Value(bytes[i]))
 				{
+					bytesUsed++;
 					if (i == bytesCompleted-1)
 						break;
 				}
@@ -380,22 +391,22 @@ void NEWUTF8Decoder::GetNextCodePointLength(abyte* bytes, int byteCount, int& by
 				}
 			}
 
-			if (i == bytesCompleted - 1)
-			{
-				bytesUsed = bytesCompleted;
-				return;
-			}
-			else
-			{
-				if (isLegal)
-				{
-					bytesUsed = byteCount;
-				}
-				else
-				{
-					bytesUsed = i+1;
-				}
-			}
+			//if (i == bytesCompleted - 1)
+			//{
+			//	bytesUsed = bytesCompleted;
+			//	return;
+			//}
+			//else
+			//{
+			//	if (isLegal)
+			//	{
+			//		bytesUsed = byteCount;
+			//	}
+			//	else
+			//	{
+			//		bytesUsed = i+1;
+			//	}
+			//}
 		}
 	}
 }
