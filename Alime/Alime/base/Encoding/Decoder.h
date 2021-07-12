@@ -15,8 +15,8 @@ public:
 	//virtual void Convert(const std::vector<abyte> &bytes, std::vector<Char> chars,
 	//	bool flush, int& bytesUsed, int& charsUsed, bool& completed);
 
-	//virtual int GetCharCount(abyte* bytes, int count, bool flush);
-	//virtual int GetCharCount(abyte bytes[], int index, int count) = 0;
+	virtual int GetCharCount(abyte* bytes, int count, bool flush) = 0;
+	virtual int GetCharCount(abyte bytes[], int index, int count) = 0;
 	virtual int GetCharCount(abyte bytes[], int index, int count, bool flush) = 0;
 	//virtual int GetCharCount(const std::vector<abyte> &bytes, bool flush);
 
@@ -33,6 +33,8 @@ class NEWUTF8Decoder : public NEWDecoder
 public:
 	//flush意味着当前buffer剩余将视为一个完整码点
 	//本函数不会影响buffer
+	virtual int GetCharCount(abyte* bytes, int count, bool flush) override;
+	virtual int GetCharCount(abyte bytes[], int index, int count) override;
 	virtual int GetCharCount(abyte bytes[], int index, int count, bool flush) override;
 
     // 摘要:

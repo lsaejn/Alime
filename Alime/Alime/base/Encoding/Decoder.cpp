@@ -228,6 +228,16 @@ void NEWUTF8Decoder::Convert(abyte bytes[], int byteIndex,
 
 }
 
+int NEWUTF8Decoder::GetCharCount(abyte* bytes, int count, bool flush)
+{
+	return GetCharCount(bytes, 0, count, flush);
+}
+
+int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count)
+{
+	return GetCharCount(bytes, index, count, false);
+}
+
 //10 , 0xxxxxxx, 110xxxxx, 1110xxxx, 1111xxxx
 //fix me, windows only
 int NEWUTF8Decoder::GetCharCount(abyte bytes[], int index, int count, bool flush)
