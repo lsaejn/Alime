@@ -25,7 +25,7 @@ public:
 	//virtual int GetChars(abyte bytes[], int byteIndex, int byteCount, Char chars[], int charIndex, bool flush);
 	//virtual int GetChars(const std::vector<abyte> &bytes, std::vector<Char> &chars, bool flush);
 
-	//virtual void Reset();
+	virtual void Reset()=0;
 };
 
 class NEWUTF8Decoder : public NEWDecoder
@@ -77,7 +77,11 @@ public:
 	virtual void Convert(abyte bytes[], int byteIndex, int byteCount, Char chars[], int charIndex,
 		int charCount, bool flush, int& bytesUsed, int& charsUsed, bool& completed) override;
 
+	virtual void Reset() override;
+
 private:
+	void ClearCacheChar();
+	void ClearCacheBytes();
 	/// <summary>
 	/// 
 	/// </summary>
@@ -89,6 +93,7 @@ private:
 
 	/// <summary>
 	/// 尝试从buffer和bytes里读一个完整码点
+	/// 有多种可能: 1.数据长度完整且正确 2.数据长度完整，但数据错误 3.数据长度不完整，但数据正确 4数据长度不完整，且数据错误
 	/// </summary>
 	/// <param name="bytes"></param>
 	/// <param name="byteCount"></param>

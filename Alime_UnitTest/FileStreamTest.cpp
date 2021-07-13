@@ -31,7 +31,7 @@ TEST_UNIT(FileStreamAccessTest)
 		}
 
 	}
-	FileStream fs(L"FileStreamAccess.cpp", Alime::base::FileMode::OpenOrCreate);
+	FileStream fs(L"FileStreamAccess.cpp", Alime::base::FileMode::OpenOrCreate, Alime::base::FileAccess::ReadWrite);
 	exist = Alime::base::System::IO::File::Exists(L"FileStreamAccess.cpp");
 	H_TEST_EQUAL(exist, true);
 	H_TEST_EQUAL(fs.CanRead(), true);
@@ -66,7 +66,8 @@ TEST_UNIT(FileStreamRequest)
 	}
 	catch (Alime::base::Error& e)
 	{
-		std::cout << e.Message();
+		auto msg =  e.Message();
+		msg = nullptr;
 	}
 
 	try
@@ -134,14 +135,14 @@ TEST_UNIT(FileInfo)
 TEST_UNIT(StreamReader)
 {
 	using Alime::base::System::IO::FileStream;
-	FileStream fs(L"fuckyou-u16.txt");
+	FileStream fs(L"fuckyouu16.txt", Alime::base::FileMode::OpenOrCreate, Alime::base::FileAccess::ReadWrite);
 	auto sz=fs.Size();
 	char buffer[2046] = { 0 };
 	auto all = fs.Read(buffer, 2046);
 	fs.SeekFromBegin(0);
 	all = fs.Read(buffer, 2046);
 	fs.SeekFromBegin(0);
-	Alime::base::System::IO::StreamReader sr(fs);
+	Alime::base::System::IO::StreamReader sr(fs, true);
 	auto info=sr.ReadLine();
 	
 	fs.SeekFromBegin(0);

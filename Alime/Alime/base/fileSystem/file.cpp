@@ -87,7 +87,7 @@ namespace Alime::base::System::IO
 	//u8÷±Ω”–¥»Î
 	void File::AppendAllLines(const String& path, std::vector<String>& contents)
 	{
-		FileStream fs(path, FileMode::OpenOrCreate);
+		FileStream fs(path, FileMode::OpenOrCreate, FileAccess::ReadWrite);
 		for (auto& line : contents)
 		{
 			auto u8Str=UTF16ToUTF8(line);

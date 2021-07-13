@@ -12,15 +12,17 @@ TEST_UNIT(testBufferAppendRead) {
     H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize);
     H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize);
 
-    const string str(200, 'x');
+    string str(100, 'x');
+    str.append(100, 'y');
+
     buf.Append(str);
     H_TEST_EQUAL(buf.length(), str.size());
-    H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - str.size());
+    H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - 200);
     H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize);
 
     auto firstHalf = buf.NextString(100);
     H_TEST_EQUAL(buf.length(), str.size()-100);
-    H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - str.size());
+    H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - 200);
     H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize+100);
     
     const string secondHalf = buf.NextString(50);
@@ -28,19 +30,12 @@ TEST_UNIT(testBufferAppendRead) {
     H_TEST_EQUAL(buf.length(), 50);
     H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - str.size());
     H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize + firstHalf.size() + secondHalf.size());
-    H_TEST_EQUAL(secondHalf, string(50, 'x'));
+    H_TEST_EQUAL(secondHalf, string(50, 'y'));
 
     //buf.Append(str);
     //H_TEST_EQUAL(buf.length(), 2 * str.size() - str2.size());
     //H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize - 2 * str.size());
     //H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize + str2.size());
-
-    const string str3 = buf.NextAllString();
-    H_TEST_EQUAL(str3.size(), 350);
-    H_TEST_EQUAL(buf.length(), 0);
-    H_TEST_EQUAL(buf.WritableBytes(), Buffer::kInitialSize);
-    H_TEST_EQUAL(buf.PrependableBytes(), Buffer::kCheapPrependSize);
-    H_TEST_EQUAL(str3, string(350, 'x'));
 }
 
 TEST_UNIT(testBufferGrow1) {

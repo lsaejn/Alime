@@ -86,10 +86,11 @@ TEST_UNIT(test_File)
 {
 	std::thread t;
 
+	Alime::base::System::IO::File::Delete(L"fuckyou.txt");
 	auto fs=Alime::base::System::IO::File::Create(L"fuckyou.txt");
 	fs.Close();
 
-	fs=(Alime::base::System::IO::FileStream(L"fuckyou.txt"));
+	fs=Alime::base::System::IO::FileStream(L"fuckyou.txt", Alime::base::FileMode::Open, Alime::base::FileAccess::ReadWrite);
 	if (fs.CanWrite())
 	{
 		char buffer[] = "this is a test to write ÄãºÃ in u8";

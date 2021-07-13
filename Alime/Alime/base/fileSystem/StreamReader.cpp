@@ -183,9 +183,9 @@ namespace Alime::base::System::IO
 		if (stream_)
 		{
 			Char buffer = 0;
-			if (stream_->Read(&buffer, sizeof(buffer)) == 0)
+			if (innerStream_->Read(&buffer, sizeof(buffer)) == 0)
 			{
-				stream_ = 0;
+				innerStream_ = 0;
 				return L'\0';
 			}
 			else

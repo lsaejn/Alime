@@ -12,5 +12,5 @@ TEST_UNIT(FileTest)
 	lines.push_back(L"ÄãºÃ1");
 	lines.push_back(L"ÄãºÃ2");
 	lines.push_back(L"ÄãºÃ3");
-	Alime::base::System::IO::File::AppendAllLines(L"FileTest.text", lines);
+	Alime::base::System::IO::File::AppendAllLines(L"FileTest.txt", lines);
 }
