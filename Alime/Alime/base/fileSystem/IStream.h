@@ -36,6 +36,7 @@ namespace Alime::base::System::IO
 		virtual void Setup(IStream* _stream) = 0;
 		virtual void Close() = 0;
 		virtual int Write(void* _buffer, int _size) = 0;
+		virtual ~IEncoder() = default;
 	};
 
 	/// <summary>
@@ -47,6 +48,7 @@ namespace Alime::base::System::IO
 		virtual void Setup(IStream* _stream) = 0;
 		virtual void Close() = 0;
 		virtual int Read(void* _buffer, int _size) = 0;
+		virtual ~IDecoder() = default;
 	};
 
 }

@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
 
     _CrtSetDbgFlag(tmpFlag);
-    //_CrtSetBreakAlloc(79);
+    _CrtSetBreakAlloc(4625);
 
     printf("Running main() from gtest_main.cc\n");
     testing::InitGoogleTest(&argc, argv);

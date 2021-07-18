@@ -290,6 +290,7 @@ TEST_UNIT(newUtf8decoder_Test)
 		std::wstring ws;
 		ws.append(buffer, charsUsed);
 		H_TEST_EQUAL(L"󰀋字符󰀋.....分电视剧奋斗和顺丰单号是解放", ws);
+		delete buffer;
 	}
 
 }
