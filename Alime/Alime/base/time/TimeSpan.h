@@ -30,9 +30,7 @@ The representation limits the largest representable duration to approximately 58
 	public:
 		TimeSpan();
 		explicit TimeSpan(const struct timeval& t);
-		explicit TimeSpan(int64_t nanoseconds);
-		explicit TimeSpan(int nanoseconds);
-		explicit TimeSpan(double seconds);
+		explicit TimeSpan(int64_t ticks);
 
 		// Nanoseconds returns the duration as an integer nanosecond count.
 		int64_t toNanoSeconds() const;

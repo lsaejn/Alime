@@ -9,14 +9,12 @@ namespace Alime::base::System
 	TimeSpan::TimeSpan(const struct timeval& t)
 		: ticks_(t.tv_sec * kSecond + t.tv_usec * kMicrosecond) {}
 
-	TimeSpan::TimeSpan(int64_t nanoseconds)
-		: ticks_(nanoseconds/100) {}
-
-	TimeSpan::TimeSpan(int nanoseconds)
-		: ticks_(nanoseconds/100) {}
-
-	TimeSpan::TimeSpan(double seconds)
-		: ticks_(static_cast<int64_t>(seconds * kSecond)) {}
+	TimeSpan::TimeSpan(int64_t ticks)
+		: ticks_(ticks)
+	{
+		if (ticks_ < 0)
+			throw "ticks should not be a negative value";
+	}
 
 	int64_t TimeSpan::Ticks() const
 	{

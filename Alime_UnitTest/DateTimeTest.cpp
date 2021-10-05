@@ -379,3 +379,27 @@ TEST_UNIT(DateTime_TEST_NowSeries)
 		ASSERT_TRUE(tm_t->tm_sec == date.Second());
 	}
 }
+
+/*
+		static TimeSpan Seconds(double count);
+		static TimeSpan Milliseconds(double count);
+		static TimeSpan Microseconds(double count);
+		static TimeSpan Minutes(double count);
+		static TimeSpan Hours(double count);
+		static TimeSpan Nanoseconds(int64_t count);
+*/
+TEST_UNIT(TimeSpan_TEST)
+{
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(1.1).Ticks() == 1.1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(0).Ticks() == 0);
+
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Hours(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Hours(1.1).Ticks() == 1.1 * 60 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Hours(1.5).Ticks() == 1.5 * 60 * 60 * 1000 * 1000 * 10);
+
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Microseconds(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+	ASSERT_TRUE(Alime::base::System::TimeSpan::Minutes(1).Ticks() == 1 * 60 * 1000 * 1000 * 10);
+}
